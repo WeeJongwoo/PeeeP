@@ -55,6 +55,8 @@ void UPPPartsBase::OnComponentDestroyed(bool bDestroyingHierarchy)
 	// ?????? ????(with Github Copilot)
 	Super::OnComponentDestroyed(bDestroyingHierarchy);
 
+	CleanUpParts();
+
 	APPCharacterPlayer* PlayerCharacter = Cast<APPCharacterPlayer>(GetOwner());
 	if (PlayerCharacter)
 	{

@@ -111,6 +111,8 @@ APPCharacterPlayer::APPCharacterPlayer()
 		GetMesh()->SetAnimInstanceClass(AnimBlueprintRef.Class);
 	}
 
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("PlayerCharacter"));
+
 	// Camera
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));	// CameraBoom 컴포?��?���? �??��?��
 	CameraBoom->SetupAttachment(RootComponent);
@@ -484,27 +486,7 @@ void APPCharacterPlayer::GrabHitCheck()
 	UPPGrabParts* GrabParts = Cast<UPPGrabParts>(Parts);
 	if (GrabParts == nullptr) return;
 
-	FHitResult HitResult;
-	FCollisionQueryParams Params(SCENE_QUERY_STAT(Grab), false, this);
-	const FVector StartPos = GetMesh()->GetSocketLocation(Parts->HitSocket) + GetActorForwardVector() * GetCapsuleComponent()->GetScaledCapsuleRadius();
-	const FVector EndPos = StartPos + GetActorForwardVector() * 5.0f;
-
-	bool HitDetected = GetWorld()->SweepSingleByChannel(HitResult, StartPos, EndPos, FQuat::Identity, ECC_GameTraceChannel2, FCollisionShape::MakeSphere(10.0f), Params);
-	if (HitDetected)
-	{
-		UE_LOG(LogTemp, Log, TEXT("GrabHit"));
-		GrabParts->SetIsGrabbed(true);
-		GrabParts->Grab(HitResult);
-	}
-
-
-#if ENABLE_DRAW_DEBUG
-	FVector CapsuleOrigin = StartPos + (EndPos - StartPos) * 0.5f;
-	float CapsuleHalfHeight = 5.0f * 0.5f;
-	FColor DrawColor = HitDetected ? FColor::Green : FColor::Red;
-
-	DrawDebugCapsule(GetWorld(), CapsuleOrigin, CapsuleHalfHeight, 10.0f, FRotationMatrix::MakeFromZ(GetActorForwardVector()).ToQuat(), DrawColor, false, 5.0f);
-#endif
+	GrabParts->Grab();
 }
 
 

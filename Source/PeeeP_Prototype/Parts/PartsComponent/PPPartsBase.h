@@ -35,16 +35,13 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	virtual void CleanUpParts() {};
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	inline TObjectPtr<class UPPPartsDataBase> GetPartsData() { return PartsData; }
-
-	//기능 동작시킬 소켓이름.  ex) GrabParts , 그랩소켓 
-	FName HitSocket;		
-
 
 
 protected:

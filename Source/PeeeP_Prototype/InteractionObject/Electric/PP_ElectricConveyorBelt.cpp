@@ -18,6 +18,7 @@ APP_ElectricConveyorBelt::APP_ElectricConveyorBelt()
 
     TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerBox"));
     TriggerBox->SetupAttachment(RootComponent);
+	TriggerBox->SetCollisionProfileName(TEXT("Conveyor"));
     TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &APP_ElectricConveyorBelt::OnOverlapBegin);
     TriggerBox->OnComponentEndOverlap.AddDynamic(this, &APP_ElectricConveyorBelt::OnOverlapEnd);
 

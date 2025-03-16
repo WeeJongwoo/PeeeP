@@ -6,6 +6,12 @@
 #include "MediaTexture.h"
 #include "Kismet/GameplayStatics.h"
 
+void UPPIntroWidget::NativeConstruct()
+{
+	bIsFocusable = true;
+	SetFocus();
+}
+
 FReply UPPIntroWidget::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
 	Super::NativeOnKeyDown(InGeometry, InKeyEvent);
@@ -31,6 +37,7 @@ void UPPIntroWidget::StartGame()
 
 void UPPIntroWidget::PlayIntro()
 {
+
 	if (IntroMedia)
 	{
 		if (IntroMedia->OpenSource(IntroMediaSource))

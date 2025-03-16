@@ -20,7 +20,7 @@ class PEEEP_PROTOTYPE_API UPPGrabParts : public UPPPartsBase
 public:
 	UPPGrabParts();
 	
-	void Grab(FHitResult& InHitResult);
+	void Grab();
 	void SetIsGrabbed(bool b) { IsGrabbed = b; }
 	bool GetIsGrabbed() const { return IsGrabbed; }
 
@@ -30,6 +30,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void BeginDestroy() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void CleanUpParts() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<class UPhysicsHandleComponent> GrabHandle;
@@ -43,4 +45,7 @@ protected:
 
 	bool IsGrabbed;
 
+	FName GrabSocket;
+
+	FVector GrabbedObjectOffset;
 };
