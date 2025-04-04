@@ -60,7 +60,6 @@ void UPPGrabParts::OnComponentCreated()
     {
         UActorComponent* GrabComponent = PlayerCharacter->AddComponentByClass(UPhysicsHandleComponent::StaticClass(), true, FTransform::Identity, false);
         GrabHandle = CastChecked<UPhysicsHandleComponent>(GrabComponent);
-		GrabHandle->SetAngularDamping(1000.0f);
 
         APlayerController* PlayerController = CastChecked<APlayerController>(PlayerCharacter->GetController());
         if (UEnhancedInputLocalPlayerSubsystem* Subsystem

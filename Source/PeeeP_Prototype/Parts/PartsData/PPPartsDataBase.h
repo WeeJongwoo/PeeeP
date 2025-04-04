@@ -34,7 +34,7 @@ public:
 	TObjectPtr<class UInputMappingContext> PartsMappingContext;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<class UPPPartsBase> PartsComponent;
+	TSubclassOf<class UPPPartsBase> PartsComponentClass;
 
 
 public:

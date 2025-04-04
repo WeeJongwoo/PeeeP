@@ -23,12 +23,8 @@ class PEEEP_PROTOTYPE_API UPPGrabPartsData : public UPPPartsDataBase
 public:
 	UPPGrabPartsData();
 
-	virtual FPrimaryAssetId GetPrimaryAssetId() const override
-	{
-		return FPrimaryAssetId("PPPartsData", GetFName());
-	}
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<class UInputAction> GrabAction;
+
 };

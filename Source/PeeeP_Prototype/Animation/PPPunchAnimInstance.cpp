@@ -9,8 +9,10 @@ UPPPunchAnimInstance::UPPPunchAnimInstance()
 
 void UPPPunchAnimInstance::NativeInitializeAnimation()
 {
+	Super::NativeInitializeAnimation();
 }
 
 void UPPPunchAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
+	Super::NativeUpdateAnimation(DeltaSeconds);
 }
