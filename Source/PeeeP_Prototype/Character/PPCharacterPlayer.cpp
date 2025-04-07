@@ -113,6 +113,8 @@ APPCharacterPlayer::APPCharacterPlayer()
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("PlayerCharacter"));
 
+	RunningMultiplier = 2.0f;	// Running Speed Multiplier. You can Setting Running Speed Multiplier.
+
 	// Camera
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));	// CameraBoom 컴포?��?���? �??��?��
 	CameraBoom->SetupAttachment(RootComponent);
@@ -136,7 +138,7 @@ APPCharacterPlayer::APPCharacterPlayer()
 	// Player Movement Setting
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->GravityScale = 1.6f;
-	this->MaxWalkSpeed = 60.0f;										// Setting Default Max Walk Speed
+	this->MaxWalkSpeed = 100.0f;										// Setting Default Max Walk Speed
 	GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed;		// Apply Default Max Walk Speed
 	GetCharacterMovement()->MaxStepHeight = 5.0f;
 	GetCharacterMovement()->SetWalkableFloorAngle(50.f);
@@ -402,7 +404,7 @@ void APPCharacterPlayer::OnRunningStart(const FInputActionValue& Value)
 	// Set Player Max Walk Speed for Running.
 	if (!this->bIsRunning)
 	{
-		GetCharacterMovement()->MaxWalkSpeed = 150.f;	// Here is Running Max Walk Speed. You can Setting Running Max Walk Speed.
+		GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed * RunningMultiplier;	// Here is Running Max Walk Speed. You can Setting Running Max Walk Speed.
 		this->bIsRunning = true;
 		UE_LOG(LogTemp, Log, TEXT("Running Start"));
 	}

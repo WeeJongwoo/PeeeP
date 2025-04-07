@@ -71,6 +71,7 @@ protected:
 	// Move MaxWalkSpeed Variable here from ElectricDischarge Setting Section
 	// You can Setting Player's Max Walk Speed
 	float MaxWalkSpeed;
+	float RunningMultiplier;
 
 	bool bIsRunning;
 
