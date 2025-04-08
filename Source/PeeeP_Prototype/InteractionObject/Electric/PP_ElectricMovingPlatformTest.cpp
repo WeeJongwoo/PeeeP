@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "InteractionObject/Electric/PP_ElectricMovingPlatformTest.h"
@@ -10,36 +10,36 @@ APP_ElectricMovingPlatformTest::APP_ElectricMovingPlatformTest()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// ¸Ş½¬ ÄÄÆ÷³ÍÆ® ÁöÁ¤
-	// ¿òÁ÷ÀÌ´Â ÇÃ·§ÆûÀÇ °æ¿ì Áß·ÂÀÇ ¿µÇâÀ» ¹ŞÁö ¾ÊÀ¸¹Ç·Î SetSimulatePhysics¸¦ false·Î ¼³Á¤ÇØ¾ß ÇÔ.
+	// ë©”ì‰¬ ì»´í¬ë„ŒíŠ¸ ì§€ì •
+	// ì›€ì§ì´ëŠ” í”Œë«í¼ì˜ ê²½ìš° ì¤‘ë ¥ì˜ ì˜í–¥ì„ ë°›ì§€ ì•Šìœ¼ë¯€ë¡œ SetSimulatePhysicsë¥¼ falseë¡œ ì„¤ì •í•´ì•¼ í•¨.
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
-	Mesh->SetSimulatePhysics(false);								// Áß·ÂÀÇ ¿µÇâÀ» ¹ŞÁö ¾Ê´Â´Ù¸é ¹İµå½Ã false·Î ¼³Á¤.
-	Mesh->SetCollisionProfileName(TEXT("ElectricObjectProfile"));	// ÇÃ·¹ÀÌ¾îÀÇ Àü±â ¹æÃâÀ» ¹Ş±â À§ÇÑ Äİ¸®Àü ÇÁ·ÎÇÊ ¼¼ÆÃ.
+	Mesh->SetSimulatePhysics(false);								// ì¤‘ë ¥ì˜ ì˜í–¥ì„ ë°›ì§€ ì•ŠëŠ”ë‹¤ë©´ ë°˜ë“œì‹œ falseë¡œ ì„¤ì •.
+	Mesh->SetCollisionProfileName(TEXT("ElectricObjectProfile"));	// í”Œë ˆì´ì–´ì˜ ì „ê¸° ë°©ì¶œì„ ë°›ê¸° ìœ„í•œ ì½œë¦¬ì „ í”„ë¡œí•„ ì„¸íŒ….
 
-	// InterpToMovement ÄÄÆ÷³ÍÆ® ºÎºĞ
+	// InterpToMovement ì»´í¬ë„ŒíŠ¸ ë¶€ë¶„
 	InterpToMovement = CreateDefaultSubobject<UInterpToMovementComponent>(TEXT("Interp To Movement"));
 	
-	// InterpToMovement ÄÄÆ÷³ÍÆ® ¼¼ÆÃ ºÎºĞ
-	// ³ªÁß¿¡ °æ·Î ÁöÁ¡À» Ãß°¡ÇÒ ¶§´Â ÄÚµå¿¡¼­ Ãß°¡ÇÏ´Â °ÍÀÌ ¾Æ´Ñ BP¿¡¼­ Ãß°¡ÇÏ´Â ¹æ¹ıÀÌ ´õ ÆíÇÒ µí
-	// ÄÚµå¿¡¼­ ÁöÁ¤ ½Ã ÀçÈ°¿ëÀÌ ¾î·Á¿ò
-	bIsCharged = false;								// Áßº¹À¸·Î ÄÑÁö´Â °ÍÀ» ¹æÁöÇÏ±â À§ÇÑ flagÀÔ´Ï´Ù. ÃßÈÄ ¹ßÆÇ ÀÛµ¿ ½Ã°£ µî Á¶ÀıÇÏ·Á¸é »óÈ²¿¡ ¸Â°Ô ¼öÁ¤ÇØ ÁÖ¼¼¿ä.
-	InterpToMovement->bAutoActivate = false;		// ÀÚµ¿ ½ÃÀÛ ºñÈ°¼ºÈ­
+	// InterpToMovement ì»´í¬ë„ŒíŠ¸ ì„¸íŒ… ë¶€ë¶„
+	// ë‚˜ì¤‘ì— ê²½ë¡œ ì§€ì ì„ ì¶”ê°€í•  ë•ŒëŠ” ì½”ë“œì—ì„œ ì¶”ê°€í•˜ëŠ” ê²ƒì´ ì•„ë‹Œ BPì—ì„œ ì¶”ê°€í•˜ëŠ” ë°©ë²•ì´ ë” í¸í•  ë“¯
+	// ì½”ë“œì—ì„œ ì§€ì • ì‹œ ì¬í™œìš©ì´ ì–´ë ¤ì›€
+	bIsCharged = false;								// ì¤‘ë³µìœ¼ë¡œ ì¼œì§€ëŠ” ê²ƒì„ ë°©ì§€í•˜ê¸° ìœ„í•œ flagì…ë‹ˆë‹¤. ì¶”í›„ ë°œíŒ ì‘ë™ ì‹œê°„ ë“± ì¡°ì ˆí•˜ë ¤ë©´ ìƒí™©ì— ë§ê²Œ ìˆ˜ì •í•´ ì£¼ì„¸ìš”.
+	InterpToMovement->bAutoActivate = false;		// ìë™ ì‹œì‘ ë¹„í™œì„±í™”
 
-	// °æ·Î ÁöÁ¡ ¼³Á¤ ºÎºĞ
+	// ê²½ë¡œ ì§€ì  ì„¤ì • ë¶€ë¶„
 	FVector StartPosition = GetActorLocation();
 	FInterpControlPoint Point1;
-	Point1.PositionControlPoint = StartPosition;	// ½ÃÀÛ À§Ä¡
+	Point1.PositionControlPoint = StartPosition;	// ì‹œì‘ ìœ„ì¹˜
 
 	FInterpControlPoint Point2;
-	Point2.PositionControlPoint = FVector(StartPosition.X, StartPosition.Y, StartPosition.Z + 1000.f);	// ¸ñÇ¥ À§Ä¡
+	Point2.PositionControlPoint = FVector(StartPosition.X, StartPosition.Y, StartPosition.Z + 1000.f);	// ëª©í‘œ ìœ„ì¹˜
 
-	// °æ·Î ÁöÁ¡ Ãß°¡ ºÎºĞ
+	// ê²½ë¡œ ì§€ì  ì¶”ê°€ ë¶€ë¶„
 	InterpToMovement->ControlPoints.Add(Point1);
 	InterpToMovement->ControlPoints.Add(Point2);
 
-	InterpToMovement->Duration = 5.0f;	// ÀÌµ¿ ½Ã°£
-	InterpToMovement->bSweep = false;	// ¹°Ã¼ Ãæµ¹ ½Ã °æ·Î °áÁ¤ ¹æ¹ı
+	InterpToMovement->Duration = 5.0f;	// ì´ë™ ì‹œê°„
+	InterpToMovement->bSweep = false;	// ë¬¼ì²´ ì¶©ëŒ ì‹œ ê²½ë¡œ ê²°ì • ë°©ë²•
 
 }
 
@@ -52,7 +52,7 @@ void APP_ElectricMovingPlatformTest::BeginPlay()
 
 void APP_ElectricMovingPlatformTest::Charge()
 {
-	if (bIsCharged)	// ÀÌ¹Ì Â÷Â¡ÀÌ µÇ¾úÀ¸¹Ç·Î Áßº¹Àº ÇÊ¿ä ¾øÀ½
+	if (bIsCharged)	// ì´ë¯¸ ì°¨ì§•ì´ ë˜ì—ˆìœ¼ë¯€ë¡œ ì¤‘ë³µì€ í•„ìš” ì—†ìŒ
 	{
 		UE_LOG(LogTemp, Log, TEXT("This Platform is already Charged!"));
 		return;
@@ -61,7 +61,7 @@ void APP_ElectricMovingPlatformTest::Charge()
 	UE_LOG(LogTemp, Log, TEXT("Platform Charged!"));
 	bIsCharged = true;
 	
-	InterpToMovement->Activate();	// ÀÚµ¿ È°¼ºÈ­°¡ falseÀÌ¹Ç·Î ¼öµ¿À¸·Î È°¼ºÈ­
+	InterpToMovement->Activate();	// ìë™ í™œì„±í™”ê°€ falseì´ë¯€ë¡œ ìˆ˜ë™ìœ¼ë¡œ í™œì„±í™”
 }
 
 // Called every frame

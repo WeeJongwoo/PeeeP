@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "UI/PPKeyManualUI.h"
@@ -9,14 +9,14 @@ void UPPKeyManualUI::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	KeyManualImage_WASD = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_WASD")));					// Å° °¡ÀÌµå ÀÌ¹ÌÁö - WASD
-	KeyManualImage_Jump = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Jump")));					// Å° °¡ÀÌµå ÀÌ¹ÌÁö - Jump
-	KeyManualImage_Charge = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Charge")));				// Å° °¡ÀÌµå ÀÌ¹ÌÁö - Charge
-	KeyManualImage_Discharge = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Discharge")));		// Å° °¡ÀÌµå ÀÌ¹ÌÁö - Discharge
-	KeyManualImage_Equip = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Equip")));				// Å° °¡ÀÌµå ÀÌ¹ÌÁö - Equip
-	KeyManualImage_Unequip = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Unequip")));			// Å° °¡ÀÌµå ÀÌ¹ÌÁö - Unequip
-	KeyManualImage_Grab01 = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Grab01")));				// Å° °¡ÀÌµå ÀÌ¹ÌÁö - Grab Parts(Grab)
-	KeyManualImage_Grab02 = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Grab02")));				// Å° °¡ÀÌµå ÀÌ¹ÌÁö - Grab Parts(Release)
+	KeyManualImage_WASD = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_WASD")));					// í‚¤ ê°€ì´ë“œ ì´ë¯¸ì§€ - WASD
+	KeyManualImage_Jump = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Jump")));					// í‚¤ ê°€ì´ë“œ ì´ë¯¸ì§€ - Jump
+	KeyManualImage_Charge = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Charge")));				// í‚¤ ê°€ì´ë“œ ì´ë¯¸ì§€ - Charge
+	KeyManualImage_Discharge = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Discharge")));		// í‚¤ ê°€ì´ë“œ ì´ë¯¸ì§€ - Discharge
+	KeyManualImage_Equip = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Equip")));				// í‚¤ ê°€ì´ë“œ ì´ë¯¸ì§€ - Equip
+	KeyManualImage_Unequip = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Unequip")));			// í‚¤ ê°€ì´ë“œ ì´ë¯¸ì§€ - Unequip
+	KeyManualImage_Grab01 = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Grab01")));				// í‚¤ ê°€ì´ë“œ ì´ë¯¸ì§€ - Grab Parts(Grab)
+	KeyManualImage_Grab02 = Cast<UImage>(GetWidgetFromName(TEXT("KeyManualImage_Grab02")));				// í‚¤ ê°€ì´ë“œ ì´ë¯¸ì§€ - Grab Parts(Release)
 
 
 	KeyManualImage_WASD->SetVisibility(ESlateVisibility::Hidden);
@@ -28,7 +28,7 @@ void UPPKeyManualUI::NativeConstruct()
 	KeyManualImage_Grab01->SetVisibility(ESlateVisibility::Hidden);
 	KeyManualImage_Grab02->SetVisibility(ESlateVisibility::Hidden);
 
-	// µ¨¸®°ÔÀÌÆ®¸¦ À§ÇÑ ÀÎÅÍÆäÀÌ½º(ÇÃ·¹ÀÌ¾î¿¡°Ô »ó¼ÓµÊ)
+	// ë¸ë¦¬ê²Œì´íŠ¸ë¥¼ ìœ„í•œ ì¸í„°í˜ì´ìŠ¤(í”Œë ˆì´ì–´ì—ê²Œ ìƒì†ë¨)
 	IPPElectricHUDInterface* ElectricHUDInterface = Cast<IPPElectricHUDInterface>(GetOwningPlayerPawn());
 	if (ElectricHUDInterface)
 	{
@@ -50,13 +50,13 @@ void UPPKeyManualUI::SetAllKeyManualImageHidden()
 }
 
 /// <summary>
-/// Å° °¡ÀÌµå UI Ç¥½Ã, ÀÔ·ÂÇÑ index¿¡ ÇØ´çÇÏ´Â ÇÏ³ªÀÇ UI¸¸ Ç¥½Ã
+/// í‚¤ ê°€ì´ë“œ UI í‘œì‹œ, ì…ë ¥í•œ indexì— í•´ë‹¹í•˜ëŠ” í•˜ë‚˜ì˜ UIë§Œ í‘œì‹œ
 /// ///
-/// 0: ¸ğµÎ ºñÈ°¼ºÈ­
-/// 1: ±âº» Á¶ÀÛ, 2: Á¡ÇÁ, 3: Àü±â ÃæÀü, 4: Àü±â ¹æÃâ
-/// 5: ÆÄÃ÷ ÀåÂø, 6: ÆÄÃ÷ ÇØÁ¦, 7: ±×·¦ ÆÄÃ÷(±×·¦), 8: ±×·¦ ÆÄÃ÷(³õ±â)
+/// 0: ëª¨ë‘ ë¹„í™œì„±í™”
+/// 1: ê¸°ë³¸ ì¡°ì‘, 2: ì í”„, 3: ì „ê¸° ì¶©ì „, 4: ì „ê¸° ë°©ì¶œ
+/// 5: íŒŒì¸  ì¥ì°©, 6: íŒŒì¸  í•´ì œ, 7: ê·¸ë© íŒŒì¸ (ê·¸ë©), 8: ê·¸ë© íŒŒì¸ (ë†“ê¸°)
 /// </summary>
-/// <param name="index">Ç¥½ÃÇÒ UI</param>
+/// <param name="index">í‘œì‹œí•  UI</param>
 void UPPKeyManualUI::SetKeyManualImageVisible(uint32 index)
 {
 	SetAllKeyManualImageHidden();

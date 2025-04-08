@@ -1,4 +1,4 @@
-#include "InteractionObject/Electric/PP_ElectricConveyorBelt.h"
+ï»¿#include "InteractionObject/Electric/PP_ElectricConveyorBelt.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
@@ -11,7 +11,7 @@ APP_ElectricConveyorBelt::APP_ElectricConveyorBelt()
 {
     PrimaryActorTick.bCanEverTick = true;
 
-    // Mesh ¹× TriggerBox ¼³Á¤
+    // Mesh ë° TriggerBox ì„¤ì •
     BeltMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BP_Conveyor"));
     RootComponent = BeltMesh;
     BeltMesh->SetCollisionProfileName(TEXT("ElectricObjectProfile"));
@@ -22,14 +22,14 @@ APP_ElectricConveyorBelt::APP_ElectricConveyorBelt()
     TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &APP_ElectricConveyorBelt::OnOverlapBegin);
     TriggerBox->OnComponentEndOverlap.AddDynamic(this, &APP_ElectricConveyorBelt::OnOverlapEnd);
 
-    // ±âº» ¼Ó¼º ÃÊ±âÈ­
+    // ê¸°ë³¸ ì†ì„± ì´ˆê¸°í™”
     BeltSpeed = 300.0f;
     bIsActivated = false;
     BeltLength = 1000.0f;
     Tolerance = 10.0f;
-    bIsCharged = false; // ÃÊ±â¿¡´Â ÃæÀüµÇÁö ¾ÊÀ½
+    bIsCharged = false; // ì´ˆê¸°ì—ëŠ” ì¶©ì „ë˜ì§€ ì•ŠìŒ
 
-    // InterpToMovementComponent ÃÊ±âÈ­
+    // InterpToMovementComponent ì´ˆê¸°í™”
     InterpToMovement = CreateDefaultSubobject<UInterpToMovementComponent>(TEXT("InterpToMovementComponent"));
     InterpToMovement->bSweep = false;
 }
@@ -38,7 +38,7 @@ void APP_ElectricConveyorBelt::BeginPlay()
 {
     Super::BeginPlay();
 
-    // InterpToMovement°¡ Á¦´ë·Î ¼³Á¤µÇ¾ú´ÂÁö È®ÀÎ
+    // InterpToMovementê°€ ì œëŒ€ë¡œ ì„¤ì •ë˜ì—ˆëŠ”ì§€ í™•ì¸
     if (!InterpToMovement)
     {
         UE_LOG(LogTemp, Error, TEXT("InterpToMovement is not initialized properly!"));
@@ -71,7 +71,7 @@ void APP_ElectricConveyorBelt::Tick(float DeltaTime)
 
 void APP_ElectricConveyorBelt::Charge()
 {
-    if (bIsCharged)	// ÀÌ¹Ì ÃæÀüµÈ »óÅÂ¶ó¸é Áßº¹À¸·Î Ã³¸®ÇÏÁö ¾ÊÀ½
+    if (bIsCharged)	// ì´ë¯¸ ì¶©ì „ëœ ìƒíƒœë¼ë©´ ì¤‘ë³µìœ¼ë¡œ ì²˜ë¦¬í•˜ì§€ ì•ŠìŒ
     {
         UE_LOG(LogTemp, Log, TEXT("This Platform is already Charged!"));
         return;
@@ -80,17 +80,17 @@ void APP_ElectricConveyorBelt::Charge()
     UE_LOG(LogTemp, Log, TEXT("Platform Charged!"));
     bIsCharged = true;
 
-    // ¹æÇâÀ» ¹İÀü
+    // ë°©í–¥ì„ ë°˜ì „
     ReverseDirection();
 }
 
 void APP_ElectricConveyorBelt::ReverseDirection()
 {
-    // º§Æ®ÀÇ ÀÌµ¿ ¼Óµµ¸¦ À½¼ö·Î ¹İÀü
+    // ë²¨íŠ¸ì˜ ì´ë™ ì†ë„ë¥¼ ìŒìˆ˜ë¡œ ë°˜ì „
     BeltSpeed = -BeltSpeed;
 }
 
-// Ãæµ¹ ¹ß»ı ½Ã Ã³¸®
+// ì¶©ëŒ ë°œìƒ ì‹œ ì²˜ë¦¬
 void APP_ElectricConveyorBelt::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     if (OtherActor && (OtherActor != this) && OtherComp)
@@ -100,7 +100,7 @@ void APP_ElectricConveyorBelt::OnOverlapBegin(class UPrimitiveComponent* Overlap
     }
 }
 
-// Ãæµ¹ ³¡³¯ ¶§ Ã³¸®
+// ì¶©ëŒ ëë‚  ë•Œ ì²˜ë¦¬
 void APP_ElectricConveyorBelt::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
     if (OtherActor && (OtherActor != this) && OtherComp)
@@ -133,7 +133,7 @@ void APP_ElectricConveyorBelt::OnOverlapEnd(class UPrimitiveComponent* Overlappe
     }
 }
 
-// º§Æ® ³¡¿¡ µµ´ŞÇß´ÂÁö È®ÀÎ
+// ë²¨íŠ¸ ëì— ë„ë‹¬í–ˆëŠ”ì§€ í™•ì¸
 bool APP_ElectricConveyorBelt::HasReachedEndOfBelt(AActor* Actor) const
 {
     FVector BeltEndLocation = GetActorLocation() + GetActorForwardVector() * BeltLength;

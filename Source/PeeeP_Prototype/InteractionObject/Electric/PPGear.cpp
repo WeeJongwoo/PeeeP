@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "InteractionObject/Electric/PPGear.h"
@@ -9,25 +9,25 @@
 // Sets default values
 APPGear::APPGear()
 {
-	// ÇØ¾ßÇÒ ÀÏ
-	// 1. Ãæµ¹ Ã³¸®ÇÒ ¹Ú½º ÄÄÆ÷³ÍÆ® Ãß°¡
-	// 2. ÇØ´ç ¹Ú½ºÄÄÆ÷³ÍÆ®¿Í Ãæµ¹ ½Ã ³Ë¹é ±â´É(Overlap BeginÀ¸·Î)
+	// í•´ì•¼í•  ì¼
+	// 1. ì¶©ëŒ ì²˜ë¦¬í•  ë°•ìŠ¤ ì»´í¬ë„ŒíŠ¸ ì¶”ê°€
+	// 2. í•´ë‹¹ ë°•ìŠ¤ì»´í¬ë„ŒíŠ¸ì™€ ì¶©ëŒ ì‹œ ë„‰ë°± ê¸°ëŠ¥(Overlap Beginìœ¼ë¡œ)
 	
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// ¸Ş½¬ ÄÄÆ÷³ÍÆ® ÁöÁ¤
+	// ë©”ì‰¬ ì»´í¬ë„ŒíŠ¸ ì§€ì •
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
-	Mesh->SetSimulatePhysics(false);								// ¹°¸® ¿µÇâÀ» ¹ŞÁö ¾Ê´Â´Ù¸é ¹İµå½Ã false·Î ¼³Á¤.
-	Mesh->SetCollisionProfileName(TEXT("ElectricObjectProfile"));	// ÇÃ·¹ÀÌ¾îÀÇ Àü±â ¹æÃâÀ» ¹Ş±â À§ÇÑ Äİ¸®Àü ÇÁ·ÎÇÊ ¼¼ÆÃ.
+	Mesh->SetSimulatePhysics(false);								// ë¬¼ë¦¬ ì˜í–¥ì„ ë°›ì§€ ì•ŠëŠ”ë‹¤ë©´ ë°˜ë“œì‹œ falseë¡œ ì„¤ì •.
+	Mesh->SetCollisionProfileName(TEXT("ElectricObjectProfile"));	// í”Œë ˆì´ì–´ì˜ ì „ê¸° ë°©ì¶œì„ ë°›ê¸° ìœ„í•œ ì½œë¦¬ì „ í”„ë¡œí•„ ì„¸íŒ….
 
 	bIsCharged = false;
 }
 
 /// <summary>
-/// ¾×ÅÍ°¡ Ãæµ¹ÇßÀ» ¶§ È£ÃâµÇ´Â ¸Ş¼­µå
-/// ÇöÀç ¿©·¯¹ø Ãæµ¹µÇ´Â Çö»ó ¹ß»ı
+/// ì•¡í„°ê°€ ì¶©ëŒí–ˆì„ ë•Œ í˜¸ì¶œë˜ëŠ” ë©”ì„œë“œ
+/// í˜„ì¬ ì—¬ëŸ¬ë²ˆ ì¶©ëŒë˜ëŠ” í˜„ìƒ ë°œìƒ
 /// </summary>
 /// <param name="MyComp"></param>
 /// <param name="Other"></param>
@@ -56,7 +56,7 @@ void APPGear::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveCo
 		}
 	}*/
 
-	// ÇÃ·¹ÀÌ¾î¿Í Ãæµ¹ÇÏ¸é
+	// í”Œë ˆì´ì–´ì™€ ì¶©ëŒí•˜ë©´
 	if (Other && Other->IsA(APPCharacterPlayer::StaticClass()))
 	{
 		UE_LOG(LogTemp, Log, TEXT("Player Hit"));
@@ -93,15 +93,15 @@ void APPGear::BeginPlay()
 }
 
 /// <summary>
-/// Ä³¸¯ÅÍ¸¦ ³Ë¹é½ÃÅ°´Â ¸Ş¼­µå
+/// ìºë¦­í„°ë¥¼ ë„‰ë°±ì‹œí‚¤ëŠ” ë©”ì„œë“œ
 /// </summary>
-/// <param name="CharacterMovementComponent">³Ë¹é½ÃÅ³ Ä³¸¯ÅÍÀÇ CharacterMovementComponent</param>
-/// <param name="Direction">³Ë¹é ¹æÇâ</param>
-/// <param name="strength">³Ë¹é °­µµ</param>
+/// <param name="CharacterMovementComponent">ë„‰ë°±ì‹œí‚¬ ìºë¦­í„°ì˜ CharacterMovementComponent</param>
+/// <param name="Direction">ë„‰ë°± ë°©í–¥</param>
+/// <param name="strength">ë„‰ë°± ê°•ë„</param>
 void APPGear::ApplyKnockback(UCharacterMovementComponent* CharacterMovementComponent, FVector direction, float strength, bool bVelocityChange)
 {
-	// ³Ë¹éÀº ½ºÅÂÆ½ ¸Å½¬ÀÇ Á¤Áß¾Ó ¾ŞÄ¿¸¦ Root·Î »ï°í ±× RootÀÇ À§Ä¡¿Í ºÎµúÈù Ä³¸¯ÅÍ¿ÍÀÇ º¤ÅÍ¸¦ ±¸ÇØ¼­ normalization ½ÃÅ² ´ÙÀ½ strength¸¦ °öÇÏ¿© ³Ë¹é ½ÃÅ³ ¿¹Á¤
-	// Character¿¡¼­ z Velocity¸¦ ¹Ş¾Æ¿Í strength¿ÍÀÇ Â÷ÀÌ¸¸Å­ zÃà ¹æÇâÀ¸·Î ÈûÀ» ÁÖ¾î °úµµÇÏ°Ô Á¡ÇÁÇÏ´Â Çö»óÀ» ¼öÁ¤.
+	// ë„‰ë°±ì€ ìŠ¤íƒœí‹± ë§¤ì‰¬ì˜ ì •ì¤‘ì•™ ì•µì»¤ë¥¼ Rootë¡œ ì‚¼ê³  ê·¸ Rootì˜ ìœ„ì¹˜ì™€ ë¶€ë”ªíŒ ìºë¦­í„°ì™€ì˜ ë²¡í„°ë¥¼ êµ¬í•´ì„œ normalization ì‹œí‚¨ ë‹¤ìŒ strengthë¥¼ ê³±í•˜ì—¬ ë„‰ë°± ì‹œí‚¬ ì˜ˆì •
+	// Characterì—ì„œ z Velocityë¥¼ ë°›ì•„ì™€ strengthì™€ì˜ ì°¨ì´ë§Œí¼ zì¶• ë°©í–¥ìœ¼ë¡œ í˜ì„ ì£¼ì–´ ê³¼ë„í•˜ê²Œ ì í”„í•˜ëŠ” í˜„ìƒì„ ìˆ˜ì •.
 
 	double ZVelocity = CharacterMovementComponent->Velocity.Z;
 
@@ -114,10 +114,10 @@ void APPGear::ApplyKnockback(UCharacterMovementComponent* CharacterMovementCompo
 void APPGear::Charge()
 {
 	bIsCharged = true;
-	// Ãæµ¹ ºñÈ°¼ºÈ­
+	// ì¶©ëŒ ë¹„í™œì„±í™”
 	Mesh->SetCollisionProfileName(TEXT("OverlapAll"));
 
-	// ¹°¸® È°¼ºÈ­
+	// ë¬¼ë¦¬ í™œì„±í™”
 	Mesh->SetSimulatePhysics(true);
 }
 

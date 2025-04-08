@@ -15,7 +15,6 @@ UCLASS(meta = (BlueprintSpawnableComponent))
 class PEEEP_PROTOTYPE_API UPPGrabParts : public UPPPartsBase
 {
 	GENERATED_BODY()
-	
 
 public:
 	UPPGrabParts();

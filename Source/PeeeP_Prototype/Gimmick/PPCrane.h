@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -73,7 +73,7 @@ protected:
     FTimerHandle DropTimerHandle;
     FVector TargetLocation;
 
-    // Ãß°¡µÈ ¸â¹ö º¯¼ö
+    // ì¶”ê°€ëœ ë©¤ë²„ ë³€ìˆ˜
     FVector PreviousLocation;
     bool bStopDownMovement;
 

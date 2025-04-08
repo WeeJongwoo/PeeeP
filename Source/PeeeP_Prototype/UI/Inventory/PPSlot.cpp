@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "UI/Inventory/PPSlot.h"
@@ -15,7 +15,7 @@ void UPPSlot::NativeConstruct()
 
 void UPPSlot::Init()
 {
-	// °³º° ÇÔ¼ö¸¦ ¿¬µ¿ÇÏ¿© ¸Ê¿¡ ÀúÀå(ÇöÀç´Â ÆÄÃ÷ ½½·Ô¸¸)
+	// ê°œë³„ í•¨ìˆ˜ë¥¼ ì—°ë™í•˜ì—¬ ë§µì— ì €ì¥(í˜„ì¬ëŠ” íŒŒì¸  ìŠ¬ë¡¯ë§Œ)
 	SlotUpdateActions.Add(ESlotType::ST_None, FUpdateSlotDelegateWrapper(FOnUpdateSlotDelegate::CreateUObject(this, &UPPSlot::UpdatePartsSlot)));
 	SlotUpdateActions.Add(ESlotType::ST_InventoryParts, FUpdateSlotDelegateWrapper(FOnUpdateSlotDelegate::CreateUObject(this, &UPPSlot::UpdatePartsSlot)));
 
@@ -31,7 +31,7 @@ void UPPSlot::SetType(ESlotType Type)
 
 void UPPSlot::UpdateSlot()
 {
-	// ½½·Ô Å¸ÀÔ¿¡ µû¶ó ½ÇÇàµÇ´Â ÇÔ¼ö È£Ãâ
+	// ìŠ¬ë¡¯ íƒ€ì…ì— ë”°ë¼ ì‹¤í–‰ë˜ëŠ” í•¨ìˆ˜ í˜¸ì¶œ
 	SlotUpdateActions[SlotType].SlotDelegate.ExecuteIfBound();
 }
 
@@ -41,22 +41,22 @@ void UPPSlot::UpdatePartsSlot()
 
 	if (InvPlayer)
 	{
-		// ÀÎº¥Åä¸®(Parts)¸¦ °¡Á®¿Â´Ù.
+		// ì¸ë²¤í† ë¦¬(Parts)ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
 		TArray<UPPInventoryPartsItem*> InventoryItems = InvPlayer->GetInventoryComponent()->GetPartsItems();	// ?
 
-		// ÇöÀç SlotÀÇ ÀÎµ¦½º°¡ À¯È¿ÇÑÁö Ã¼Å©ÇÑ´Ù.
+		// í˜„ì¬ Slotì˜ ì¸ë±ìŠ¤ê°€ ìœ íš¨í•œì§€ ì²´í¬í•œë‹¤.
 		if (InventoryItems.IsValidIndex(SlotIndex))
 		{
-			// ÇØ´ç ½½·Ô¿¡ ¾ÆÀÌÅÛÀÌ Á¸ÀçÇÏ´ÂÁö È®ÀÎ
+			// í•´ë‹¹ ìŠ¬ë¡¯ì— ì•„ì´í…œì´ ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸
 			if (IsValid(InventoryItems[SlotIndex]))
 			{
-				// Á¸ÀçÇÏ´Â °æ¿ì ¾ÆÀÌÅÛÀÇ ÅØ½ºÃÄ¿Í ¼ö·®À» ¹İ¿µ(ÆÄÃ÷´Â ¼ö·® Ç¥½Ã ¾ÈÇÔ)
+				// ì¡´ì¬í•˜ëŠ” ê²½ìš° ì•„ì´í…œì˜ í…ìŠ¤ì³ì™€ ìˆ˜ëŸ‰ì„ ë°˜ì˜(íŒŒì¸ ëŠ” ìˆ˜ëŸ‰ í‘œì‹œ ì•ˆí•¨)
 				IMG_Item->SetBrushFromTexture(InventoryItems[SlotIndex]->PartsData->ItemTexture);
 				TXT_Quantity->SetText(FText::FromString(TEXT("")));
 			}
 			else
 			{
-				// Á¸ÀçÇÏÁö ¾Ê´Â °æ¿ì ºó Ä­
+				// ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ê²½ìš° ë¹ˆ ì¹¸
 				IMG_Item->SetBrushFromTexture(DefaultTexture);
 				TXT_Quantity->SetText(FText::FromString(TEXT("")));
 			}

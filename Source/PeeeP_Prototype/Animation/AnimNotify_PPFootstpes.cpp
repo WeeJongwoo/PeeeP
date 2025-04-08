@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Animation/AnimNotify_PPFootstpes.h"
@@ -52,9 +52,9 @@ void UAnimNotify_PPFootstpes::Notify(USkeletalMeshComponent* MeshComp, UAnimSequ
 		//UE_LOG(LogTemp, Log, TEXT("Hit Actor: %s"), *HitActor->GetName());
 
 		EPhysicalSurface SurfaceType = UGameplayStatics::GetSurfaceType(HitResult);
-		// ���⼭ �߰��� �۾� �ʿ�
-		// ǥ���� Ÿ�Կ� ���� �ٸ� ���带 ����ϵ��� �����ؾ� ��.
-		// ���� SurfaceType�� SurfaceType_Default�� �޾ƿ��� ������ �߻���. -> ���� �ϴ� ǥ�鿡 ������� �⺻ �߼Ҹ��� ������ �ӽ÷� ����.
+		// 여기서 추가로 작업 필요
+		// 표면의 타입에 따라 다른 사운드를 재생하도록 구현해야 함.
+		// 현재 SurfaceType을 SurfaceType_Default만 받아오는 문제가 발생함. -> 따라서 일단 표면에 상관없이 기본 발소리만 나도록 임시로 구현.
 		/*
 		switch (SurfaceType)
 		{

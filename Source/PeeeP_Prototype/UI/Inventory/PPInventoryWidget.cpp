@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "UI/Inventory/PPInventoryWidget.h"
@@ -13,35 +13,35 @@ void UPPInventoryWidget::NativeConstruct()
 
 void UPPInventoryWidget::Init()
 {
-	// ±âº» Å¸ÀÔ ¼³Á¤(ÆÄÃ÷)
+	// ê¸°ë³¸ íƒ€ì… ì„¤ì •(íŒŒì¸ )
 	SetType(ESlotType::ST_InventoryParts);
 
-	// ¹öÆ° Å¬¸¯ ÀÌº¥Æ®¿Í ÇÔ¼ö ¿¬µ¿
+	// ë²„íŠ¼ í´ë¦­ ì´ë²¤íŠ¸ì™€ í•¨ìˆ˜ ì—°ë™
 	if (BTN_Parts)
 	{
 		BTN_Parts->OnClicked.AddDynamic(this, &UPPInventoryWidget::SetPartsType);
 	}
 
-	// ½½·ÔÀ» ÀúÀåÇÏ±â À§ÇÑ ¹è¿­ ÃÊ±âÈ­(ÀÏ´Ü 5Ä­)
+	// ìŠ¬ë¡¯ì„ ì €ì¥í•˜ê¸° ìœ„í•œ ë°°ì—´ ì´ˆê¸°í™”(ì¼ë‹¨ 5ì¹¸)
 	Slots.Init(nullptr, 5);
 
 	TArray<UWidget*> Widgets;
-	// ¸ğµç À§Á¬µéÀ» °¡Á®¿Í Widgets ¹è¿­¿¡ ÀúÀå
+	// ëª¨ë“  ìœ„ì ¯ë“¤ì„ ê°€ì ¸ì™€ Widgets ë°°ì—´ì— ì €ì¥
 	WidgetTree->GetAllWidgets(Widgets);
 
-	// ¹è¿­À» ¼øÈ¸ÇÏ¿© Ä¿½ºÅÒ SlotÀ» Ã£À½
+	// ë°°ì—´ì„ ìˆœíšŒí•˜ì—¬ ì»¤ìŠ¤í…€ Slotì„ ì°¾ìŒ
 	for (UWidget* Widget : Widgets)
 	{
 		UPPSlot* InvSlot = Cast<UPPSlot>(Widget);
 		if (InvSlot)
 		{
-			// ½½·ÔÀÇ ¼ÒÀ¯ÁÖ¸¦ ÇöÀç ¼ÒÀ¯ÁÖ·Î ÁöÁ¤
+			// ìŠ¬ë¡¯ì˜ ì†Œìœ ì£¼ë¥¼ í˜„ì¬ ì†Œìœ ì£¼ë¡œ ì§€ì •
 			InvSlot->SetOwningActor(OwningActor);
-			// ½½·ÔÀÇ Å¸ÀÔÀ» ÇöÀç ÀÎº¥Åä¸®ÀÇ Å¸ÀÔÀ¸·Î ÁöÁ¤
+			// ìŠ¬ë¡¯ì˜ íƒ€ì…ì„ í˜„ì¬ ì¸ë²¤í† ë¦¬ì˜ íƒ€ì…ìœ¼ë¡œ ì§€ì •
 			InvSlot->SetType(InventorySlotType);
-			// ½½·Ô ÃÊ±âÈ­
+			// ìŠ¬ë¡¯ ì´ˆê¸°í™”
 			InvSlot->Init();
-			// ÇØ´ç ½½·ÔÀÇ ÀÎµ¦½º À§Ä¡¿¡ ½½·ÔÀ» ÀúÀå
+			// í•´ë‹¹ ìŠ¬ë¡¯ì˜ ì¸ë±ìŠ¤ ìœ„ì¹˜ì— ìŠ¬ë¡¯ì„ ì €ì¥
 			Slots[InvSlot->SlotIndex] = InvSlot;
 		}
 	}
@@ -49,7 +49,7 @@ void UPPInventoryWidget::Init()
 
 void UPPInventoryWidget::UpdateInventorySlot()
 {
-	// ½½·ÔÀ» ÇöÀç ÀÎº¥Åä¸® Å¸ÀÔÀ¸·Î ¾÷µ¥ÀÌÆ®
+	// ìŠ¬ë¡¯ì„ í˜„ì¬ ì¸ë²¤í† ë¦¬ íƒ€ì…ìœ¼ë¡œ ì—…ë°ì´íŠ¸
 	for (const auto& InvSlot : Slots)
 	{
 		InvSlot->SetType(InventorySlotType);
@@ -64,7 +64,7 @@ void UPPInventoryWidget::SetPartsType()
 
 void UPPInventoryWidget::SetType(ESlotType Type)
 {
-	// ÇöÀç ÀÎº¥Åä¸® Å¸ÀÔ º¯°æ
+	// í˜„ì¬ ì¸ë²¤í† ë¦¬ íƒ€ì… ë³€ê²½
 	InventorySlotType = Type;
 	UpdateInventorySlot();
 }

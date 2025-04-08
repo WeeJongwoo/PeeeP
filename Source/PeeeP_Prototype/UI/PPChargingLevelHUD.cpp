@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "UI/PPChargingLevelHUD.h"
@@ -29,7 +29,7 @@ void UPPChargingLevelHUD::NativeConstruct()
 	Level2Glow->SetVisibility(ESlateVisibility::Hidden);
 	Level3Glow->SetVisibility(ESlateVisibility::Hidden);
 
-	// Bind ¿µ¿ª
+	// Bind ì˜ì—­
 	IPPElectricHUDInterface* ElectricHUDInterface = Cast<IPPElectricHUDInterface>(GetOwningPlayerPawn());
 	if (ElectricHUDInterface)
 	{

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -11,7 +11,7 @@ UENUM(BlueprintType)
 enum class ESlotType: uint8
 {
 	ST_None,
-	ST_InventoryParts,		// ÀÎº¥Åä¸®(ÆÄÃ÷)
-	ST_InventoryConsumable,	// ÀÎº¥Åä¸®(¼Òºñ)
-	ST_InventoryOther,		// ÀÎº¥Åä¸®(±âÅ¸)
+	ST_InventoryParts,		// ì¸ë²¤í† ë¦¬(íŒŒì¸ )
+	ST_InventoryConsumable,	// ì¸ë²¤í† ë¦¬(ì†Œë¹„)
+	ST_InventoryOther,		// ì¸ë²¤í† ë¦¬(ê¸°íƒ€)
 };

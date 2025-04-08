@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "UI/Inventory/PPQuickSlotWidget.h"
@@ -15,31 +15,31 @@ void UPPQuickSlotWidget::NativeConstruct()
 
 void UPPQuickSlotWidget::Init()
 {
-	// ±âº» Å¸ÀÔ ¼³Á¤(ÆÄÃ÷)
+	// ê¸°ë³¸ íƒ€ì… ì„¤ì •(íŒŒì¸ )
 	SetType(ESlotType::ST_InventoryParts);
 
-	// ½½·ÔÀ» ÀúÀåÇÏ±â À§ÇÑ ¹è¿­ ÃÊ±âÈ­(ÀÏ´Ü 6Ä­)
+	// ìŠ¬ë¡¯ì„ ì €ì¥í•˜ê¸° ìœ„í•œ ë°°ì—´ ì´ˆê¸°í™”(ì¼ë‹¨ 6ì¹¸)
 	Slots.Init(nullptr, 6);
 
 	TArray<UWidget*> Widgets;
-	// ¸ğµç À§Á¬µéÀ» °¡Á®¿Í Widgets ¹è¿­¿¡ ÀúÀå
+	// ëª¨ë“  ìœ„ì ¯ë“¤ì„ ê°€ì ¸ì™€ Widgets ë°°ì—´ì— ì €ì¥
 	WidgetTree->GetAllWidgets(Widgets);
 
-	// ¹è¿­À» ¼øÈ¸ÇÏ¿© Ä¿½ºÅÒ SlotÀ» Ã£À½
-	// ±Ã±İÇØÁø Á¡: ÀÌ·¸°Ô Ã£¾Æ¿À¸é UMG¿¡¼­ ¼ø¼­¸¦ ÁöÁ¤ÇÑ´ë·Î ÀúÀåÇÒ ¼ö ÀÖÀ»±î?
-	// ÀÏ´ÜÀº ¼ø¼­´ë·Î ÀúÀåµÊ.
+	// ë°°ì—´ì„ ìˆœíšŒí•˜ì—¬ ì»¤ìŠ¤í…€ Slotì„ ì°¾ìŒ
+	// ê¶ê¸ˆí•´ì§„ ì : ì´ë ‡ê²Œ ì°¾ì•„ì˜¤ë©´ UMGì—ì„œ ìˆœì„œë¥¼ ì§€ì •í•œëŒ€ë¡œ ì €ì¥í•  ìˆ˜ ìˆì„ê¹Œ?
+	// ì¼ë‹¨ì€ ìˆœì„œëŒ€ë¡œ ì €ì¥ë¨.
 	for (UWidget* Widget : Widgets)
 	{
 		UPPSlot* InvSlot = Cast<UPPSlot>(Widget);
 		if (InvSlot)
 		{
-			// ½½·ÔÀÇ ¼ÒÀ¯ÁÖ¸¦ ÇöÀç ¼ÒÀ¯ÁÖ·Î ÁöÁ¤
+			// ìŠ¬ë¡¯ì˜ ì†Œìœ ì£¼ë¥¼ í˜„ì¬ ì†Œìœ ì£¼ë¡œ ì§€ì •
 			InvSlot->SetOwningActor(OwningActor);
-			// ½½·ÔÀÇ Å¸ÀÔÀ» ÇöÀç ÀÎº¥Åä¸®ÀÇ Å¸ÀÔÀ¸·Î ÁöÁ¤
+			// ìŠ¬ë¡¯ì˜ íƒ€ì…ì„ í˜„ì¬ ì¸ë²¤í† ë¦¬ì˜ íƒ€ì…ìœ¼ë¡œ ì§€ì •
 			InvSlot->SetType(InventorySlotType);
-			// ½½·Ô ÃÊ±âÈ­
+			// ìŠ¬ë¡¯ ì´ˆê¸°í™”
 			InvSlot->Init();
-			// ÇØ´ç ½½·ÔÀÇ ÀÎµ¦½º À§Ä¡¿¡ ½½·ÔÀ» ÀúÀå
+			// í•´ë‹¹ ìŠ¬ë¡¯ì˜ ì¸ë±ìŠ¤ ìœ„ì¹˜ì— ìŠ¬ë¡¯ì„ ì €ì¥
 			Slots[InvSlot->SlotIndex] = InvSlot;
 		}
 	}
@@ -58,7 +58,7 @@ void UPPQuickSlotWidget::Init()
 
 void UPPQuickSlotWidget::UpdateQuickSlot()
 {
-	// ½½·ÔÀ» ÇöÀç ÀÎº¥Åä¸® Å¸ÀÔÀ¸·Î ¾÷µ¥ÀÌÆ®
+	// ìŠ¬ë¡¯ì„ í˜„ì¬ ì¸ë²¤í† ë¦¬ íƒ€ì…ìœ¼ë¡œ ì—…ë°ì´íŠ¸
 	for (const auto& InvSlot : Slots)
 	{
 		InvSlot->SetType(InventorySlotType);
@@ -83,7 +83,7 @@ TArray<TObjectPtr<class UPPSlot>> UPPQuickSlotWidget::GetSlots()
 
 void UPPQuickSlotWidget::SetType(ESlotType Type)
 {
-	// ÇöÀç ÀÎº¥Åä¸® Å¸ÀÔ º¯°æ
+	// í˜„ì¬ ì¸ë²¤í† ë¦¬ íƒ€ì… ë³€ê²½
 	InventorySlotType = Type;
 	UpdateQuickSlot();
 }

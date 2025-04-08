@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "UI/PP_PlayerStatusUI.h"
@@ -9,13 +9,13 @@ void UPP_PlayerStatusUI::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// Cast ¿µ¿ª
+	// Cast ì˜ì—­
 	BatteryProgressBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("BatteryProgressBar")));
 
-	// °¢ ¿ä¼Ò ÃÊ±âÈ­ ¿µ¿ª
+	// ê° ìš”ì†Œ ì´ˆê¸°í™” ì˜ì—­
 	BatteryProgressBar->SetPercent(0.0f);
 
-	// Bind ¿µ¿ª
+	// Bind ì˜ì—­
 	IPPElectricHUDInterface* ElectricHUDInterface = Cast<IPPElectricHUDInterface>(GetOwningPlayerPawn());
 	if (ElectricHUDInterface)
 	{

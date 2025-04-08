@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Parts/PartsComponent/PPPartsBase.h"
@@ -21,34 +21,6 @@ UPPPartsBase::UPPPartsBase()
 	Owner = Cast<APPCharacterPlayer>(GetOwner());
 
 }
-
-
-//void UPPPartsBase::OnComponentDestroyed(bool bDestroyingHierarchy)
-//{
-//	// ?????? ?????(with Github Copilot)
-//	Super::OnComponentDestroyed(bDestroyingHierarchy);
-//
-//	APPCharacterPlayer* PlayerCharacter = Cast<APPCharacterPlayer>(GetOwner());
-//	if (PlayerCharacter)
-//	{
-//		APlayerController* PlayerController = Cast<APlayerController>(PlayerCharacter->GetController());
-//		if (!PlayerController)
-//		{
-//			PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-//		}
-//		if (PlayerController)
-//		{
-//			if (UEnhancedInputLocalPlayerSubsystem* Subsystem
-//				= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-//			{
-//				if (PartsData)
-//				{
-//					Subsystem->RemoveMappingContext(PartsData->PartsMappingContext);
-//				}
-//			}
-//		}
-//	}
-//}
 
 void UPPPartsBase::OnComponentDestroyed(bool bDestroyingHierarchy)
 {

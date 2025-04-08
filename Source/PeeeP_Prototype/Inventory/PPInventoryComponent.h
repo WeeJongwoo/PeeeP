@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -10,7 +10,7 @@
 #include "../UI/Inventory/PPQuickSlotWidget.h"
 #include "PPInventoryComponent.generated.h"
 
-// ÀÎº¥Åä¸® ³»¿ë º¯°æ µ¨¸®°ÔÀÌÆ®
+// ì¸ë²¤í† ë¦¬ ë‚´ìš© ë³€ê²½ ë¸ë¦¬ê²Œì´íŠ¸
 DECLARE_MULTICAST_DELEGATE(FOnChangedInventoryDelegate);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -33,21 +33,21 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	// ÆÄÃ÷
+	// íŒŒì¸ 
 	UPROPERTY(VisibleAnywhere, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
 	TArray<TObjectPtr<class UPPInventoryPartsItem>> PartsItems;
-	// ¼Òºñ
+	// ì†Œë¹„
 	UPROPERTY(VisibleAnywhere, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
 	TArray<TObjectPtr<class UPPInventoryPartsItem>> ConsumableItems;
-	// ±âÅ¸
+	// ê¸°íƒ€
 	UPROPERTY(VisibleAnywhere, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
 	TArray<TObjectPtr<class UPPInventoryPartsItem>> OtherItems;
 
-	// ÃÖ´ë ÀÎº¥Åä¸® ½½·Ô ¼ö
+	// ìµœëŒ€ ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ ìˆ˜
 	UPROPERTY(EditAnywhere, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
 	int32 MaxInventorySlotNum;
 
-	// ½½·Ô ÇÑ Ä­´ç ÀúÀå °¡´ÉÇÑ ¾ÆÀÌÅÛÀÇ ¼ö(ÆÄÃ÷´Â 1 °íÁ¤)
+	// ìŠ¬ë¡¯ í•œ ì¹¸ë‹¹ ì €ì¥ ê°€ëŠ¥í•œ ì•„ì´í…œì˜ ìˆ˜(íŒŒì¸ ëŠ” 1 ê³ ì •)
 	UPROPERTY(VisibleAnywhere, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
 	int32 MaxItemNum;
 
@@ -57,23 +57,23 @@ public:
 	FORCEINLINE TArray<TObjectPtr<class UPPInventoryPartsItem>> GetConsumableItems() { return ConsumableItems; }
 	FORCEINLINE TArray<TObjectPtr<class UPPInventoryPartsItem>> GetOtherItems() { return OtherItems; }
 
-	// ¾ÆÀÌÅÛ Ãß°¡
+	// ì•„ì´í…œ ì¶”ê°€
 	bool AddItem(FName InItemName, int32 InItemQuantity, int32& OutItemQuantity);
-	// ¾ÆÀÌÅÛ »ç¿ë
+	// ì•„ì´í…œ ì‚¬ìš©
 	void UseItem(int32 InSlotIndex, ESlotType InventoryType);
-	// ÇöÀç ÀÎµ¦½º ±â¹İ ¾ÆÀÌÅÛ »ç¿ë
+	// í˜„ì¬ ì¸ë±ìŠ¤ ê¸°ë°˜ ì•„ì´í…œ ì‚¬ìš©
 	void UseItemCurrentIndex(ESlotType InventoryType);
-	// ¾ÆÀÌÅÛ ±³Ã¼
+	// ì•„ì´í…œ êµì²´
 	void SwapItem(int32 InprevIndex, int32 InCurrentIndex);
 
 
-	// ÀÎº¥Åä¸® Á¤·Ä
+	// ì¸ë²¤í† ë¦¬ ì •ë ¬
 	void SortItem();
 
 protected:
-	// ÀÎº¥Åä¸® ÃÊ±âÈ­
+	// ì¸ë²¤í† ë¦¬ ì´ˆê¸°í™”
 	void InitInventory();
-	// ¾ÆÀÌÅÛ »èÁ¦
+	// ì•„ì´í…œ ì‚­ì œ
 	void RemoveItem(int32 InSlotIndex, ESlotType InventoryType);
 
 public:	
@@ -81,25 +81,25 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
-	// ÇöÀç ¼±ÅÃµÈ ½½·Ô ÀÎµ¦½º
+	// í˜„ì¬ ì„ íƒëœ ìŠ¬ë¡¯ ì¸ë±ìŠ¤
 	int32 CurrentSlotIndex;
-	// ÇöÀç ÀåÂøµÈ ÆÄÃ÷ ½½·Ô ÀÎµ¦½º
+	// í˜„ì¬ ì¥ì°©ëœ íŒŒì¸  ìŠ¬ë¡¯ ì¸ë±ìŠ¤
 	int32 UsingSlotIndex;
 
 public:
 	void ModifyCurrentSlotIndex(int32 Value);
 
 private:
-	// Äü½½·Ô À§Á¬
+	// í€µìŠ¬ë¡¯ ìœ„ì ¯
 	UPROPERTY()
 	TObjectPtr <class UPPQuickSlotWidget> QuickSlotWidget;
 
-	// ½½·ÔµéÀ» ÀúÀåÇÏ±â À§ÇÑ ¹è¿­
+	// ìŠ¬ë¡¯ë“¤ì„ ì €ì¥í•˜ê¸° ìœ„í•œ ë°°ì—´
 	UPROPERTY(VisibleAnywhere, Category = "Inventory")
 	TArray<TObjectPtr<class UPPSlot>> Slots;
 
 public:
-	// ÀÎº¥Åä¸® ÄÄÆ÷³ÍÆ® ³» Äü½½·Ô À§Á¬ ¼³Á¤À» À§ÇÑ ÇÔ¼ö
+	// ì¸ë²¤í† ë¦¬ ì»´í¬ë„ŒíŠ¸ ë‚´ í€µìŠ¬ë¡¯ ìœ„ì ¯ ì„¤ì •ì„ ìœ„í•œ í•¨ìˆ˜
 	UFUNCTION()
 	void SetQuickSlotWidget(UPPQuickSlotWidget* widget);
 };

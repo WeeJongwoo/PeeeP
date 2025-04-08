@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "UI/PPInGameUIMain.h"
@@ -6,22 +6,22 @@
 #include "Interface/UI/PPElectricHUDInterface.h"
 
 /// <summary>
-/// Main Äµ¹ö½ºÀÎ WBP_InGameUIMainÀ» ÅëÇØ ÀÎ°ÔÀÓÀÇ °¢Á¾ UserWidgetÀ» °ü¸®ÇÏ´Â ¹æ½ÄÀ¸·Î Ã¤ÅÃ
-/// °¢ ¿ä¼Ò¿¡ Á¢±ÙÇÏ±â À§ÇØ¼­´Â ÇØ´ç ¿ä¼Ò¸¦ °®°íÀÖ´Â UserWidget¿¡ Á¢±ÙÇØ °ªÀ» °ü¸®ÇÏ´Â ¹æ½ÄÀ¸·Î ÁøÇà
+/// Main ìº”ë²„ìŠ¤ì¸ WBP_InGameUIMainì„ í†µí•´ ì¸ê²Œì„ì˜ ê°ì¢… UserWidgetì„ ê´€ë¦¬í•˜ëŠ” ë°©ì‹ìœ¼ë¡œ ì±„íƒ
+/// ê° ìš”ì†Œì— ì ‘ê·¼í•˜ê¸° ìœ„í•´ì„œëŠ” í•´ë‹¹ ìš”ì†Œë¥¼ ê°–ê³ ìˆëŠ” UserWidgetì— ì ‘ê·¼í•´ ê°’ì„ ê´€ë¦¬í•˜ëŠ” ë°©ì‹ìœ¼ë¡œ ì§„í–‰
 /// </summary>
 
 void UPPInGameUIMain::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// Cast ¿µ¿ª
-	PlayerStatusWidget = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBP_PlayerStatusWidget")));		// Á¶ÀÛ¹ı ÀÌ¹ÌÁö À§Á¬
-	KeyManualWidget = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBP_KeyManualWidget")));			// ÇÃ·¹ÀÌ¼­ »óÅÂ À§Á¬
-	QuickSlotWidget = Cast<UPPQuickSlotWidget>(GetWidgetFromName(TEXT("WBP_QuickSlot")));			// Äü½½·Ô À§Á¬(Å×½ºÆ®)
+	// Cast ì˜ì—­
+	PlayerStatusWidget = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBP_PlayerStatusWidget")));		// ì¡°ì‘ë²• ì´ë¯¸ì§€ ìœ„ì ¯
+	KeyManualWidget = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBP_KeyManualWidget")));			// í”Œë ˆì´ì„œ ìƒíƒœ ìœ„ì ¯
+	QuickSlotWidget = Cast<UPPQuickSlotWidget>(GetWidgetFromName(TEXT("WBP_QuickSlot")));			// í€µìŠ¬ë¡¯ ìœ„ì ¯(í…ŒìŠ¤íŠ¸)
 
-	// °¢ ¿ä¼Ò ÃÊ±âÈ­ ¿µ¿ª
+	// ê° ìš”ì†Œ ì´ˆê¸°í™” ì˜ì—­
 	QuickSlotWidget->SetOwningActor(OwningActor);
 	QuickSlotWidget->Init();
 
-	// Bind ¿µ¿ª
+	// Bind ì˜ì—­
 }

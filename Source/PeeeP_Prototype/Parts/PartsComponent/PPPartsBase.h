@@ -16,7 +16,6 @@
 //파츠별로 개별 애니메이션이 있으니, 애니메이션 델리게이트 추가.
 DECLARE_MULTICAST_DELEGATE(FOnPlayAnimationDelegate);
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PEEEP_PROTOTYPE_API UPPPartsBase : public UActorComponent
 {

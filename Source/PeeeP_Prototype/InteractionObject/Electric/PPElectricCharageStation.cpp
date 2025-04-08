@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "InteractionObject/Electric/PPElectricCharageStation.h"
 #include "Components/BoxComponent.h"
@@ -88,7 +88,7 @@ void APPElectricCharageStation::SaveGame(APPCharacterPlayer* InPlayer)
 	APPPlayerState* PlayerState = InPlayer->GetPlayerState<APPPlayerState>();
 	if (IsValid(PlayerState))
 	{
-		//ÇöÀç ¾×ÅÍÀÇ À§Ä¡¿¡ ½ºÆùµÇ¸é ¶¥¿¡ ¹ÚÇô¼­ ÀÓÀÇ·Î Á¶Á¤, ÀÓÀÇ°ª »ç¿ëÀÌ ¹®Á¦µÇ¸é ÃßÈÄ SceneComponent¸¦ »ç¿ëÇÏ¿© À§Ä¡ Á¶Á¤
+		//í˜„ìž¬ ì•¡í„°ì˜ ìœ„ì¹˜ì— ìŠ¤í°ë˜ë©´ ë•…ì— ë°•í˜€ì„œ ìž„ì˜ë¡œ ì¡°ì •, ìž„ì˜ê°’ ì‚¬ìš©ì´ ë¬¸ì œë˜ë©´ ì¶”í›„ SceneComponentë¥¼ ì‚¬ìš©í•˜ì—¬ ìœ„ì¹˜ ì¡°ì •
 		//FVector SpawnLocation = GetActorLocation() + FVector(0.0f, 0.0f, 10.0f);
 		PlayerState->SetSpawnActorLocation(this);
 		//PlayerState->SetSpawnLocation(SpawnLocation);
@@ -103,6 +103,5 @@ void APPElectricCharageStation::SaveGame(APPCharacterPlayer* InPlayer)
 		}
 	}
 	bIsActivate = true;
-
 }
 

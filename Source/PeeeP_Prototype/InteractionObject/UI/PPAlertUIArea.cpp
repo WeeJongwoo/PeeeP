@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "InteractionObject/UI/PPAlertUIArea.h"
@@ -42,7 +42,7 @@ void APPAlertUIArea::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		if (APPCharacterPlayer* player = Cast<APPCharacterPlayer>(OtherActor))
 		{
 			UE_LOG(LogTemp, Log, TEXT("[APPAlertUIArea] Player Overlap Begin."));
-			// UI ÀÌ¹ÌÁö º¯°æ Å×½ºÆ®
+			// UI ì´ë¯¸ì§€ ë³€ê²½ í…ŒìŠ¤íŠ¸
 			IPPElectricHUDInterface* ElectircHUDInterface = Cast<IPPElectricHUDInterface>(player);
 			if (ElectircHUDInterface)
 			{

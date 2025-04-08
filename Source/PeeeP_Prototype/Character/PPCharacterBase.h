@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -26,7 +26,7 @@ protected:
 	virtual void SetCharacterControlData(const class UPPCharacterControlData* CharacterControlData);
 
 	UPROPERTY(EditAnywhere, Category = CharacterControl, Meta = (AllowPrivateAccess = "true"))
-	// TMap -> python¿¡ ÀÖ´Â Dictionary¶û ºñ½Á
+	// TMap -> pythonì— ìˆëŠ” Dictionaryë‘ ë¹„ìŠ·
 	// TMap<[Key], [Value]>
 	TMap<ECharacterControlType, class UPPCharacterControlData*> CharacterControlManager;
 };

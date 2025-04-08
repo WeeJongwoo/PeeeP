@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -7,7 +7,7 @@
 #include "PPCustomWidget.generated.h"
 
 /**
- * ÇÃ·¹ÀÌ¾î¸¦ ÀúÀåÇÏ±â À§ÇÑ º¯¼ö¿Í ÇÔ¼ö¸¸À» °¡Áø Ä¿½ºÅÒ À§Á¬. ÇÃ·¹ÀÌ¾î¿¡ Á¢±ÙÇÒ ¸ñÀûÀ¸·Î Á¦ÀÛ
+ * í”Œë ˆì´ì–´ë¥¼ ì €ì¥í•˜ê¸° ìœ„í•œ ë³€ìˆ˜ì™€ í•¨ìˆ˜ë§Œì„ ê°€ì§„ ì»¤ìŠ¤í…€ ìœ„ì ¯. í”Œë ˆì´ì–´ì— ì ‘ê·¼í•  ëª©ì ìœ¼ë¡œ ì œì‘
  */
 UCLASS()
 class PEEEP_PROTOTYPE_API UPPCustomWidget : public UUserWidget
@@ -18,7 +18,7 @@ public:
 	FORCEINLINE void SetOwningActor(AActor* NewOwner) { OwningActor = NewOwner; }
 
 protected:
-	// ÇöÀç À§Á¬À» ¼ÒÀ¯ÇÏ°í ÀÖ´Â ¾×ÅÍ ÀúÀå¿ë º¯¼ö
+	// í˜„ì¬ ìœ„ì ¯ì„ ì†Œìœ í•˜ê³  ìˆëŠ” ì•¡í„° ì €ì¥ìš© ë³€ìˆ˜
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Actor")
 	TObjectPtr<AActor> OwningActor;
 };

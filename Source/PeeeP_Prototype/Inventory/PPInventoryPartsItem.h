@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -22,7 +22,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UPPPartsDataBase> PartsData;
 
-	// ÆÄÃ÷´ç º¸À¯ °¡´ÉÇÑ °³¼ö´Â 1°³ÀÌ¹Ç·Î Å« »ó°ü ¾È½áµµ µÊ.
+	// íŒŒì¸ ë‹¹ ë³´ìœ  ê°€ëŠ¥í•œ ê°œìˆ˜ëŠ” 1ê°œì´ë¯€ë¡œ í° ìƒê´€ ì•ˆì¨ë„ ë¨.
 	UPROPERTY(VisibleAnywhere)
 	int32 ItemQuantity;
 };

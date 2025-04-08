@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -19,9 +19,9 @@ protected:
 	virtual void NativeConstruct() override;
 
 public:
-	// ÀÎº¥Åä¸® ÃÊ±âÈ­ ÇÔ¼ö
+	// ì¸ë²¤í† ë¦¬ ì´ˆê¸°í™” í•¨ìˆ˜
 	void Init();
-	// ÀÎº¥Åä¸® ¾ÆÀÌÅÛ ½½·Ô ¾÷µ¥ÀÌÆ® ÇÔ¼ö
+	// ì¸ë²¤í† ë¦¬ ì•„ì´í…œ ìŠ¬ë¡¯ ì—…ë°ì´íŠ¸ í•¨ìˆ˜
 	void UpdateInventorySlot();
 	
 private:
@@ -42,13 +42,13 @@ public:
 public:
 	
 private:
-	// ÇöÀç ÀÎº¥Åä¸®ÀÇ Å¸ÀÔÀ» ÁöÁ¤ÇÏ±â À§ÇÑ ÇÔ¼ö
+	// í˜„ì¬ ì¸ë²¤í† ë¦¬ì˜ íƒ€ì…ì„ ì§€ì •í•˜ê¸° ìœ„í•œ í•¨ìˆ˜
 	void SetType(ESlotType Type);
 
-	// ½½·ÔµéÀ» ÀúÀåÇÏ±â À§ÇÑ ¹è¿­
+	// ìŠ¬ë¡¯ë“¤ì„ ì €ì¥í•˜ê¸° ìœ„í•œ ë°°ì—´
 	UPROPERTY(VisibleAnywhere, Category = "Inventory")
 	TArray<TObjectPtr<class UPPSlot>> Slots;
 
-	// ÇöÀç ÀÎº¥Åä¸®ÀÇ Å¸ÀÔ(ÆÄÃ÷)
+	// í˜„ì¬ ì¸ë²¤í† ë¦¬ì˜ íƒ€ì…(íŒŒì¸ )
 	ESlotType InventorySlotType;
 };

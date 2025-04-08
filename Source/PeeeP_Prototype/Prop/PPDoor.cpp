@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Prop/PPDoor.h"
@@ -24,7 +24,7 @@ void APPDoor::BeginPlay()
     if (CurveFloat)
     {
         FOnTimelineFloat TimelineProgress;
-        TimelineProgress.BindDynamic(this, &APPDoor::OpenDoor); // Timeline µ¨¸®°ÔÀÌÆ®¿¡ OpenDoor ÇÔ¼ö¸¦ ¹ÙÀÎµù
+        TimelineProgress.BindDynamic(this, &APPDoor::OpenDoor); // Timeline ë¸ë¦¬ê²Œì´íŠ¸ì— OpenDoor í•¨ìˆ˜ë¥¼ ë°”ì¸ë”©
         Timeline.AddInterpFloat(CurveFloat, TimelineProgress);
     }
 }

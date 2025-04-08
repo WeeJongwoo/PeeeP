@@ -1,4 +1,4 @@
-#include "PPMovingPlate.h"
+ï»¿#include "PPMovingPlate.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
@@ -17,7 +17,7 @@ APPMovingPlate::APPMovingPlate()
 
     BeltSpeed = 200.0f;
     bIsActivated = false;
-    bIsSwitchOn = false; // ½ºÀ§Ä¡ »óÅÂ¸¦ ³ªÅ¸³»´Â º¯¼ö ÃÊ±âÈ­
+    bIsSwitchOn = false; // ìŠ¤ìœ„ì¹˜ ìƒíƒœë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë³€ìˆ˜ ì´ˆê¸°í™”
 }
 
 void APPMovingPlate::BeginPlay()
@@ -29,7 +29,7 @@ void APPMovingPlate::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    if (bIsActivated && bIsSwitchOn) // µÎ »óÅÂ°¡ ¸ğµÎ trueÀÏ ¶§¸¸ ¹ßÆÇÀÌ ÀÛµ¿
+    if (bIsActivated && bIsSwitchOn) // ë‘ ìƒíƒœê°€ ëª¨ë‘ trueì¼ ë•Œë§Œ ë°œíŒì´ ì‘ë™
     {
         FVector NewLocation = GetActorLocation();
         NewLocation += GetActorUpVector() * BeltSpeed * DeltaTime;

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Inventory/PPInventoryComponent.h"
@@ -14,29 +14,30 @@ UPPInventoryComponent::UPPInventoryComponent()
 	MaxInventorySlotNum = 6;
 	MaxItemNum = 1;
 
-	// ÃÊ±â »çÀÌÁî ÁöÁ¤
+	// ì´ˆê¸° ì‚¬ì´ì¦ˆ ì§€ì •
+
 	PartsItems.Init(nullptr, MaxInventorySlotNum);
 	ConsumableItems.Init(nullptr, MaxInventorySlotNum);
 	OtherItems.Init(nullptr, MaxInventorySlotNum);
 
 	CurrentSlotIndex = 0;
-	UsingSlotIndex = -1;	// -1: ¹ÌÀåÂø
+	UsingSlotIndex = -1;	// -1: ë¯¸ì¥ì°©
 }
 
 void UPPInventoryComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
 
-	// ÀÎº¥Åä¸® ÃÊ±âÈ­
+	// ì¸ë²¤í† ë¦¬ ì´ˆê¸°í™”
 	InitInventory();
 }
 
 
 void UPPInventoryComponent::ClearUsingItem()
 {
-	UsingSlotIndex = -1; // ¹ÌÀåÂøÀ¸·Î º¯°æ
+	UsingSlotIndex = -1; // ë¯¸ì¥ì°©ìœ¼ë¡œ ë³€ê²½
 	QuickSlotWidget->SetEquipmentTextVisible(ESlateVisibility::Hidden);
-	// ÆÄÃ÷ ÇØÁ¦ºÎ
+	// íŒŒì¸  í•´ì œë¶€
 
 	UE_LOG(LogTemp, Log, TEXT("Parts Item Detached: %d Slot"), CurrentSlotIndex);
 }
@@ -54,28 +55,28 @@ void UPPInventoryComponent::BeginPlay()
 bool UPPInventoryComponent::AddItem(FName InItemName, int32 InItemQuantity, int32& OutItemQuantity)
 {
 
-	// ¼º°øÀûÀ¸·Î Ãß°¡Çß´ÂÁö¿¡ ´ëÇÑ °á°ú ¹İÈ¯¿ë º¯¼ö
+	// ì„±ê³µì ìœ¼ë¡œ ì¶”ê°€í–ˆëŠ”ì§€ì— ëŒ€í•œ ê²°ê³¼ ë°˜í™˜ìš© ë³€ìˆ˜
 	bool bIsResult = false;
 
-	// ¾Ö¼Â ¸Å´ÏÀú ºÒ·¯¿À±â
+	// ì• ì…‹ ë§¤ë‹ˆì € ë¶ˆëŸ¬ì˜¤ê¸°
 	UAssetManager& Manager = UAssetManager::Get();
 
-	// ¾Ö¼Â ¾ÆÀÌµğ ¸®½ºÆ® ¹Ş¾Æ¿À±â
+	// ì• ì…‹ ì•„ì´ë”” ë¦¬ìŠ¤íŠ¸ ë°›ì•„ì˜¤ê¸°
 	TArray<FPrimaryAssetId> Assets;
-	// ÅÂ±× Á¤º¸¸¦ ³Ñ°ÜÁà¼­ µ¿ÀÏÇÑ ÅÂ±×¸¦ °¡Áø ¾Ö¼ÂµéÀÇ ¸ñ·ÏÀ» ¹è¿­·Î º¯È¯¹ŞÀ½
+	// íƒœê·¸ ì •ë³´ë¥¼ ë„˜ê²¨ì¤˜ì„œ ë™ì¼í•œ íƒœê·¸ë¥¼ ê°€ì§„ ì• ì…‹ë“¤ì˜ ëª©ë¡ì„ ë°°ì—´ë¡œ ë³€í™˜ë°›ìŒ
 	Manager.GetPrimaryAssetIdList(TEXT("PPPartsData"), Assets);
 
-	// Æ¯Á¤ ¾ÆÀÌÅÛ Å° »ı¼º
+	// íŠ¹ì • ì•„ì´í…œ í‚¤ ìƒì„±
 	FPrimaryAssetId Key;
 	Key.PrimaryAssetType = TEXT("PPPartsData");
 	Key.PrimaryAssetName = InItemName;
 
-	// ÇØ´ç Å°ÀÇ ¾Ö¼ÂÀÌ Á¸ÀçÇÑ´Ù¸é
+	// í•´ë‹¹ í‚¤ì˜ ì• ì…‹ì´ ì¡´ì¬í•œë‹¤ë©´
 	if (Assets.Contains(Key))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Find Data"));
 
-		// ¾ÆÀÌÅÛ »ı¼º
+		// ì•„ì´í…œ ìƒì„±
 		UPPInventoryPartsItem* NewItem = NewObject<UPPInventoryPartsItem>();
 		if (NewItem)
 		{
@@ -96,8 +97,8 @@ bool UPPInventoryComponent::AddItem(FName InItemName, int32 InItemQuantity, int3
 			}
 		}
 
-		// ÇØ´ç ¾ÆÀÌÅÛ Å¸ÀÔ(ÀÌ ÇÁ·ÎÁ§Æ®¿¡¼­´Â ÆÄÃ÷)ÀÇ ÀÎº¥Åä¸®ÀÇ ºó Ä­ Ã£¾Æ µ¥ÀÌÅÍ Ãß°¡ÇÏ±â
-		// ÀÌ ÇÁ·ÎÁ§Æ®¿¡¼­´Â ¾ÆÀÌÅÛ Å¸ÀÔÀÌ ÆÄÃ÷¸¸ ÀÖ°í, ÀÎº¥Åä¸® ½½·Ô ¶ÇÇÑ ÆÄÃ÷¸¸ ÀÖ±â¿¡ ±×³É ÀÎº¥Åä¸® ½½·Ô¿¡ ÇÏ³ª Ãß°¡ÇÑ´Ù°í º¸¸é µÈ´Ù.
+		// í•´ë‹¹ ì•„ì´í…œ íƒ€ì…(ì´ í”„ë¡œì íŠ¸ì—ì„œëŠ” íŒŒì¸ )ì˜ ì¸ë²¤í† ë¦¬ì˜ ë¹ˆ ì¹¸ ì°¾ì•„ ë°ì´í„° ì¶”ê°€í•˜ê¸°
+		// ì´ í”„ë¡œì íŠ¸ì—ì„œëŠ” ì•„ì´í…œ íƒ€ì…ì´ íŒŒì¸ ë§Œ ìˆê³ , ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ ë˜í•œ íŒŒì¸ ë§Œ ìˆê¸°ì— ê·¸ëƒ¥ ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ì— í•˜ë‚˜ ì¶”ê°€í•œë‹¤ê³  ë³´ë©´ ëœë‹¤.
 		int32 Index = 0;
 		switch (NewItem->PartsData->ItemType)
 		{
@@ -137,10 +138,10 @@ bool UPPInventoryComponent::AddItem(FName InItemName, int32 InItemQuantity, int3
 
 void UPPInventoryComponent::UseItem(int32 InSlotIndex, ESlotType InventoryType)
 {
-	/// ¾ÆÀÌÅÛ »ç¿ë ÇÔ¼ö¿¡¼­´Â ¾ÆÀÌÅÛ ½½·ÔÀÇ Å¸ÀÔ°ú ÀÎµ¦½º¸¦ ¹Ş¾Æ¿Í¼­ ÇØ´ç ÀÎº¥Åä¸®ÀÇ ¾ÆÀÌÅÛÀ» »ç¿ëÇÏ´Â ·ÎÁ÷À» Ãß°¡ÇÒ °ÍÀÔ´Ï´Ù.
-	/// ¾ÕÀ¸·Îµµ ¼Òºñ ¾ÆÀÌÅÛ¸¸ »ç¿ëÇÒ °Í °°Áö¸¸ È¤½Ã ¸ô¶ó Switch¹®À» »ç¿ëÇØ Å¸ÀÔº°·Î µ¿ÀÛÀ» º¯°æÇØÁÖµµ·Ï ¼³Á¤Çß½À´Ï´Ù. (ex.¹«±â ÀåÂø µî)
-	/// ¾ÆÀÌÅÛ »ç¿ë ÇÔ¼ö´Â ½ÇÁ¦ ½ºÅÈ¿¡ ¹İ¿µÇÒ ÀÏÀÌ ¸¹À» °Í °°¾Æ ÇÃ·¹ÀÌ¾îÀÇ ÇÔ¼ö¸¦ È£ÃâÇÏ´Â ÂÊÀ¸·Î ±¸Çö ¹æÇâÀ» Àâ¾Ò½À´Ï´Ù.
-	/// ¼Òºñ ¾ÆÀÌÅÛ »ç¿ë ½Ã ¼ö·®À» °¨¼Ò½ÃÅ°°í, ¸¸¾à ³²Àº ¼ö°¡ 0ÀÌ¶ó¸é ÇØ´ç ¾ÆÀÌÅÛÀ» ¼Ò¸ê½ÃÄÑÁÖµµ·Ï ÇÏ¿´½À´Ï´Ù.
+	/// ì•„ì´í…œ ì‚¬ìš© í•¨ìˆ˜ì—ì„œëŠ” ì•„ì´í…œ ìŠ¬ë¡¯ì˜ íƒ€ì…ê³¼ ì¸ë±ìŠ¤ë¥¼ ë°›ì•„ì™€ì„œ í•´ë‹¹ ì¸ë²¤í† ë¦¬ì˜ ì•„ì´í…œì„ ì‚¬ìš©í•˜ëŠ” ë¡œì§ì„ ì¶”ê°€í•  ê²ƒì…ë‹ˆë‹¤.
+	/// ì•ìœ¼ë¡œë„ ì†Œë¹„ ì•„ì´í…œë§Œ ì‚¬ìš©í•  ê²ƒ ê°™ì§€ë§Œ í˜¹ì‹œ ëª°ë¼ Switchë¬¸ì„ ì‚¬ìš©í•´ íƒ€ì…ë³„ë¡œ ë™ì‘ì„ ë³€ê²½í•´ì£¼ë„ë¡ ì„¤ì •í–ˆìŠµë‹ˆë‹¤. (ex.ë¬´ê¸° ì¥ì°© ë“±)
+	/// ì•„ì´í…œ ì‚¬ìš© í•¨ìˆ˜ëŠ” ì‹¤ì œ ìŠ¤íƒ¯ì— ë°˜ì˜í•  ì¼ì´ ë§ì„ ê²ƒ ê°™ì•„ í”Œë ˆì´ì–´ì˜ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ëŠ” ìª½ìœ¼ë¡œ êµ¬í˜„ ë°©í–¥ì„ ì¡ì•˜ìŠµë‹ˆë‹¤.
+	/// ì†Œë¹„ ì•„ì´í…œ ì‚¬ìš© ì‹œ ìˆ˜ëŸ‰ì„ ê°ì†Œì‹œí‚¤ê³ , ë§Œì•½ ë‚¨ì€ ìˆ˜ê°€ 0ì´ë¼ë©´ í•´ë‹¹ ì•„ì´í…œì„ ì†Œë©¸ì‹œì¼œì£¼ë„ë¡ í•˜ì˜€ìŠµë‹ˆë‹¤.
 	/// https://velog.io/@apth1023/13.-12.-%EC%95%84%EC%9D%B4%ED%85%9C-%EC%9D%B8%EB%B2%A4%ED%86%A0%EB%A6%AC-%EC%8B%9C%EC%8A%A4%ED%85%9C-2
 	
 	switch (InventoryType)
@@ -148,15 +149,15 @@ void UPPInventoryComponent::UseItem(int32 InSlotIndex, ESlotType InventoryType)
 	case ESlotType::ST_InventoryParts:
 		if (PartsItems.IsValidIndex(InSlotIndex) && IsValid(PartsItems[InSlotIndex]))
 		{
-			// ¼ö·®À» ÁÙ¾îµé°Ô ÇÒ °ÍÀÎÁö, ¾Æ´Ï¸é »ç¿ëÇÑ´Ù´Â flag·Î ÇÒ °ÍÀÎÁö´Â ÃßÈÄ ³íÀÇ
-			// »ç½Ç ÀåÂø ÁßÀÌ¸é ¸ø¾²°Ô flagÇÏ´Â °ÍÀÌ ¸Â±äÇÑµ¥ ÀÏ´Ü ¿¹Àç´ë·Î ÇÑ´Ù°í ÇÏÀÚ.
+			// ìˆ˜ëŸ‰ì„ ì¤„ì–´ë“¤ê²Œ í•  ê²ƒì¸ì§€, ì•„ë‹ˆë©´ ì‚¬ìš©í•œë‹¤ëŠ” flagë¡œ í•  ê²ƒì¸ì§€ëŠ” ì¶”í›„ ë…¼ì˜
+			// ì‚¬ì‹¤ ì¥ì°© ì¤‘ì´ë©´ ëª»ì“°ê²Œ flagí•˜ëŠ” ê²ƒì´ ë§ê¸´í•œë° ì¼ë‹¨ ì˜ˆì¬ëŒ€ë¡œ í•œë‹¤ê³  í•˜ì.
 			// PartsItems[InSlotIndex]->ItemQuantity--;
 
-			// ¾ÆÀÌÅÛ »ç¿ë
+			// ì•„ì´í…œ ì‚¬ìš©
 			UE_LOG(LogTemp, Warning, TEXT("Parts Item Use"));
 
-			// ¼ö·®ÀÌ 0 ÀÌÇÏ¶ó¸é ¼Ò¸ê½ÃÄÑÁÖ´Â ºÎºĞ
-			// ÀÌ ÇÁ·ÎÁ§Æ®¿¡¼­´Â ÆÄÃ÷°¡ ¼Ò¸êµÇ¸é ¾ÈµÇ¹Ç·Î Àû¿ëÇÏÁö ¾ÊÀ½.
+			// ìˆ˜ëŸ‰ì´ 0 ì´í•˜ë¼ë©´ ì†Œë©¸ì‹œì¼œì£¼ëŠ” ë¶€ë¶„
+			// ì´ í”„ë¡œì íŠ¸ì—ì„œëŠ” íŒŒì¸ ê°€ ì†Œë©¸ë˜ë©´ ì•ˆë˜ë¯€ë¡œ ì ìš©í•˜ì§€ ì•ŠìŒ.
 		}
 		break;
 	}
@@ -170,36 +171,36 @@ void UPPInventoryComponent::UseItemCurrentIndex(ESlotType InventoryType)
 	case ESlotType::ST_InventoryParts:
 		if (PartsItems.IsValidIndex(CurrentSlotIndex) && IsValid(PartsItems[CurrentSlotIndex]))
 		{
-			// ¾ÆÀÌÅÛ »ç¿ë
+			// ì•„ì´í…œ ì‚¬ìš©
 			UE_LOG(LogTemp, Log, TEXT("Trying Parts Item Use: %d Slot"), CurrentSlotIndex);
 
 			/////////////////////////////////////////////////////////////////////////////////////
-			/// °í·ÁÇØ¾ß ÇÒ Á¡µé
-			/// 1. ÀÌÀü¿¡ ÆÄÃ÷¸¦ ÀåÂøÇÏÁö ¾Ê¾Ò´Ù¸é, ÀåÂøµÇ¾î¾ß ÇÏ¸ç ¿ìÃø ÇÏ´Ü "E" ÅØ½ºÆ®°¡ Ç¥±âµÇ¾î¾ß ÇÔ.
-			/// 2. ³»°¡ ÇöÀç ÀåÂøÇÏ°íÀÚ ÇÏ´Â ÆÄÃ÷¿Í ÀÌÀüÀÇ ÆÄÃ÷°¡ ´Ù¸£¸é, ÇöÀç ÀåÂøµÇ¾îÀÖ´Â ÆÄÃ÷¸¦ ÇØÁ¦ÇÏ°í »õ ÆÄÃ÷¸¦ ÀåÂøÇØ¾ß ÇÔ.
-			/// ÀÌ ¶§ "E" ÅØ½ºÆ®´Â ÇöÀç ÄÚµå»ó visible ÀüÈ¯ ÇÊ¿ä ¾øÀ½(¼±ÅÃµÈ(È­¸é¿¡ Ç¥½ÃµÈ) ÆÄÃ÷´Â ³»°¡ ¹æ±İ ÀåÂøÇÑ ÆÄÃ÷ÀÌ¹Ç·Î)
-			/// 3. ³»°¡ ÇöÀç ÀåÂøÇÏ°íÀÚ ÇÏ´Â ÆÄÃ÷¿Í ÀÌÀüÀÇ ÆÄÃ÷°¡ °°´Ù¸é, ÇöÀç ÀåÂøµÇ¾îÀÖ´Â ÆÄÃ÷¸¦ ÇØÁ¦ÇØ¾ß ÇÔ.
-			/// ÀÌ ¶§ "E" ÅØ½ºÆ®´Â Ç¥±â°¡ µÇÁö ¾Ê¾Æ¾ß ÇÔ.
+			/// ê³ ë ¤í•´ì•¼ í•  ì ë“¤
+			/// 1. ì´ì „ì— íŒŒì¸ ë¥¼ ì¥ì°©í•˜ì§€ ì•Šì•˜ë‹¤ë©´, ì¥ì°©ë˜ì–´ì•¼ í•˜ë©° ìš°ì¸¡ í•˜ë‹¨ "E" í…ìŠ¤íŠ¸ê°€ í‘œê¸°ë˜ì–´ì•¼ í•¨.
+			/// 2. ë‚´ê°€ í˜„ì¬ ì¥ì°©í•˜ê³ ì í•˜ëŠ” íŒŒì¸ ì™€ ì´ì „ì˜ íŒŒì¸ ê°€ ë‹¤ë¥´ë©´, í˜„ì¬ ì¥ì°©ë˜ì–´ìˆëŠ” íŒŒì¸ ë¥¼ í•´ì œí•˜ê³  ìƒˆ íŒŒì¸ ë¥¼ ì¥ì°©í•´ì•¼ í•¨.
+			/// ì´ ë•Œ "E" í…ìŠ¤íŠ¸ëŠ” í˜„ì¬ ì½”ë“œìƒ visible ì „í™˜ í•„ìš” ì—†ìŒ(ì„ íƒëœ(í™”ë©´ì— í‘œì‹œëœ) íŒŒì¸ ëŠ” ë‚´ê°€ ë°©ê¸ˆ ì¥ì°©í•œ íŒŒì¸ ì´ë¯€ë¡œ)
+			/// 3. ë‚´ê°€ í˜„ì¬ ì¥ì°©í•˜ê³ ì í•˜ëŠ” íŒŒì¸ ì™€ ì´ì „ì˜ íŒŒì¸ ê°€ ê°™ë‹¤ë©´, í˜„ì¬ ì¥ì°©ë˜ì–´ìˆëŠ” íŒŒì¸ ë¥¼ í•´ì œí•´ì•¼ í•¨.
+			/// ì´ ë•Œ "E" í…ìŠ¤íŠ¸ëŠ” í‘œê¸°ê°€ ë˜ì§€ ì•Šì•„ì•¼ í•¨.
 			///
-			/// À§ °í·Á »çÇ×¿¡¼­ ´ÙÀ½°ú °°Àº ÀÇ¹®ÀÌ ¹ß»ıÇÒ ¼ö ÀÖÀ½.
-			/// a. ÀåÂøÇÏ°í ÀÖ´Â ÆÄÃ÷¿¡ ´ëÇÑ Á¤º¸´Â ¾î¶»°Ô ¾òÀ» °ÍÀÎ°¡?
-			/// b. ÀÎµ¦½º·Î¸¸ Á¢±ÙÇÑ´Ù¸é ÄÄÆ÷³ÍÆ® ³»ÀÇ ÀÎµ¦½º¿Í ³»°¡ ½ÇÁ¦·Î ÀåÂøÇÏ°í ÀÖ´Â ÆÄÃ÷°¡ °°´Ù´Â °ÍÀ» º¸ÀåÇÒ ¼ö ÀÖ´Â°¡?
-			/// c. ÆÄÃ÷ÀÇ ÀåÂøÀº ¾î¶»°Ô ±¸ÇöÇÒ °ÍÀÎ°¡?
+			/// ìœ„ ê³ ë ¤ ì‚¬í•­ì—ì„œ ë‹¤ìŒê³¼ ê°™ì€ ì˜ë¬¸ì´ ë°œìƒí•  ìˆ˜ ìˆìŒ.
+			/// a. ì¥ì°©í•˜ê³  ìˆëŠ” íŒŒì¸ ì— ëŒ€í•œ ì •ë³´ëŠ” ì–´ë–»ê²Œ ì–»ì„ ê²ƒì¸ê°€?
+			/// b. ì¸ë±ìŠ¤ë¡œë§Œ ì ‘ê·¼í•œë‹¤ë©´ ì»´í¬ë„ŒíŠ¸ ë‚´ì˜ ì¸ë±ìŠ¤ì™€ ë‚´ê°€ ì‹¤ì œë¡œ ì¥ì°©í•˜ê³  ìˆëŠ” íŒŒì¸ ê°€ ê°™ë‹¤ëŠ” ê²ƒì„ ë³´ì¥í•  ìˆ˜ ìˆëŠ”ê°€?
+			/// c. íŒŒì¸ ì˜ ì¥ì°©ì€ ì–´ë–»ê²Œ êµ¬í˜„í•  ê²ƒì¸ê°€?
 			///		c-1. ex. GrabParts
-			///				PartsItems[0]->PartsData->PartsComponent ¿¡ PPGrabParts Class(ÀÚ·áÇü TObjectPtr<UClass>)°¡ ÀÖÀ½.
-			///		ÇÃ·¹ÀÌ¾î¿¡ Àû¿ëÇÏ´Â ¹æ½Ä(¿¹½Ã):
+			///				PartsItems[0]->PartsData->PartsComponent ì— PPGrabParts Class(ìë£Œí˜• TObjectPtr<UClass>)ê°€ ìˆìŒ.
+			///		í”Œë ˆì´ì–´ì— ì ìš©í•˜ëŠ” ë°©ì‹(ì˜ˆì‹œ):
 			///			UActorComponent* PartsComponent = AddComponentByClass(UPPGrabParts::StaticClass(), true, FTransform::Identity, false);
 			///			Parts = CastChecked<UPPPartsBase>(PartsComponent);
 			/////////////////////////////////////////////////////////////////////////////////////
 
-			/// ÀÎµ¦½º ±¸Çö ¹æ½Ä
+			/// ì¸ë±ìŠ¤ êµ¬í˜„ ë°©ì‹
 
 			APPCharacterPlayer* Player = Cast<APPCharacterPlayer>(GetOwner());
-			if (UsingSlotIndex == -1)	// ÀÌÀü¿¡ ÆÄÃ÷¸¦ ÀåÂøÇÏÁö ¾Ê¾Ò´Ù¸é
+			if (UsingSlotIndex == -1)	// ì´ì „ì— íŒŒì¸ ë¥¼ ì¥ì°©í•˜ì§€ ì•Šì•˜ë‹¤ë©´
 			{
 				UsingSlotIndex = CurrentSlotIndex;
 				QuickSlotWidget->SetEquipmentTextVisible(ESlateVisibility::Visible);
-				// ÆÄÃ÷ ÀåÂøºÎ
+				// íŒŒì¸  ì¥ì°©ë¶€
 				
 				if (Player)
 				{
@@ -208,11 +209,11 @@ void UPPInventoryComponent::UseItemCurrentIndex(ESlotType InventoryType)
 
 				UE_LOG(LogTemp, Log, TEXT("Parts Item Attached: %d Slot"), CurrentSlotIndex);
 			}
-			else if (UsingSlotIndex == CurrentSlotIndex)	// ÇöÀç »ç¿ëÇÏ°í ÀÖ´Â ÆÄÃ÷°¡ ³»°¡ »ç¿ëÇÏ·Á´Â ÆÄÃ÷¿Í °°´Ù¸é(Áï, ÀåÂø ÇØÁ¦)
+			else if (UsingSlotIndex == CurrentSlotIndex)	// í˜„ì¬ ì‚¬ìš©í•˜ê³  ìˆëŠ” íŒŒì¸ ê°€ ë‚´ê°€ ì‚¬ìš©í•˜ë ¤ëŠ” íŒŒì¸ ì™€ ê°™ë‹¤ë©´(ì¦‰, ì¥ì°© í•´ì œ)
 			{
-				UsingSlotIndex = -1; // ¹ÌÀåÂøÀ¸·Î º¯°æ
+				UsingSlotIndex = -1; // ë¯¸ì¥ì°©ìœ¼ë¡œ ë³€ê²½
 				QuickSlotWidget->SetEquipmentTextVisible(ESlateVisibility::Hidden);
-				// ÆÄÃ÷ ÇØÁ¦ºÎ
+				// íŒŒì¸  í•´ì œë¶€
 				
 				if (Player)
 				{
@@ -222,11 +223,11 @@ void UPPInventoryComponent::UseItemCurrentIndex(ESlotType InventoryType)
 
 				UE_LOG(LogTemp, Log, TEXT("Parts Item Detached: %d Slot"), CurrentSlotIndex);
 			}
-			else	// ÇöÀç »ç¿ëÇÏ°í ÀÖ´Â ÆÄÃ÷°¡ ³»°¡ »ç¿ëÇÏ·Á´Â ÆÄÃ÷¿Í ´Ù¸£´Ù¸é
+			else	// í˜„ì¬ ì‚¬ìš©í•˜ê³  ìˆëŠ” íŒŒì¸ ê°€ ë‚´ê°€ ì‚¬ìš©í•˜ë ¤ëŠ” íŒŒì¸ ì™€ ë‹¤ë¥´ë‹¤ë©´
 			{
 				UsingSlotIndex = CurrentSlotIndex;
 				QuickSlotWidget->SetEquipmentTextVisible(ESlateVisibility::Visible);
-				// ÆÄÃ÷ ±³Ã¼ºÎ
+				// íŒŒì¸  êµì²´ë¶€
 				
 				if (Player)
 				{
@@ -244,7 +245,7 @@ void UPPInventoryComponent::UseItemCurrentIndex(ESlotType InventoryType)
 
 void UPPInventoryComponent::RemoveItem(int32 InSlotIndex, ESlotType InventoryType)
 {
-	// ÇØ´ç ÀÎº¥Åä¸® ½½·ÔÀÇ À¯È¿¼ºÀ» Ã¼Å©ÇÏ°í ¼Ò¸ê½ÃÄÑÁØ´Ù.
+	// í•´ë‹¹ ì¸ë²¤í† ë¦¬ ìŠ¬ë¡¯ì˜ ìœ íš¨ì„±ì„ ì²´í¬í•˜ê³  ì†Œë©¸ì‹œì¼œì¤€ë‹¤.
 	switch (InventoryType)
 	{
 	case ESlotType::ST_None:
@@ -266,45 +267,45 @@ void UPPInventoryComponent::RemoveItem(int32 InSlotIndex, ESlotType InventoryTyp
 
 void UPPInventoryComponent::SwapItem(int32 InprevIndex, int32 InCurrentIndex)
 {
-	// ÃßÈÄ ÀÎº¥Åä¸® ³»¿¡¼­ ±³Ã¼ ±â´ÉÀÌ ÀÖÀ» ¶§ ±¸Çö ¿¹Á¤
+	// ì¶”í›„ ì¸ë²¤í† ë¦¬ ë‚´ì—ì„œ êµì²´ ê¸°ëŠ¥ì´ ìˆì„ ë•Œ êµ¬í˜„ ì˜ˆì •
 }
 
 void UPPInventoryComponent::SortItem()
 {
-	// ÃßÈÄ ÀÎº¥Åä¸® ¾ÆÀÌÅÛ Á¤·Ä ±â´É ±¸Çö ¿¹Á¤
+	// ì¶”í›„ ì¸ë²¤í† ë¦¬ ì•„ì´í…œ ì •ë ¬ ê¸°ëŠ¥ êµ¬í˜„ ì˜ˆì •
 }
 
 void UPPInventoryComponent::InitInventory()
 {
-	// ±âÁ¸¿¡ ÀÖ´ø Á¤º¸µéÀº ¾îµğ¼­ °¡Á®¿Ã °ÍÀÎ°¡?
+	// ê¸°ì¡´ì— ìˆë˜ ì •ë³´ë“¤ì€ ì–´ë””ì„œ ê°€ì ¸ì˜¬ ê²ƒì¸ê°€?
 
-	// ¿¡¼Â ¸Å´ÏÀú ½Ì±ÛÅæ ºÒ·¯¿À±â
+	// ì—ì…‹ ë§¤ë‹ˆì € ì‹±ê¸€í†¤ ë¶ˆëŸ¬ì˜¤ê¸°
 	UAssetManager& Manager = UAssetManager::Get();
 
-	// ¿¡¼Â ¾ÆÀÌµğ ¸®½ºÆ® ¹Ş¾Æ¿À±â
+	// ì—ì…‹ ì•„ì´ë”” ë¦¬ìŠ¤íŠ¸ ë°›ì•„ì˜¤ê¸°
 	TArray<FPrimaryAssetId> Assets;
-	// ÅÂ±× Á¤º¸¸¦ ³Ñ°ÜÁà¼­ µ¿ÀÏÇÑ ÅÂ±×¸¦ °¡Áø ¾Ö¼ÂµéÀÇ ¸ñ·ÏÀ» ¹è¿­·Î ¹İÈ¯¹ŞÀ½
+	// íƒœê·¸ ì •ë³´ë¥¼ ë„˜ê²¨ì¤˜ì„œ ë™ì¼í•œ íƒœê·¸ë¥¼ ê°€ì§„ ì• ì…‹ë“¤ì˜ ëª©ë¡ì„ ë°°ì—´ë¡œ ë°˜í™˜ë°›ìŒ
 	Manager.GetPrimaryAssetIdList(TEXT("PPPartsData"), Assets);
 
 	if (Assets.Num() > 0)
 	{
-		// Slot Index, <Á¾·ù, ¼ö·®>
+		// Slot Index, <ì¢…ë¥˜, ìˆ˜ëŸ‰>
 		TMap<int32, TPair<FName, int32>> InventoryPartsArray;
 		//TMap<int32, TPair<FName, int32>> InventoryConstableArray;
 		
-		// Å×½ºÆ® ºí·Ï(½ÇÁ¦·Î´Â ÀúÀåµÈ ÆÄÀÏ¿¡¼­ µ¥ÀÌÅÍ¸¦ ÀĞ¾î¿Í¾ß ÇÔ)
+		// í…ŒìŠ¤íŠ¸ ë¸”ë¡(ì‹¤ì œë¡œëŠ” ì €ì¥ëœ íŒŒì¼ì—ì„œ ë°ì´í„°ë¥¼ ì½ì–´ì™€ì•¼ í•¨)
 		{
 			//InventoryPartsArray.Add(0, { TEXT("GrabPartsData"), 1 });
 		}
 
 		for (const auto& InvItem : InventoryPartsArray)
 		{
-			// Æ¯Á¤ ¾ÆÀÌÅÛ Å° »ı¼º
+			// íŠ¹ì • ì•„ì´í…œ í‚¤ ìƒì„±
 			FPrimaryAssetId Key(TEXT("PPPartsData"), InvItem.Value.Key);
 
 			if (Assets.Contains(Key))
 			{
-				// ¾ÆÀÌÅÛ »ı¼º
+				// ì•„ì´í…œ ìƒì„±
 				UPPInventoryPartsItem* NewItem = NewObject<UPPInventoryPartsItem>();
 				if (NewItem)
 				{
@@ -318,7 +319,7 @@ void UPPInventoryComponent::InitInventory()
 					{
 						NewItem->PartsData = ItemData;
 						NewItem->ItemQuantity = InvItem.Value.Value;
-						// ¾ÆÀÌÅÛ ³Ö±â
+						// ì•„ì´í…œ ë„£ê¸°
 						PartsItems[InvItem.Key] = NewItem;
 					}
 				}
@@ -341,7 +342,7 @@ void UPPInventoryComponent::ModifyCurrentSlotIndex(int32 Value)
 {
 	CurrentSlotIndex += Value;
 
-	// ÀÎµ¦½º Á¦ÇÑ
+	// ì¸ë±ìŠ¤ ì œí•œ
 	CurrentSlotIndex = FMath::Clamp(CurrentSlotIndex, 0, PartsItems.Num() - 1);
 
 	Slots = QuickSlotWidget->GetSlots();

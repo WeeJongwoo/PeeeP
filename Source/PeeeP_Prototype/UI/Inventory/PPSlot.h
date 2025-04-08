@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -7,10 +7,10 @@
 #include "../../Inventory/ESlotType.h"
 #include "PPSlot.generated.h"
 
-// ¾÷µ¥ÀÌÆ® µ¨¸®°ÔÀÌÆ® ¼±¾ğ
+// ì—…ë°ì´íŠ¸ ë¸ë¦¬ê²Œì´íŠ¸ ì„ ì–¸
 DECLARE_DELEGATE(FOnUpdateSlotDelegate);
 
-// ·¡ÆÛ ±¸Á¶Ã¼¸¦ ¼±¾ğ
+// ë˜í¼ êµ¬ì¡°ì²´ë¥¼ ì„ ì–¸
 USTRUCT(BlueprintType)
 struct FUpdateSlotDelegateWrapper
 {
@@ -31,42 +31,42 @@ protected:
 	virtual void NativeConstruct() override;
 	
 public:
-	// ½½·Ô ÃÊ±âÈ­
+	// ìŠ¬ë¡¯ ì´ˆê¸°í™”
 	void Init();
-	// ½½·Ô Å¸ÀÔ ÁöÁ¤
+	// ìŠ¬ë¡¯ íƒ€ì… ì§€ì •
 	void SetType(ESlotType Type);
-	// ½½·Ô ¾÷µ¥ÀÌÆ®
+	// ìŠ¬ë¡¯ ì—…ë°ì´íŠ¸
 	void UpdateSlot();
 
 public:
-	// ÇöÀç ½½·ÔÀÇ Å¸ÀÔ
+	// í˜„ì¬ ìŠ¬ë¡¯ì˜ íƒ€ì…
 	UPROPERTY(EditAnywhere, Category = "Slot")
 	ESlotType SlotType;
 
-	// ½½·Ô¿¡ ÁöÁ¤µÉ ÀÌ¹ÌÁö
+	// ìŠ¬ë¡¯ì— ì§€ì •ë  ì´ë¯¸ì§€
 	UPROPERTY(VisibleAnywhere, Category = "Slot")
 	TObjectPtr<class UImage> IMG_Item;
 
-	// ½½·Ô¿¡ ÁöÁ¤µÉ ¾ÆÀÌÅÛÀÇ ¼ö·®
+	// ìŠ¬ë¡¯ì— ì§€ì •ë  ì•„ì´í…œì˜ ìˆ˜ëŸ‰
 	UPROPERTY(VisibleAnywhere, Category = "Slot")
 	TObjectPtr<class UTextBlock> TXT_Quantity;
 
-	// ÇöÀç ½½·ÔÀÇ ÀÎµ¦½º
+	// í˜„ì¬ ìŠ¬ë¡¯ì˜ ì¸ë±ìŠ¤
 	UPROPERTY(EditAnywhere, Category = "Slot")
 	int32 SlotIndex;
 
 protected:
-	// °³º° ½½·Ô ¾÷µ¥ÀÌÆ® ÇÔ¼ö
-	// ÀÌ ÇÁ·ÎÁ§Æ®¿¡¼­´Â ¾µ ÀÏÀÌ ±×·¸°Ô ¸¹Áö ¾ÊÀ» °Í °°´Ù.
+	// ê°œë³„ ìŠ¬ë¡¯ ì—…ë°ì´íŠ¸ í•¨ìˆ˜
+	// ì´ í”„ë¡œì íŠ¸ì—ì„œëŠ” ì“¸ ì¼ì´ ê·¸ë ‡ê²Œ ë§ì§€ ì•Šì„ ê²ƒ ê°™ë‹¤.
 	void UpdatePartsSlot();
 
-	// ºó Ä­¿¡ Àû¿ëÇÏ±â À§ÇÑ Åõ¸í ÅØ½ºÃÄ
+	// ë¹ˆ ì¹¸ì— ì ìš©í•˜ê¸° ìœ„í•œ íˆ¬ëª… í…ìŠ¤ì³
 	UPROPERTY(EditAnywhere, Category = "Slot")
 	TObjectPtr<class UTexture2D> DefaultTexture;
 
 protected:
-	// <½½·Ô Å¸ÀÔ, ·¡ÆÛ ±¸Á¶Ã¼> Çü½ÄÀÇ Map ¼±¾ğ
+	// <ìŠ¬ë¡¯ íƒ€ì…, ë˜í¼ êµ¬ì¡°ì²´> í˜•ì‹ì˜ Map ì„ ì–¸
 	UPROPERTY()
 	TMap<ESlotType, FUpdateSlotDelegateWrapper> SlotUpdateActions;
-	// ÀÌÈÄ https://velog.io/@apth1023/UE5-%EC%95%84%EC%9D%B4%ED%85%9C-%EC%9D%B8%EB%B2%A4%ED%86%A0%EB%A6%AC-%EC%8B%9C%EC%8A%A4%ED%85%9C-3 °è¼Ó ÀÌ¾î°¡¸éµÊ
+	// ì´í›„ https://velog.io/@apth1023/UE5-%EC%95%84%EC%9D%B4%ED%85%9C-%EC%9D%B8%EB%B2%A4%ED%86%A0%EB%A6%AC-%EC%8B%9C%EC%8A%A4%ED%85%9C-3 ê³„ì† ì´ì–´ê°€ë©´ë¨
 };

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -18,10 +18,10 @@ class PEEEP_PROTOTYPE_API UPPQuickSlotWidget : public UPPCustomWidget
 	virtual void NativeConstruct	() override;
 
 public:
-	// Äü½½·Ô ÃÊ±âÈ­ ÇÔ¼ö
+	// í€µìŠ¬ë¡¯ ì´ˆê¸°í™” í•¨ìˆ˜
 	void Init();
 
-	// Äü½½·Ô ¾÷µ¥ÀÌÆ® ÇÔ¼ö
+	// í€µìŠ¬ë¡¯ ì—…ë°ì´íŠ¸ í•¨ìˆ˜
 	void UpdateQuickSlot();
 
 	UFUNCTION()
@@ -34,13 +34,13 @@ public:
 private:
 	void SetType(ESlotType Type);
 
-	// ½½·ÔµéÀ» ÀúÀåÇÏ±â À§ÇÑ ¹è¿­
+	// ìŠ¬ë¡¯ë“¤ì„ ì €ì¥í•˜ê¸° ìœ„í•œ ë°°ì—´
 	UPROPERTY(VisibleAnywhere, Category = "Inventory")
 	TArray<TObjectPtr<class UPPSlot>> Slots;
 
 	TObjectPtr<UTextBlock> TXT_Equipment;
 
-	// ÇöÀç ÀÎº¥Åä¸®ÀÇ Å¸ÀÔ(ÆÄÃ÷)
+	// í˜„ì¬ ì¸ë²¤í† ë¦¬ì˜ íƒ€ì…(íŒŒì¸ )
 	ESlotType InventorySlotType;
 
 private:

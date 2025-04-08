@@ -1,4 +1,4 @@
-#include "PPConveyorBelt.h"
+ï»¿#include "PPConveyorBelt.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
@@ -50,7 +50,8 @@ void APPConveyorBelt::Tick(float DeltaTime)
         }
     }
 }
-// UPrimitiveComponent : ¿ÀºêÁ§Æ®ÀÇ À§Ä¡, È¸Àü, Å©±â ¹× Ãæµ¹ Ã³¸®¿Í °ü·ÃµÈ ±â´É
+
+// UPrimitiveComponent : ì˜¤ë¸Œì íŠ¸ì˜ ìœ„ì¹˜, íšŒì „, í¬ê¸° ë° ì¶©ëŒ ì²˜ë¦¬ì™€ ê´€ë ¨ëœ ê¸°ëŠ¥
 void APPConveyorBelt::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     if (OtherActor && (OtherActor != this) && OtherComp)

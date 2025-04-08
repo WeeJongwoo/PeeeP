@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -27,11 +27,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
     float BeltSpeed;
 
-    void SetSwitchState(bool bNewState); // ½ºÀ§Ä¡ »óÅÂ¸¦ ¼³Á¤ÇÏ´Â ÇÔ¼ö Ãß°¡
+    void SetSwitchState(bool bNewState); // ìŠ¤ìœ„ì¹˜ ìƒíƒœë¥¼ ì„¤ì •í•˜ëŠ” í•¨ìˆ˜ ì¶”ê°€
 
 private:
     bool bIsActivated;
-    bool bIsSwitchOn; // ½ºÀ§Ä¡ »óÅÂ¸¦ ³ªÅ¸³»´Â º¯¼ö Ãß°¡
+    bool bIsSwitchOn; // ìŠ¤ìœ„ì¹˜ ìƒíƒœë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë³€ìˆ˜ ì¶”ê°€
 
     UFUNCTION()
     void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

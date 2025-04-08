@@ -1,4 +1,4 @@
-#include "PPCrane.h"
+ï»¿#include "PPCrane.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "TimerManager.h"
@@ -283,19 +283,19 @@ void APPCrane::MoveOnY(float DeltaTime)
     float dist = (TargetLocation - loc).Size();
     if (dist <= AcceptableRadius)
     {
-        // µµÂø
+        // ë„ì°©
         loc = TargetLocation;
         SetActorLocation(loc);
 
-        // ¿©±â¼­ ¹°Ã¼ ¶Ç´Â ÇÃ·¹ÀÌ¾î¸¦ ¶³±Å ÁÜ
+        // ì—¬ê¸°ì„œ ë¬¼ì²´ ë˜ëŠ” í”Œë ˆì´ì–´ë¥¼ ë–¨ê¶ˆ ì¤Œ
         if (bIsHoldingObject && GrabbedActor)
         {
-            // 0.1ÃÊ ÈÄ¿¡ ¶³¾î¶ß¸®±â
+            // 0.1ì´ˆ í›„ì— ë–¨ì–´ëœ¨ë¦¬ê¸°
             GetWorldTimerManager().ClearTimer(DropTimerHandle);
             GetWorldTimerManager().SetTimer(DropTimerHandle, this, &APPCrane::DropActor, 0.1f, false);
         }
 
-        // µå·Ó ÈÄ¿¡´Â Idle »óÅÂ·Î => ±× ÀÚ¸®¿¡¼­ ¸ØÃç ÀÖÀ½
+        // ë“œë¡­ í›„ì—ëŠ” Idle ìƒíƒœë¡œ => ê·¸ ìë¦¬ì—ì„œ ë©ˆì¶° ìˆìŒ
         CurrentState = EPPCraneState::Idle;
         return;
     }
@@ -309,16 +309,16 @@ void APPCrane::OnSwitchPressed()
 {
     bIsSwitchPressed = true;
 
-    // ½ºÀ§Ä¡¸¦ ´©¸¥ 'ÇöÀç À§Ä¡'¸¦ ÇÏ°­ ½ÃÀÛÁ¡À¸·Î ±â·Ï
+    // ìŠ¤ìœ„ì¹˜ë¥¼ ëˆ„ë¥¸ 'í˜„ì¬ ìœ„ì¹˜'ë¥¼ í•˜ê°• ì‹œì‘ì ìœ¼ë¡œ ê¸°ë¡
     StartLocation = GetActorLocation();
 
     CurrentState = EPPCraneState::MovingDown;
     bStopDownMovement = false;
 
-    // ¾Ö´Ï¸ŞÀÌ¼Ç Àç»ı
+    // ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
     if (Claw && Claw->GetAnimInstance() && AM_CraneMontage)
     {
-        Claw->GetAnimInstance()->Montage_Play(AM_CraneMontage, 0.3f /*Àç»ı¼Óµµ*/);
+        Claw->GetAnimInstance()->Montage_Play(AM_CraneMontage, 0.3f /*ì¬ìƒì†ë„*/);
         UE_LOG(LogTemp, Warning, TEXT("Trying to play montage"));
     }
 }

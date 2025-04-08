@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "InteractionObject/Electric/PPGear_Test.h"
@@ -11,16 +11,15 @@ APPGear_Test::APPGear_Test()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// ¸Ş½¬ ÄÄÆ÷³ÍÆ® ÁöÁ¤
+	// ë©”ì‰¬ ì»´í¬ë„ŒíŠ¸ ì§€ì •
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
-	Mesh->SetSimulatePhysics(false);								// ¹°¸® ¿µÇâÀ» ¹ŞÁö ¾Ê´Â´Ù¸é ¹İµå½Ã false·Î ¼³Á¤.
-	Mesh->SetCollisionProfileName(TEXT("ElectricObjectProfile"));	// ÇÃ·¹ÀÌ¾îÀÇ Àü±â ¹æÃâÀ» ¹Ş±â À§ÇÑ Äİ¸®Àü ÇÁ·ÎÇÊ ¼¼ÆÃ.
-
+	Mesh->SetSimulatePhysics(false);								// ë¬¼ë¦¬ ì˜í–¥ì„ ë°›ì§€ ì•ŠëŠ”ë‹¤ë©´ ë°˜ë“œì‹œ falseë¡œ ì„¤ì •.
+	Mesh->SetCollisionProfileName(TEXT("ElectricObjectProfile"));	// í”Œë ˆì´ì–´ì˜ ì „ê¸° ë°©ì¶œì„ ë°›ê¸° ìœ„í•œ ì½œë¦¬ì „ í”„ë¡œí•„ ì„¸íŒ….
 }
 
 /// <summary>
-/// ¾×ÅÍ°¡ Ãæµ¹ÇßÀ» ¶§ È£ÃâµÇ´Â ¸Ş¼­µå
+/// ì•¡í„°ê°€ ì¶©ëŒí–ˆì„ ë•Œ í˜¸ì¶œë˜ëŠ” ë©”ì„œë“œ
 /// </summary>
 /// <param name="MyComp"></param>
 /// <param name="Other"></param>
@@ -34,7 +33,7 @@ void APPGear_Test::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimit
 {
 	UE_LOG(LogTemp, Log, TEXT("NotifyHit"));
 
-	// ÇÃ·¹ÀÌ¾î¿Í Ãæµ¹ÇÏ¸é
+	// í”Œë ˆì´ì–´ì™€ ì¶©ëŒí•˜ë©´
 	if (Other && Other->IsA(APPCharacterPlayer::StaticClass()))
 	{
 		UE_LOG(LogTemp, Log, TEXT("Player Hit"));

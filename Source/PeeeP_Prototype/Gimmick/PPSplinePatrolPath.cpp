@@ -1,10 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Gimmick/PPSplinePatrolPath.h"
 #include "Components/SplineComponent.h"
 
-//¿¡µğÅÍ »ó SplineÅÂ±× ¼³Á¤¿¡¼­ bIsLoop , ActorToMoveClass , IsClosedLoop , Duration , bCanMoveActor Á¦°ø
+//ì—ë””í„° ìƒ Splineíƒœê·¸ ì„¤ì •ì—ì„œ bIsLoop , ActorToMoveClass , IsClosedLoop , Duration , bCanMoveActor ì œê³µ
 
 // Sets default values
 APPSplinePatrolPath::APPSplinePatrolPath()
@@ -24,21 +24,21 @@ void APPSplinePatrolPath::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//¿òÁ÷ÀÏ ¾×ÅÍÀÇ Å¬·¡½º°¡ ¼³Á¤µÇÁö ¾ÊÀº °æ¿ì ¸®ÅÏ.
+	//ì›€ì§ì¼ ì•¡í„°ì˜ í´ë˜ìŠ¤ê°€ ì„¤ì •ë˜ì§€ ì•Šì€ ê²½ìš° ë¦¬í„´.
 	if (ActorToMoveClass == nullptr) return; 
 	
-	//Spline ½ÃÀÛ À§Ä¡¿¡ ¾×ÅÍ ½ºÆù
+	//Spline ì‹œì‘ ìœ„ì¹˜ì— ì•¡í„° ìŠ¤í°
 	ActorToMove = GetWorld()->SpawnActor<AActor>(ActorToMoveClass, Spline->GetComponentTransform()); 
 
 	if (ActorToMove != nullptr)
 	{
-		// ½ÃÀÛ ½Ã°£ ÀúÀå  GetTimeSeconds() : °ÔÀÓÀ» ½ÃÀÛÇÑ ÈÄ ÇöÀç±îÁö °æ°úµÈ ½Ã°£À» ¸®ÅÏÇÔ.
+		// ì‹œì‘ ì‹œê°„ ì €ì¥  GetTimeSeconds() : ê²Œì„ì„ ì‹œì‘í•œ í›„ í˜„ì¬ê¹Œì§€ ê²½ê³¼ëœ ì‹œê°„ì„ ë¦¬í„´í•¨.
 		StartTime = GetWorld()->GetTimeSeconds();
 
-		//¾×ÅÍ ÀÌµ¿ °¡´É ¿©ºÎ
+		//ì•¡í„° ì´ë™ ê°€ëŠ¥ ì—¬ë¶€
 		bCanMoveActor = true; 
 
-		//ÂüÀÏ °æ¿ì Á¤¹æÇâÀ¸·Î ÀÌµ¿, °ÅÁşÀÏ °æ¿ì ¿ª¹æÇâÀ¸·Î ÀÌµ¿.
+		//ì°¸ì¼ ê²½ìš° ì •ë°©í–¥ìœ¼ë¡œ ì´ë™, ê±°ì§“ì¼ ê²½ìš° ì—­ë°©í–¥ìœ¼ë¡œ ì´ë™.
 		bIsMovingForward = true; 
 	}
 	
@@ -53,74 +53,74 @@ void APPSplinePatrolPath::Tick(float DeltaTime)
 	if ((ActorToMove == nullptr) || !bCanMoveActor) return;
 
 	/*
-	¼³Á¤µÈ Duration °ª µ¿¾È ¾×ÅÍ°¡ ÀÌµ¿ÇÏµµ·Ï ·ÎÁ÷À» Â«.
-	ºĞÀÚ °ªÀÌ °è¼Ó Áõ°¡ÇÏ´Ù°¡ ºĞ¸ğ(duration)¶û °°¾ÆÁú °æ¿ì ³ª´³À» ¶§ CurrentSplineTime °ªÀº 1.0ÀÌ µÇ°í,
-	Distance == Spline->GetSplineLength() ÀÌ µÇ¾î ¾×ÅÍ°¡ ³¡±îÁö µµ´ŞÇßÀ½À» ÀÇ¹ÌÇÔ.
+	ì„¤ì •ëœ Duration ê°’ ë™ì•ˆ ì•¡í„°ê°€ ì´ë™í•˜ë„ë¡ ë¡œì§ì„ ì§¬.
+	ë¶„ì ê°’ì´ ê³„ì† ì¦ê°€í•˜ë‹¤ê°€ ë¶„ëª¨(duration)ë‘ ê°™ì•„ì§ˆ ê²½ìš° ë‚˜ëˆ´ì„ ë•Œ CurrentSplineTime ê°’ì€ 1.0ì´ ë˜ê³ ,
+	Distance == Spline->GetSplineLength() ì´ ë˜ì–´ ì•¡í„°ê°€ ëê¹Œì§€ ë„ë‹¬í–ˆìŒì„ ì˜ë¯¸í•¨.
 	*/
 	float CurrentSplineTime = (GetWorld()->GetTimeSeconds() - StartTime) / Spline->Duration; 
 	float Distance = Spline->GetSplineLength() * CurrentSplineTime;
 
-	//Á¤¹æÇâÀÎ °æ¿ì
+	//ì •ë°©í–¥ì¸ ê²½ìš°
 	if (bIsMovingForward) 
 	{
 		SetActorRotationAndLocation(Distance);
 
-		//Á¤¹æÇâ ³¡¿¡ µµ´ŞÇÑ °æ¿ì.
+		//ì •ë°©í–¥ ëì— ë„ë‹¬í•œ ê²½ìš°.
 		if (Distance >= Spline->GetSplineLength())
 		{
 
-			//¹«ÇÑ ¹İº¹ÀÎ °æ¿ì
+			//ë¬´í•œ ë°˜ë³µì¸ ê²½ìš°
 			if (bIsLoop)
 			{
 				/*
-				IsClosedLoop °¡ ÂüÀÎ °æ¿ì´Â ½ÃÀÛ ÁöÁ¡°ú ³¡ ÁöÁ¡ÀÌ ¿¬°áµÇ¾î ¼±ÀÌ ÀÌ¾îÁø ÇüÅÂÀÏ ¶§´Ù.
-				ÀÌ °æ¿ì ¿ª¹æÇâÀ¸·Î ÀÌµ¿ÇÏÁö ¾Ê°í °è¼Ó Á¤¹æÇâÀ¸·Î ¹İº¹ ÀÌµ¿ÇÑ´Ù.
-				IsClosedLoop °¡ °ÅÁşÀÎ °æ¿ì´Â ½ÃÀÛ ÁöÁ¡¿¡¼­ ³¡ ÁöÁ¡±îÁö °¬´Ù°¡ ´Ù½Ã µ¹¾Æ¿À´Â ÇüÅÂ·Î ½ºÇÃ¶óÀÎÀÇ °æ·Î¸¦ ¿Ô´Ù °¬´Ù ÇÒ¶§ÀÌ´Ù. 
-				ÀÌ °æ¿ì Á¤¹æÇâ->¿ª¹æÇâ À» ¹İº¹ ÀÌµ¿ÇÑ´Ù.
+				IsClosedLoop ê°€ ì°¸ì¸ ê²½ìš°ëŠ” ì‹œì‘ ì§€ì ê³¼ ë ì§€ì ì´ ì—°ê²°ë˜ì–´ ì„ ì´ ì´ì–´ì§„ í˜•íƒœì¼ ë•Œë‹¤.
+				ì´ ê²½ìš° ì—­ë°©í–¥ìœ¼ë¡œ ì´ë™í•˜ì§€ ì•Šê³  ê³„ì† ì •ë°©í–¥ìœ¼ë¡œ ë°˜ë³µ ì´ë™í•œë‹¤.
+				IsClosedLoop ê°€ ê±°ì§“ì¸ ê²½ìš°ëŠ” ì‹œì‘ ì§€ì ì—ì„œ ë ì§€ì ê¹Œì§€ ê°”ë‹¤ê°€ ë‹¤ì‹œ ëŒì•„ì˜¤ëŠ” í˜•íƒœë¡œ ìŠ¤í”Œë¼ì¸ì˜ ê²½ë¡œë¥¼ ì™”ë‹¤ ê°”ë‹¤ í• ë•Œì´ë‹¤. 
+				ì´ ê²½ìš° ì •ë°©í–¥->ì—­ë°©í–¥ ì„ ë°˜ë³µ ì´ë™í•œë‹¤.
 				*/
 				if (!Spline->IsClosedLoop()) 
 				{
-					//´ÙÀ½ ¿ª¹æÇâ ÀÌµ¿À» À§ÇÑ ¼³Á¤
+					//ë‹¤ìŒ ì—­ë°©í–¥ ì´ë™ì„ ìœ„í•œ ì„¤ì •
 					bIsMovingForward = false;
 				}
 
-				//°æ°úµÈ ½Ã°£ ÀúÀåÇÏ¿© ÃÊ±âÈ­
+				//ê²½ê³¼ëœ ì‹œê°„ ì €ì¥í•˜ì—¬ ì´ˆê¸°í™”
 				StartTime = GetWorld()->GetTimeSeconds();
 				bCanMoveActor = true;
 			}
-			//¹«ÇÑ ¹İº¹ ¾Æ´Ñ °æ¿ì
+			//ë¬´í•œ ë°˜ë³µ ì•„ë‹Œ ê²½ìš°
 			else
 			{
 				bCanMoveActor = false;
 			}
 		}
 	}
-	//¿ª¹æÇâÀÎ °æ¿ì
+	//ì—­ë°©í–¥ì¸ ê²½ìš°
 	else 
 	{
 
-		//À§ ÄÚµå ¿¡¼­ Á¤¹æÇâ ±âÁØÀ¸·Î ¾ò¾î¿Â Distance°ªÀ» SplineLength¿¡ °è¼Ó »©ÁÖ¾î ¿ª¹æÇâ °Å¸®°ªÀ» ¾ò¾î¿Â´Ù.
+		//ìœ„ ì½”ë“œ ì—ì„œ ì •ë°©í–¥ ê¸°ì¤€ìœ¼ë¡œ ì–»ì–´ì˜¨ Distanceê°’ì„ SplineLengthì— ê³„ì† ë¹¼ì£¼ì–´ ì—­ë°©í–¥ ê±°ë¦¬ê°’ì„ ì–»ì–´ì˜¨ë‹¤.
 		float ReverseDistance = Spline->GetSplineLength() - Distance;
 		SetActorRotationAndLocation(ReverseDistance);
 
-		//¿ª¹æÇâ ³¡¿¡ µµ´ŞÇÑ °æ¿ì.
+		//ì—­ë°©í–¥ ëì— ë„ë‹¬í•œ ê²½ìš°.
 		if (ReverseDistance <= 0.0f)
 		{
 
-			//¹«ÇÑ ¹İº¹ÀÎ °æ¿ì
+			//ë¬´í•œ ë°˜ë³µì¸ ê²½ìš°
 			if (bIsLoop)
 			{
 				if (!Spline->IsClosedLoop())
 				{
-					//´ÙÀ½ Á¤¹æÇâ ÀÌµ¿À» À§ÇÑ ¼³Á¤
+					//ë‹¤ìŒ ì •ë°©í–¥ ì´ë™ì„ ìœ„í•œ ì„¤ì •
 					bIsMovingForward = true;
 				}
 
-				//°æ°úµÈ ½Ã°£ ÀúÀåÇÏ¿© ÃÊ±âÈ­
+				//ê²½ê³¼ëœ ì‹œê°„ ì €ì¥í•˜ì—¬ ì´ˆê¸°í™”
 				StartTime = GetWorld()->GetTimeSeconds();
 				bCanMoveActor = true;
 			}
-			//¹«ÇÑ ¹İº¹ ¾Æ´Ñ °æ¿ì
+			//ë¬´í•œ ë°˜ë³µ ì•„ë‹Œ ê²½ìš°
 			else
 			{
 				bCanMoveActor = false;
@@ -129,22 +129,22 @@ void APPSplinePatrolPath::Tick(float DeltaTime)
 	}
 }
 
-//´Ù¸¥ Å¬·¡½º¿¡¼­ »ç¿ë°¡´ÉÇÏµµ·Ï ÀÓ½Ã·Î ¸¸µç ÇÔ¼ö
+//ë‹¤ë¥¸ í´ë˜ìŠ¤ì—ì„œ ì‚¬ìš©ê°€ëŠ¥í•˜ë„ë¡ ì„ì‹œë¡œ ë§Œë“  í•¨ìˆ˜
 void APPSplinePatrolPath::MoveActor()
 {
 	bCanMoveActor = true;
 }
 
 
-//¾×ÅÍ¸¦ ÀÌµ¿,È¸Àü½ÃÅ°´Â ·ÎÁ÷.
+//ì•¡í„°ë¥¼ ì´ë™,íšŒì „ì‹œí‚¤ëŠ” ë¡œì§.
 void APPSplinePatrolPath::SetActorRotationAndLocation(float Distance)
 {
-	//Spline ¼±¿¡ (Tick¿¡¼­ °è¼Ó ¾÷µ¥ÀÌÆ® µÇ°í ÀÖ´Â) Distance°ªÀ» ±âÁØÀ¸·Î À§Ä¡,È¸Àü°ªÀ» ¾ò¾î¿Â´Ù.   
+	//Spline ì„ ì— (Tickì—ì„œ ê³„ì† ì—…ë°ì´íŠ¸ ë˜ê³  ìˆëŠ”) Distanceê°’ì„ ê¸°ì¤€ìœ¼ë¡œ ìœ„ì¹˜,íšŒì „ê°’ì„ ì–»ì–´ì˜¨ë‹¤.   
 	FVector Position = Spline->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World);
 	FVector Direction = Spline->GetDirectionAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World);
 	FRotator Rotator = FRotationMatrix::MakeFromX(Direction).Rotator();
 
-	//¾ò¾î¿Â °ªµé¿¡ ÇÃ·¹ÀÌ¾î¸¦ À§Ä¡½ÃÅ²´Ù.
+	//ì–»ì–´ì˜¨ ê°’ë“¤ì— í”Œë ˆì´ì–´ë¥¼ ìœ„ì¹˜ì‹œí‚¨ë‹¤.
 	UStaticMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<UStaticMeshComponent>();
 	ActorMesh->SetWorldLocationAndRotation(Position, Rotator, true);
 }
