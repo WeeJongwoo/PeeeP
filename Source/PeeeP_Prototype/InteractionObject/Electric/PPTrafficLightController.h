@@ -26,6 +26,25 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
 	TObjectPtr<class UMaterialInstance> TrafficLightControllerMaterial;
 
+	// 배터리가 닿는 영역
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
+	TObjectPtr<class UBoxComponent> BatteryTrigger;	
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class USceneComponent> SnapPoint;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class USceneComponent> ConstraintPoint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<class UPhysicsConstraintComponent> PhysicsConstraint;
+
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 	// 제어기가 관리하는 신호등 배열
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrafficLightController")
 	TArray<TObjectPtr<class AActor>> TrafficLights;
@@ -38,6 +57,8 @@ protected:
 	uint8 bIsPowerOn : 1;	// 전원이 켜져 있는지 여부를 나타내는 플래그
 
 	void Charge() override;
+
+	void ConfigureConstraintSettings();
 
 public:	
 	// Called every frame

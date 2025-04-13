@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameplayTagContainer.h"
 #include "PPBattery.generated.h"
 
 UCLASS()
@@ -22,8 +23,18 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UStaticMeshComponent> BatteryStaticMesh;
 
+	
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
+	FGameplayTagContainer MyTags;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Tags")
+	FGameplayTag BatteryTag;
+
+	UStaticMeshComponent* GetBatteryStaticMesh() const;
 
 };
