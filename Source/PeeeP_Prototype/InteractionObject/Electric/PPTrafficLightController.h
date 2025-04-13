@@ -1,13 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interface/PPElectricObjectInterface.h"
 #include "PPTrafficLightController.generated.h"
 
 UCLASS()
-class PEEEP_PROTOTYPE_API APPTrafficLightController : public AActor
+class PEEEP_PROTOTYPE_API APPTrafficLightController : public AActor, public IPPElectricObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -19,8 +20,31 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UStaticMeshComponent> TrafficLightControllerStaticMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
+	TObjectPtr<class UMaterialInstance> TrafficLightControllerMaterial;
+
+	// 제어기가 관리하는 신호등 배열
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrafficLightController")
+	TArray<TObjectPtr<class AActor>> TrafficLights;
+
+	// 신호가 바뀌었을 때 신호등들의 색깔에 따른 판정을 하기 위한 TrafficLightManager
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrafficLightController")
+	TObjectPtr<class AActor> TrafficLightManagerActor;
+	
+	UPROPERTY()
+	uint8 bIsPowerOn : 1;	// 전원이 켜져 있는지 여부를 나타내는 플래그
+
+	void Charge() override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void ChangeTrafficLightColor();
+
+	// TrafficLightsByController를 가져오는 getter함수
+	TArray<TObjectPtr<class AActor>> GetTrafficLightsByController() const;
 };
