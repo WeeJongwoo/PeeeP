@@ -179,6 +179,7 @@ void APPTrafficLightController::OnOverlapBegin(UPrimitiveComponent* OverlappedCo
 				BatteryRoot->SetEnableGravity(false);	// 중력 비활성화
 
 				bIsPowerOn = true;
+				Battery->SetIsGrabbed(false);	// 배터리의 IsGrabbed를 false로 설정
 				UE_LOG(LogTemp, Log, TEXT("Powered On"));
 			}
 			else

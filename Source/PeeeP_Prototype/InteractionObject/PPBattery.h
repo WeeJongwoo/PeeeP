@@ -3,38 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "InteractionObject/PPGrabableObject.h"
 #include "GameplayTagContainer.h"
 #include "PPBattery.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class PEEEP_PROTOTYPE_API APPBattery : public AActor
+class PEEEP_PROTOTYPE_API APPBattery : public APPGrabableObject
 {
 	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
+protected:
 	APPBattery();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<class UStaticMeshComponent> BatteryStaticMesh;
-
-	
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
 	FGameplayTagContainer MyTags;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Tags")
 	FGameplayTag BatteryTag;
-
-	UStaticMeshComponent* GetBatteryStaticMesh() const;
-
 };
