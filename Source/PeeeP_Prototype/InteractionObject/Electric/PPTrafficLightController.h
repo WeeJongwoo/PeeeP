@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Interface/PPElectricObjectInterface.h"
+#include "InteractionObject/ETrafficLight.h"
 #include "PPTrafficLightController.generated.h"
+
+DECLARE_DELEGATE_OneParam(FOnTrafficLightColorChangedDelegate, ETrafficLightColor);
 
 UCLASS()
 class PEEEP_PROTOTYPE_API APPTrafficLightController : public AActor, public IPPElectricObjectInterface
@@ -68,4 +71,6 @@ public:
 
 	// TrafficLightsByController를 가져오는 getter함수
 	TArray<TObjectPtr<class AActor>> GetTrafficLightsByController() const;
+
+	FOnTrafficLightColorChangedDelegate OnTrafficLightColorChangedDelegate;
 };

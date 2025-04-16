@@ -4,7 +4,6 @@
 #include "InteractionObject/Electric/PPTrafficLightController.h"
 #include "Components/StaticMeshComponent.h"
 #include "InteractionObject/PPTrafficLight.h"
-#include "InteractionObject/ETrafficLight.h"
 #include "InteractionObject/PPTrafficLightManager.h"
 #include "Components/BoxComponent.h"
 #include "InteractionObject/PPBattery.h"
@@ -26,7 +25,7 @@ APPTrafficLightController::APPTrafficLightController()
 	TrafficLightControllerStaticMesh->SetMaterial(0, TrafficLightControllerMaterial);
 
 	BatteryTrigger = CreateDefaultSubobject<UBoxComponent>(TEXT("BatteryTrigger"));
-	//BatteryTrigger->SetupAttachment(TrafficLightControllerStaticMesh);
+	BatteryTrigger->SetupAttachment(TrafficLightControllerStaticMesh);
 	BatteryTrigger->OnComponentBeginOverlap.AddDynamic(this, &APPTrafficLightController::OnOverlapBegin);
 
 	SnapPoint = CreateDefaultSubobject<USceneComponent>(TEXT("SnapPoint"));
@@ -140,6 +139,9 @@ void APPTrafficLightController::ChangeTrafficLightColor()
 			TrafficLight->ChangeColor(CurrentTrafficLightColor);
 		}
 	}
+
+	// 모두 바꾸고 난 후 신호등 색깔 체크 델리게이트
+	OnTrafficLightColorChangedDelegate.ExecuteIfBound(ETrafficLightColor::TC_RED);
 }
 
 TArray<TObjectPtr<class AActor>> APPTrafficLightController::GetTrafficLightsByController() const
@@ -166,7 +168,7 @@ void APPTrafficLightController::OnOverlapBegin(UPrimitiveComponent* OverlappedCo
 				Battery->SetActorLocation(SnapPoint->GetComponentLocation());	// 그냥 붙는 효과
 
 				UPrimitiveComponent* BatteryRoot = Cast<UPrimitiveComponent>(Battery->GetRootComponent());
-				Battery->SetActorRotation(FRotator(0.f, 0.f, 0.f));
+				Battery->SetActorRotation(TrafficLightControllerStaticMesh->GetComponentRotation());
 				BatteryRoot->SetSimulatePhysics(true);
 				PhysicsConstraint->SetWorldLocation(ConstraintPoint->GetComponentLocation());
 				PhysicsConstraint->SetConstrainedComponents(

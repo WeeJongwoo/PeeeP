@@ -7,6 +7,8 @@
 #include "InteractionObject/ETrafficLight.h"
 #include "PPTrafficLight.generated.h"
 
+DECLARE_DELEGATE(FCheckTrafficLigthColorDelegate)
+
 UCLASS()
 class PEEEP_PROTOTYPE_API APPTrafficLight : public AActor
 {
@@ -43,4 +45,6 @@ public:
 	void ChangeColor(ETrafficLightColor NewTrafficLightColor);
 
 	void ChangeEmissive(float Type);
+
+	FCheckTrafficLigthColorDelegate CheckTrafficLigthColorDelegate;
 };

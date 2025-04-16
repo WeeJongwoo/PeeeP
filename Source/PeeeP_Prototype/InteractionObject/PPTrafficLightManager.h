@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "InteractionObject/ETrafficLight.h"
 #include "PPTrafficLightManager.generated.h"
 
 UCLASS()
@@ -19,8 +20,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// 매니저가 관리하는 신호등 제어기 배열
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrafficLights")
+	TArray<TObjectPtr<class APPTrafficLightController>> TrafficLightControllers;
+
 	// 매니저가 관리하는 신호등 배열
-	// 제어기가 신호등의 제어를 결정하고 매니저가 신호등의 상태를 확인하여 이후 처리
+	// 매니저가 신호등의 상태를 확인하여 이후 처리
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="TrafficLights")
 	TArray<TObjectPtr<class APPTrafficLight>> TrafficLights;
 
@@ -28,5 +33,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
+	UFUNCTION()
+	void CheckTrafficLightsColor(ETrafficLightColor Color);
+
+	void StartEvent();
 };
