@@ -12,7 +12,8 @@ enum class ETrafficLightType : uint8
 {
 	TL_NONE,
 	TL_TWO,
-	TL_THREE
+	TL_THREE,
+	TL_THREE_WITH_BAR
 };
 
 UENUM(BlueprintType)

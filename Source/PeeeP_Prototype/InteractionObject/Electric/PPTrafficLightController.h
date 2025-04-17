@@ -50,11 +50,11 @@ protected:
 
 	// 제어기가 관리하는 신호등 배열
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrafficLightController")
-	TArray<TObjectPtr<class AActor>> TrafficLights;
+	TArray<TObjectPtr<class APPTrafficLightBase>> TrafficLights;
 
 	// 신호가 바뀌었을 때 신호등들의 색깔에 따른 판정을 하기 위한 TrafficLightManager
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrafficLightController")
-	TObjectPtr<class AActor> TrafficLightManagerActor;
+	TObjectPtr<class APPTrafficLightManager> TrafficLightManager;
 	
 	UPROPERTY()
 	uint8 bIsPowerOn : 1;	// 전원이 켜져 있는지 여부를 나타내는 플래그
@@ -70,7 +70,7 @@ public:
 	void ChangeTrafficLightColor();
 
 	// TrafficLightsByController를 가져오는 getter함수
-	TArray<TObjectPtr<class AActor>> GetTrafficLightsByController() const;
+	TArray<TObjectPtr<class APPTrafficLightBase>> GetTrafficLightsByController() const;
 
 	FOnTrafficLightColorChangedDelegate OnTrafficLightColorChangedDelegate;
 };

@@ -27,7 +27,7 @@ protected:
 	// 매니저가 관리하는 신호등 배열
 	// 매니저가 신호등의 상태를 확인하여 이후 처리
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="TrafficLights")
-	TArray<TObjectPtr<class APPTrafficLight>> TrafficLights;
+	TArray<TObjectPtr<class APPTrafficLightBase>> TrafficLights;
 
 public:	
 	// Called every frame

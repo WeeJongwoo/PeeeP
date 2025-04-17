@@ -2,7 +2,7 @@
 
 
 #include "InteractionObject/PPTrafficLightManager.h"
-#include "InteractionObject/PPTrafficLight.h"
+#include "InteractionObject/PPTrafficLightBase.h"
 #include "InteractionObject/Electric/PPTrafficLightController.h"
 
 // Sets default values
@@ -37,7 +37,7 @@ void APPTrafficLightManager::Tick(float DeltaTime)
 void APPTrafficLightManager::CheckTrafficLightsColor(ETrafficLightColor Color)
 {
 	// TrafficLights안에 있는 신호등들의 색깔을 모두 검사
-	for (APPTrafficLight* TrafficLight : TrafficLights)
+	for (APPTrafficLightBase* TrafficLight : TrafficLights)
 	{
 		if (IsValid(TrafficLight))
 		{

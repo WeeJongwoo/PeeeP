@@ -3,7 +3,7 @@
 
 #include "InteractionObject/Electric/PPTrafficLightController.h"
 #include "Components/StaticMeshComponent.h"
-#include "InteractionObject/PPTrafficLight.h"
+#include "InteractionObject/PPTrafficLightBase.h"
 #include "InteractionObject/PPTrafficLightManager.h"
 #include "Components/BoxComponent.h"
 #include "InteractionObject/PPBattery.h"
@@ -90,9 +90,8 @@ void APPTrafficLightController::ChangeTrafficLightColor()
 {
 	// 신호등 색상 변경
 	// 타입에 따라 변경 방식이 다름
-	for (TObjectPtr<AActor> TrafficLightActor : TrafficLights)
+	for (TObjectPtr<APPTrafficLightBase> TrafficLight : TrafficLights)
 	{
-		APPTrafficLight* TrafficLight = Cast<APPTrafficLight>(TrafficLightActor);
 		if (IsValid(TrafficLight))
 		{
 			UE_LOG(LogTemp, Log, TEXT("Cast Completed"));
@@ -114,8 +113,25 @@ void APPTrafficLightController::ChangeTrafficLightColor()
 					break;
 				}
 				break;
-				// 세가지 색상의 신호등
+				// 세가지 색상의 신호등(차단 봉 없음)
 			case ETrafficLightType::TL_THREE:
+				if (CurrentTrafficLightColor == ETrafficLightColor::TC_GREEN)
+				{
+					CurrentTrafficLightColor = ETrafficLightColor::TC_RED;
+				}
+				else if (CurrentTrafficLightColor == ETrafficLightColor::TC_OFF)
+				{
+					// 신호등이 꺼져있을 때(현재 이 기능은 사용하지 않음)
+				}
+				else
+				{
+					uint8 TempColorNum = static_cast<uint8>(CurrentTrafficLightColor);
+					TempColorNum--;
+					CurrentTrafficLightColor = static_cast<ETrafficLightColor>(TempColorNum);
+				}
+				break;
+				// 세가지 색상의 신호등(차단 봉 있음)
+			case ETrafficLightType::TL_THREE_WITH_BAR:
 				if (CurrentTrafficLightColor == ETrafficLightColor::TC_GREEN)
 				{
 					CurrentTrafficLightColor = ETrafficLightColor::TC_RED;
@@ -144,7 +160,7 @@ void APPTrafficLightController::ChangeTrafficLightColor()
 	OnTrafficLightColorChangedDelegate.ExecuteIfBound(ETrafficLightColor::TC_RED);
 }
 
-TArray<TObjectPtr<class AActor>> APPTrafficLightController::GetTrafficLightsByController() const
+TArray<TObjectPtr<class APPTrafficLightBase>> APPTrafficLightController::GetTrafficLightsByController() const
 {
 	return TrafficLights;
 }

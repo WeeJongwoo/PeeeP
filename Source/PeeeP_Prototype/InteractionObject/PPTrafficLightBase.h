@@ -5,25 +5,22 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "InteractionObject/ETrafficLight.h"
-#include "PPTrafficLight.generated.h"
+#include "PPTrafficLightBase.generated.h"
 
 DECLARE_DELEGATE(FCheckTrafficLigthColorDelegate)
 
 UCLASS()
-class PEEEP_PROTOTYPE_API APPTrafficLight : public AActor
+class PEEEP_PROTOTYPE_API APPTrafficLightBase : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APPTrafficLight();
+	APPTrafficLightBase();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UPROPERTY(EditAnywhere, Category = Mesh)
-	TObjectPtr<class UStaticMeshComponent> TrafficLightStaticMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
 	TObjectPtr<class UMaterialInstance> TrafficLightMaterial;
@@ -44,7 +41,7 @@ public:
 
 	void ChangeColor(ETrafficLightColor NewTrafficLightColor);
 
-	void ChangeEmissive(float Type);
+	virtual void ChangeEmissive(float Type);
 
 	FCheckTrafficLigthColorDelegate CheckTrafficLigthColorDelegate;
 };
