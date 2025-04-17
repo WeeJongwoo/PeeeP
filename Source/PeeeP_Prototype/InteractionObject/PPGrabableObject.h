@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "PPGrabableObject.generated.h"
 
+DECLARE_DELEGATE(FGrabReleaseDelegate)
+
 UCLASS()
 class PEEEP_PROTOTYPE_API APPGrabableObject : public AActor
 {
@@ -22,8 +24,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere)
+	uint8 bIsGrabbed : 1;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void SetIsGrabbed(uint8 bNewBool);
+	uint8 GetIsGrabbed() const;
+
+	FGrabReleaseDelegate GrabReleaseDelegate;
 };

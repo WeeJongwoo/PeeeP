@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 
@@ -21,7 +21,8 @@ public class PeeeP_Prototype : ModuleRules
 			"MediaAssets",
             "MovieScene",
             "LevelSequence",
-			"PhysicsCore"
+			"PhysicsCore",
+			"GameplayTags"
 		});
 
 		//PrivateDependencyModuleNames.AddRange(new string[] {  });

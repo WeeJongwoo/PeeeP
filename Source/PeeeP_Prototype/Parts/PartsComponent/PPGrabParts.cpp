@@ -9,6 +9,7 @@
 #include "CollisionQueryParams.h"
 #include "Camera/CameraComponent.h"
 #include "Character/PPCharacterPlayer.h"
+#include "InteractionObject/PPGrabableObject.h"
 
 UPPGrabParts::UPPGrabParts()
 {
@@ -90,10 +91,19 @@ void UPPGrabParts::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-
 	//GrabHandle 이 컴포넌트를 잡고 있고 Owner가 유효할 때만, 잡고있는 오브젝트 위치 업데이트.
 	if (GrabHandle->GetGrabbedComponent() && Owner)
 	{
+		//// 임시
+		//APPGrabableObject* GrabableObject = Cast<APPGrabableObject>(GrabHandle->GetGrabbedComponent()->GetOwner());
+		//if (GrabableObject)
+		//{
+		//	if (!GrabableObject->GetIsGrabbed())
+		//	{
+		//		GrabRelease();
+		//	}
+		//}
+
 		UpdateGrabbedObjectPosition();
 	}
 }
@@ -140,6 +150,16 @@ void UPPGrabParts::Grab()
 		GrabHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), TEXT("None"), HitLocation, HitComponentTransform.Rotator());
 
 		GrabHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel10, ECR_Ignore);
+
+		// 잡은 오브젝트가 PPGabableObject인지 검사하고
+		// PPGabableObject일 경우 해당 오브젝트의 IsGrabbed 변수를 true로 설정
+		APPGrabableObject* GrabableObject = Cast<APPGrabableObject>(GrabHandle->GetGrabbedComponent()->GetOwner());
+		if (GrabableObject)
+		{
+			UE_LOG(LogTemp, Log, TEXT("NICE"));
+			GrabableObject->SetIsGrabbed(true);
+			GrabableObject->GrabReleaseDelegate.BindUObject(this, &UPPGrabParts::GrabRelease);
+		}
 	}
 
 #if ENABLE_DRAW_DEBUG
@@ -162,6 +182,15 @@ void UPPGrabParts::GrabRelease()
 		IsGrabbed = false;
 		if (GrabHandle->GetGrabbedComponent())
 		{
+			// 잡은 오브젝트가 PPGabableObject인지 검사하고
+			// PPGabableObject일 경우 해당 오브젝트의 IsGrabbed 변수를 false로 설정
+			APPGrabableObject* GrabableObject = Cast<APPGrabableObject>(GrabHandle->GetGrabbedComponent()->GetOwner());
+			if (GrabableObject)
+			{
+				UE_LOG(LogTemp, Log, TEXT("byebye"));
+				GrabableObject->SetIsGrabbed(false);
+			}
+
 			GrabHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel10, ECR_Block);
 			GrabHandle->ReleaseComponent();
 		}
