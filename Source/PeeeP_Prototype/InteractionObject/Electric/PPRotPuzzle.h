@@ -53,6 +53,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Rotate, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UMaterialInterface> ActivedMaterial;
 
+	UPROPERTY(EditDefaultsOnly, Category = Rotate, meta = (AllowPrivateAccess = "true"))
+	uint8 IsBroken : 1;
 
 	bool bIsRotating;
 	float CurrentRotatingTime;

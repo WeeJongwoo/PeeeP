@@ -18,6 +18,8 @@ APPRotPuzzle::APPRotPuzzle()
 
 	Wing = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Wing"));
 	Wing->SetupAttachment(Frame);
+
+	bIsRotating = false;
 }
 
 // Called when the game starts or when spawned
@@ -58,6 +60,11 @@ void APPRotPuzzle::Tick(float DeltaTime)
 
 void APPRotPuzzle::Charge()
 {
+	if(IsBroken)
+	{
+		return;
+	}
+
 	if (bIsRotating)
 	{
 		return;
