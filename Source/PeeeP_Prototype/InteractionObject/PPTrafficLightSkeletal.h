@@ -22,6 +22,8 @@ protected:
 	TObjectPtr<class USkeletalMeshComponent> TrafficLightSkeletalMesh;
 
 public:
+	virtual void ChangeColor(ETrafficLightColor NewTrafficLightColor) override;
+
 	virtual void ChangeEmissive(float Type) override;
 
 	void PlayAnimation();

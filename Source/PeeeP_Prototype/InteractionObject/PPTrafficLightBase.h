@@ -39,7 +39,7 @@ public:
 	ETrafficLightColor GetCurrentTrafficLightColor() const;
 	ETrafficLightType GetTrafficLightType() const;
 
-	void ChangeColor(ETrafficLightColor NewTrafficLightColor);
+	virtual void ChangeColor(ETrafficLightColor NewTrafficLightColor);
 
 	virtual void ChangeEmissive(float Type);
 
