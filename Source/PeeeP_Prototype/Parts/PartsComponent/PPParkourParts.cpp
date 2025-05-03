@@ -7,6 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Parts/PartsData/PPParkourPartsData.h"
+#include "Components/AudioComponent.h"
 
 
 UPPParkourParts::UPPParkourParts()
@@ -24,6 +25,8 @@ UPPParkourParts::UPPParkourParts()
 	{
 		PartsData = ParkourPartsDataRef.Object;
 	}
+
+	ParkourSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ParkourSoundComponent"));
 
 }
 
@@ -53,6 +56,9 @@ void UPPParkourParts::OnComponentCreated()
 				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingJumpAction, ETriggerEvent::Started, this, &UPPParkourParts::ChargStart);
 				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingJumpAction, ETriggerEvent::Ongoing, this, &UPPParkourParts::TickJumpCharge);
 				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingJumpAction, ETriggerEvent::Completed, this, &UPPParkourParts::Jump);
+
+				ChargeSound = ParkourPartsData->ChargeSound;
+				JumpSound = ParkourPartsData->JumpSound;
 			}
 		}
 	}
@@ -88,6 +94,14 @@ void UPPParkourParts::ChargStart()
 	{
 		PreviousJumpChargingTime = World->GetTimeSeconds();
 		UE_LOG(LogTemp, Warning, TEXT("Start"));
+
+		if (IsValid(ParkourSoundComponent) && IsValid(ChargeSound))
+		{
+			ParkourSoundComponent->SetSound(ChargeSound);
+			ParkourSoundComponent->SetVolumeMultiplier(0.5f);
+			ParkourSoundComponent->SetPitchMultiplier(1.0f);
+			ParkourSoundComponent->Play();
+		}
 	}
 }
 
@@ -119,6 +133,21 @@ void UPPParkourParts::TickJumpCharge()
 void UPPParkourParts::Jump()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Charge Jump"));
+
+	if (IsValid(ParkourSoundComponent))
+	{
+		if (ParkourSoundComponent->IsPlaying())
+		{
+			ParkourSoundComponent->Stop();
+		}
+		if (IsValid(JumpSound))
+		{
+			ParkourSoundComponent->SetSound(JumpSound);
+			ParkourSoundComponent->SetVolumeMultiplier(0.5f);
+			ParkourSoundComponent->SetPitchMultiplier(1.0f);
+			ParkourSoundComponent->Play();
+		}
+	}
 
 	if (CurrentJumpLevel > 0)
 	{
