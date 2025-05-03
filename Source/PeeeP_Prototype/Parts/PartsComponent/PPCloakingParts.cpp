@@ -2,6 +2,8 @@
 
 
 #include "Parts/PartsComponent/PPCloakingParts.h"
+#include "Character/PPCharacterPlayer.h"
+#include "Components/CapsuleComponent.h"
 
 UPPCloakingParts::UPPCloakingParts()
 {
@@ -35,8 +37,26 @@ void UPPCloakingParts::CleanUpParts()
 
 void UPPCloakingParts::StartCloaking()
 {
+	if (IsValid(Owner))
+	{
+		if (IsValid(DefaultMaterial) && IsValid(CloakingMaterial))
+		{
+			Owner->GetMesh()->SetMaterial(0, CloakingMaterial);
+		}
+
+		Owner->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel11, ECR_Ignore);
+	}
+	
 }
 
 void UPPCloakingParts::StopCloaking()
 {
+	if (IsValid(Owner))
+	{
+		if (IsValid(DefaultMaterial) && IsValid(CloakingMaterial))
+		{
+			Owner->GetMesh()->SetMaterial(0, DefaultMaterial);
+		}
+		Owner->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel11, ECR_Overlap);
+	}
 }
