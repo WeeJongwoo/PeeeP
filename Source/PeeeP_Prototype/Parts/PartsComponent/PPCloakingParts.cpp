@@ -46,7 +46,6 @@ void UPPCloakingParts::StartCloaking()
 
 		Owner->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel11, ECR_Ignore);
 	}
-	
 }
 
 void UPPCloakingParts::StopCloaking()

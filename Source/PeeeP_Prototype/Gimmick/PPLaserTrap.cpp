@@ -22,6 +22,7 @@ void APPLaserTrap::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	LaserCollider->OnComponentBeginOverlap.AddDynamic(this, &APPLaserTrap::OnLaserOverlap);
 }
 
 // Called every frame
@@ -31,8 +32,8 @@ void APPLaserTrap::Tick(float DeltaTime)
 
 }
 
-void APPLaserTrap::OnLaserPressed(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void APPLaserTrap::OnLaserOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-
+	
 }
 
