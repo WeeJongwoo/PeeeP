@@ -31,7 +31,7 @@ private:
 	void TickJumpCharge();
 	void Jump();
 
-	int8 bIsIsCharging : 1;
+	int8 bIsCharging : 1;
 
 	float DefaultJumpZVelocity;
 	float DefaultMaxWalkSpeed;

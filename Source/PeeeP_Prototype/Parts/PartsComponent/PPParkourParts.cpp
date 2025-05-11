@@ -82,12 +82,15 @@ void UPPParkourParts::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 void UPPParkourParts::CleanUpParts()
 {
 	Owner->GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
-	Owner->GetCharacterMovement()->JumpZVelocity = DefaultJumpZVelocity;
 }
 
 void UPPParkourParts::ChargStart()
 {
-	bIsIsCharging = true;
+	bIsCharging = true;
+	if (CurrentJumpLevel > 0)
+	{
+		CurrentJumpLevel = 0;
+	}
 
 	UWorld* World = GetWorld();
 	if (IsValid(World))
@@ -108,7 +111,7 @@ void UPPParkourParts::ChargStart()
 void UPPParkourParts::TickJumpCharge()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Charge"));
-	if (bIsIsCharging)
+	if (bIsCharging)
 	{
 		CurrentJumpChargingTime = GetWorld()->GetTimeSeconds();
 
@@ -134,6 +137,13 @@ void UPPParkourParts::Jump()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Charge Jump"));
 
+	bIsCharging = false;
+
+	if (Owner->GetCharacterMovement()->IsFalling())
+	{
+		return;
+	}
+
 	if (IsValid(ParkourSoundComponent))
 	{
 		if (ParkourSoundComponent->IsPlaying())
@@ -153,10 +163,13 @@ void UPPParkourParts::Jump()
 	{
 		int32 JumpMultiplierExponent = CurrentJumpLevel - 1;
 		float FinalJumpMultiplier = FMath::Pow(ParkourJumpMultiplier, JumpMultiplierExponent);
+		float JumpSpeed = DefaultJumpZVelocity * FinalJumpMultiplier;
 
-		Owner->GetCharacterMovement()->JumpZVelocity *= FinalJumpMultiplier;
+		Owner->LaunchCharacter(FVector(0.0f, 0.0f, JumpSpeed), true, false);
+		UE_LOG(LogTemp, Warning, TEXT("Current Jump Level %d"), CurrentJumpLevel);
+
+		//Owner->GetCharacterMovement()->JumpZVelocity *= FinalJumpMultiplier;
 	}
 	
-	Owner->Jump();
-	bIsIsCharging = false;
+	//Owner->Jump();
 }
