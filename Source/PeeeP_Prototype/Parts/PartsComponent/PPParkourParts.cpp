@@ -7,6 +7,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Parts/PartsData/PPParkourPartsData.h"
+#include "Components/AudioComponent.h"
+#include "Containers/Ticker.h"
 
 
 UPPParkourParts::UPPParkourParts()
@@ -24,6 +26,8 @@ UPPParkourParts::UPPParkourParts()
 	{
 		PartsData = ParkourPartsDataRef.Object;
 	}
+
+	ParkourSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ParkourSoundComponent"));
 
 }
 
@@ -53,6 +57,9 @@ void UPPParkourParts::OnComponentCreated()
 				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingJumpAction, ETriggerEvent::Started, this, &UPPParkourParts::ChargStart);
 				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingJumpAction, ETriggerEvent::Ongoing, this, &UPPParkourParts::TickJumpCharge);
 				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingJumpAction, ETriggerEvent::Completed, this, &UPPParkourParts::Jump);
+
+				ChargeSound = ParkourPartsData->ChargeSound;
+				JumpSound = ParkourPartsData->JumpSound;
 			}
 		}
 	}
@@ -76,25 +83,36 @@ void UPPParkourParts::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 void UPPParkourParts::CleanUpParts()
 {
 	Owner->GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
-	Owner->GetCharacterMovement()->JumpZVelocity = DefaultJumpZVelocity;
 }
 
 void UPPParkourParts::ChargStart()
 {
-	bIsIsCharging = true;
+	bIsCharging = true;
+	if (CurrentJumpLevel > 0)
+	{
+		CurrentJumpLevel = 0;
+	}
 
 	UWorld* World = GetWorld();
 	if (IsValid(World))
 	{
 		PreviousJumpChargingTime = World->GetTimeSeconds();
 		UE_LOG(LogTemp, Warning, TEXT("Start"));
+
+		if (IsValid(ParkourSoundComponent) && IsValid(ChargeSound))
+		{
+			ParkourSoundComponent->SetSound(ChargeSound);
+			ParkourSoundComponent->SetVolumeMultiplier(0.5f);
+			ParkourSoundComponent->SetPitchMultiplier(1.0f);
+			ParkourSoundComponent->Play();
+		}
 	}
 }
 
 void UPPParkourParts::TickJumpCharge()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Charge"));
-	if (bIsIsCharging)
+	if (bIsCharging)
 	{
 		CurrentJumpChargingTime = GetWorld()->GetTimeSeconds();
 
@@ -120,14 +138,49 @@ void UPPParkourParts::Jump()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Charge Jump"));
 
+	FTimerDelegate TimerDelegate;
+	TimerDelegate.BindLambda([this]()
+		{
+			if (IsValid(this))
+			{
+				bIsCharging = false;
+			}
+		}
+	);
+
+	GetWorld()->GetTimerManager().SetTimerForNextTick(TimerDelegate);
+
+	if (Owner->GetCharacterMovement()->IsFalling())
+	{
+		return;
+	}
+
+	if (IsValid(ParkourSoundComponent))
+	{
+		if (ParkourSoundComponent->IsPlaying())
+		{
+			ParkourSoundComponent->Stop();
+		}
+		if (IsValid(JumpSound))
+		{
+			ParkourSoundComponent->SetSound(JumpSound);
+			ParkourSoundComponent->SetVolumeMultiplier(0.5f);
+			ParkourSoundComponent->SetPitchMultiplier(1.0f);
+			ParkourSoundComponent->Play();
+		}
+	}
+
 	if (CurrentJumpLevel > 0)
 	{
 		int32 JumpMultiplierExponent = CurrentJumpLevel - 1;
 		float FinalJumpMultiplier = FMath::Pow(ParkourJumpMultiplier, JumpMultiplierExponent);
+		float JumpSpeed = DefaultJumpZVelocity * FinalJumpMultiplier;
 
-		Owner->GetCharacterMovement()->JumpZVelocity *= FinalJumpMultiplier;
+		Owner->LaunchCharacter(FVector(0.0f, 0.0f, JumpSpeed), true, false);
+		UE_LOG(LogTemp, Warning, TEXT("Current Jump Level %d"), CurrentJumpLevel);
+
+		//Owner->GetCharacterMovement()->JumpZVelocity *= FinalJumpMultiplier;
 	}
 	
-	Owner->Jump();
-	bIsIsCharging = false;
+	//Owner->Jump();
 }

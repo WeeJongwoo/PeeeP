@@ -2,6 +2,7 @@
 
 
 #include "Gimmick/PPLaserTrap.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 APPLaserTrap::APPLaserTrap()
@@ -9,6 +10,11 @@ APPLaserTrap::APPLaserTrap()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	LaserMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LaserMesh"));
+	LaserMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	LaserCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("LaserCollider"));
+	LaserCollider->SetCollisionProfileName(TEXT("LaserTrap"));
 }
 
 // Called when the game starts or when spawned
@@ -16,6 +22,7 @@ void APPLaserTrap::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	LaserCollider->OnComponentBeginOverlap.AddDynamic(this, &APPLaserTrap::OnLaserOverlap);
 }
 
 // Called every frame
@@ -25,8 +32,8 @@ void APPLaserTrap::Tick(float DeltaTime)
 
 }
 
-void APPLaserTrap::OnLaserPressed(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void APPLaserTrap::OnLaserOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-
+	
 }
 

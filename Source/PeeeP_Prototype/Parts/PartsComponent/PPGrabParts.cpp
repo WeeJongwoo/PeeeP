@@ -23,11 +23,11 @@ UPPGrabParts::UPPGrabParts()
 	}
 
 
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> GrabAnimMontageRef(TEXT("/Game/Characters/PeePCharacter/Animation/AM_Grab.AM_Grab"));
+	/*static ConstructorHelpers::FObjectFinder<UAnimMontage> GrabAnimMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/Parts/Grab/AM_GrabParts.AM_GrabParts'"));
 	if (GrabAnimMontageRef.Object)
 	{
 		GrabAnimMontage = GrabAnimMontageRef.Object;
-	}
+	}*/
 
 
 	GrabSocket = TEXT("GrabSocket");
@@ -75,6 +75,8 @@ void UPPGrabParts::OnComponentCreated()
 
                 EnhancedInputComponent->BindAction(GrabPartsData->GrabAction, ETriggerEvent::Started, this, &UPPGrabParts::HandleGrabAnimation);
                 EnhancedInputComponent->BindAction(GrabPartsData->GrabAction, ETriggerEvent::Completed, this, &UPPGrabParts::GrabRelease);
+
+				this->GrabAnimMontage = GrabPartsData->GrabAnimMontage;
             }
         }
     }
