@@ -20,6 +20,8 @@ public:
 	virtual void OnComponentCreated() override;
 	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
 
+	bool GetIsCharging() const { return bIsCharging; }
+
 private:
 
 	virtual void BeginPlay() override;

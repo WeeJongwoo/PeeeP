@@ -7,6 +7,7 @@
 #include "LevelSequencePlayer.h"
 #include "MovieSceneSequence.h"
 #include "Gimmick/PPHologramBridge.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APPHologramBridgeManager::APPHologramBridgeManager()
@@ -45,11 +46,46 @@ void APPHologramBridgeManager::SetClear()
 			}
 		}
 	}
+	else
+	{
+		SwitchToLightCam();
+	}
 }
 
 void APPHologramBridgeManager::SequenceFinished()
 {
 	bSequencePlayed = true;
+}
+
+void APPHologramBridgeManager::SwitchToLightCam()
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	DefaultCamActor = PlayerController->GetViewTarget();
+
+	if (IsValid(DefaultCamActor) && IsValid(LightCamActor))
+	{
+		PlayerController->SetViewTargetWithBlend(LightCamActor, 0.5f);
+
+		GetWorld()->GetTimerManager().SetTimer(LightCamTimerHandle, this, &APPHologramBridgeManager::RevertCam, 1.0f);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DefaultCamActor is not valid"));
+	}
+}
+
+void APPHologramBridgeManager::RevertCam()
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	if (IsValid(DefaultCamActor))
+	{
+		PlayerController->SetViewTargetWithBlend(DefaultCamActor, 0.5f);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DefaultCamActor is not valid"));
+	}
 }
 
 // Called every frame

@@ -8,6 +8,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Parts/PartsData/PPParkourPartsData.h"
 #include "Components/AudioComponent.h"
+#include "Containers/Ticker.h"
 
 
 UPPParkourParts::UPPParkourParts()
@@ -137,7 +138,17 @@ void UPPParkourParts::Jump()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Charge Jump"));
 
-	bIsCharging = false;
+	FTimerDelegate TimerDelegate;
+	TimerDelegate.BindLambda([this]()
+		{
+			if (IsValid(this))
+			{
+				bIsCharging = false;
+			}
+		}
+	);
+
+	GetWorld()->GetTimerManager().SetTimerForNextTick(TimerDelegate);
 
 	if (Owner->GetCharacterMovement()->IsFalling())
 	{

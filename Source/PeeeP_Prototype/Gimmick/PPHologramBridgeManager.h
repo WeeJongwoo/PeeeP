@@ -42,8 +42,17 @@ protected:
 	TObjectPtr<class ULevelSequence> ClearSequence;
 
 	TObjectPtr<class ULevelSequencePlayer> ClearSequencePlayer;
+
+	void SwitchToLightCam();
+
+	void RevertCam();
 	
-	//class ALevelSequenceActor* RestartSequenceActor;
+	TObjectPtr<class AActor> DefaultCamActor;
+
+	UPROPERTY(EditAnywhere, Category = "Button")
+	TObjectPtr<class AActor> LightCamActor;
+
+	FTimerHandle LightCamTimerHandle;
 
 public:	
 	// Called every frame
