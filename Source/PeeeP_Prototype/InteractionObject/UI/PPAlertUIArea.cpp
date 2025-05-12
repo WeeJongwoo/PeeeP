@@ -18,7 +18,8 @@ APPAlertUIArea::APPAlertUIArea()
 	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &APPAlertUIArea::OnOverlapBegin);
 	TriggerBox->OnComponentEndOverlap.AddDynamic(this, &APPAlertUIArea::OnOverlapEnd);
 
-	KeyManualIndex = 0;
+	KeyManualShowTime = 4.0f;
+	KeyManual = EKeyManual::NONE;
 }
 
 // Called when the game starts or when spawned
@@ -50,11 +51,11 @@ void APPAlertUIArea::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				if (ElectircHUDInterface->ShowKeyManualDelegate.IsBound())
 				{
 					UE_LOG(LogTemp, Log, TEXT("Succeessed to Bound ShowKeyManualDelegate."));
-					ElectircHUDInterface->ShowKeyManualDelegate.Broadcast(KeyManualIndex);
+					ElectircHUDInterface->ShowKeyManualDelegate.Broadcast(static_cast<uint8>(KeyManual));
 
 					FTimerDelegate TimerDelegate;
 					TimerDelegate.BindUObject(this, &APPAlertUIArea::SetKeyMaunalWidgetHiddenByTimer, ElectircHUDInterface);
-					GetWorld()->GetTimerManager().SetTimer(AutoHiddenTimer, TimerDelegate, 3.0f, false);
+					GetWorld()->GetTimerManager().SetTimer(AutoHiddenTimer, TimerDelegate, KeyManualShowTime, false);
 					UE_LOG(LogTemp, Warning, TEXT("Timer"));
 				}
 			}
@@ -75,8 +76,7 @@ void APPAlertUIArea::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* O
 
 void APPAlertUIArea::SetKeyMaunalWidgetHiddenByTimer(IPPElectricHUDInterface* ElectircHUDInterface)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hidden"));
-	ElectircHUDInterface->ShowKeyManualDelegate.Broadcast(0);
+	ElectircHUDInterface->ShowKeyManualDelegate.Broadcast(static_cast<uint8>(EKeyManual::VISIBLE_TIMEOUT));
 	// GetWorld()->GetTimerManager().ClearTimer(AutoHiddenTimer);
 }
 
