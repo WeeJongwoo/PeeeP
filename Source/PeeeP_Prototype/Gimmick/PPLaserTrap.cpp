@@ -17,8 +17,8 @@ APPLaserTrap::APPLaserTrap()
 	LaserCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("LaserCollider"));
 	LaserCollider->SetCollisionProfileName(TEXT("LaserTrap"));
 
-	RootComponent = LaserCollider;
-	LaserMesh->SetupAttachment(LaserCollider);
+	RootComponent = LaserMesh;
+	LaserCollider->SetupAttachment(LaserMesh);
 
 	TrapDamage = 5.0f;
 }
