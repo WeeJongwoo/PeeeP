@@ -54,6 +54,8 @@ protected:
 
 	FTimerHandle LightCamTimerHandle;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -62,4 +64,7 @@ public:
 
 	UFUNCTION()
 	void SequenceFinished();
+
+	
 };
+

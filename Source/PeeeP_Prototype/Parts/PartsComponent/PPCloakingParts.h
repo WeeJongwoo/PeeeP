@@ -31,11 +31,9 @@ private:
 	void StartCloaking();
 	void StopCloaking();
 
-	TArray<TObjectPtr<class UMaterialInstance>> DefaultPartsMaterial;
-
 	TObjectPtr<class UMaterialInstance> CloakingMaterial;
 
-	TObjectPtr<class UMaterialInstance> DefaultCharacterMaterial;
+	int32 NumMaterials;
 
 	float CloakingTime;
 

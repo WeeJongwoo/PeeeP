@@ -41,9 +41,8 @@ void UPPCloakingParts::OnComponentCreated()
 
 				CloakingTime = CloakingPartsData->CloakingTime;
 
-				DefaultPartsMaterial = CloakingPartsData->DefaultMaterial;
 				CloakingMaterial = CloakingPartsData->CloakingMaterial;
-				DefaultCharacterMaterial = CloakingPartsData->DefaultCharacterMaterial;
+				NumMaterials = CloakingPartsData->PartsMesh->GetNumMaterials();
 			}
 		}
 	}
@@ -57,6 +56,7 @@ void UPPCloakingParts::OnComponentDestroyed(bool bDestroyingHierarchy)
 void UPPCloakingParts::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 void UPPCloakingParts::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -74,9 +74,10 @@ void UPPCloakingParts::StartCloaking()
 {
 	if (IsValid(Owner))
 	{
-		if (DefaultPartsMaterial.Num() > 0 && IsValid(CloakingMaterial))
+		//NumMaterials = Owner->GetMesh()->GetNumMaterials();
+		if (NumMaterials > 0 && IsValid(CloakingMaterial))
 		{
-			for (int32 i = 0; i < DefaultPartsMaterial.Num(); i++)
+			for (int32 i = 0; i < NumMaterials; i++)
 			{
 				Owner->GetMesh()->SetMaterial(i, CloakingMaterial);
 			}
@@ -95,9 +96,9 @@ void UPPCloakingParts::StopCloaking()
 	if (IsValid(Owner))
 	{
 		UE_LOG(LogTemp, Log, TEXT("DefaultMaterial Set"));
-		if (DefaultPartsMaterial.Num() > 0 && IsValid(CloakingMaterial))
+		if (NumMaterials > 0 && IsValid(CloakingMaterial))
 		{
-			for (int i = 0; i < DefaultPartsMaterial.Num(); i++)
+			for (int i = 0; i < NumMaterials; i++)
 			{
 				Owner->GetMesh()->SetMaterial(i, nullptr);
 			}
