@@ -20,8 +20,14 @@ public:
 	TObjectPtr<class UInputAction> CloakingAction;
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<class UMaterialInstance> DefaultMaterial;
+	TArray<TObjectPtr<class UMaterialInstance>> DefaultMaterial;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UMaterialInstance> CloakingMaterial;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UMaterialInstance> DefaultCharacterMaterial;
+
+	UPROPERTY(EditAnywhere)
+	float CloakingTime;
 };

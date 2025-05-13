@@ -31,10 +31,14 @@ private:
 	void StartCloaking();
 	void StopCloaking();
 
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<class UMaterialInstance> DefaultMaterial;
+	TArray<TObjectPtr<class UMaterialInstance>> DefaultPartsMaterial;
 
-	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UMaterialInstance> CloakingMaterial;
+
+	TObjectPtr<class UMaterialInstance> DefaultCharacterMaterial;
+
+	float CloakingTime;
+
+	FTimerHandle CloakingTimerHandle;
 
 };
