@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -8,7 +8,7 @@
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FUsingElectricDelegate, float)
 DECLARE_MULTICAST_DELEGATE_TwoParams(FChargingLevelDelegate, int, float)
-DECLARE_MULTICAST_DELEGATE_OneParam(FShowKeyManualDelegate, uint32)
+DECLARE_MULTICAST_DELEGATE_OneParam(FShowKeyManualDelegate, uint8)
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
@@ -26,12 +26,12 @@ class PEEEP_PROTOTYPE_API IPPElectricHUDInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	// Àü±â·®ÀÌ º¯È­ÇÒ ¶§ »ç¿ëÇÏ´Â µ¨¸®°ÔÀÌÆ®
+	// ì „ê¸°ëŸ‰ì´ ë³€í™”í•  ë•Œ ì‚¬ìš©í•˜ëŠ” ë¸ë¦¬ê²Œì´íŠ¸
 	FUsingElectricDelegate ElectircCapacityDelegate;
 
-	// ÃæÀüµÈ ¾ç¿¡ µû¶ó °ÔÀÌÁö¸¦ Ã³¸®ÇÒ ¶§ »ç¿ëÇÏ´Â µ¨¸®°ÔÀÌÆ®
+	// ì¶©ì „ëœ ì–‘ì— ë”°ë¼ ê²Œì´ì§€ë¥¼ ì²˜ë¦¬í•  ë•Œ ì‚¬ìš©í•˜ëŠ” ë¸ë¦¬ê²Œì´íŠ¸
 	FChargingLevelDelegate ChargingLevelDelegate;
 
-	// UI ÀÌ¹ÌÁö º¯°æ
+	// UI ì´ë¯¸ì§€ ë³€ê²½
 	FShowKeyManualDelegate ShowKeyManualDelegate;
 };
