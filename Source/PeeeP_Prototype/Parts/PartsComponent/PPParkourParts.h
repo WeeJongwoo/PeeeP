@@ -20,6 +20,8 @@ public:
 	virtual void OnComponentCreated() override;
 	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
 
+	bool GetIsCharging() const { return bIsCharging; }
+
 private:
 
 	virtual void BeginPlay() override;
@@ -31,7 +33,7 @@ private:
 	void TickJumpCharge();
 	void Jump();
 
-	int8 bIsIsCharging : 1;
+	int8 bIsCharging : 1;
 
 	float DefaultJumpZVelocity;
 	float DefaultMaxWalkSpeed;
@@ -53,4 +55,21 @@ private:
 	TObjectPtr<class UNiagaraSystem> JumpChargingEffect;
 
 	TObjectPtr<class UNiagaraComponent> ParkourEffectComponent;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UAudioComponent> ParkourSoundComponent;
+
+	//이 사운드 에셋은 파쿠르파츠 데이터에 넣으면 자동 적용 되도록 해뒀슈.
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class USoundBase> ChargeSound;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class USoundBase> JumpSound;
+
+	TObjectPtr<class UNiagaraSystem> ChargingEffect;
+
+	TObjectPtr<class UNiagaraComponent> ChargingEffectComponent;
+
 };
+
+

@@ -14,6 +14,9 @@ class PEEEP_PROTOTYPE_API UPPParkourAnimInstance : public UPPAnimInstance
 {
 	GENERATED_BODY()
 	
+protected:
+	UPROPERTY()
+	TObjectPtr<class APPCharacterPlayer> CharacterPlayer;
 	
 public:
 	UPPParkourAnimInstance();
@@ -21,4 +24,7 @@ public:
 	virtual void NativeInitializeAnimation() override;
 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ParkruParts")
+	bool bIsCharging;
 };
