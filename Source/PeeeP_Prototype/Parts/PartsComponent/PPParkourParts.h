@@ -65,4 +65,11 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class USoundBase> JumpSound;
+
+	TObjectPtr<class UNiagaraSystem> ChargingEffect;
+
+	TObjectPtr<class UNiagaraComponent> ChargingEffectComponent;
+
 };
+
+

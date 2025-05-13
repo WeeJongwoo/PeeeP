@@ -9,6 +9,8 @@
 #include "Parts/PartsData/PPParkourPartsData.h"
 #include "Components/AudioComponent.h"
 #include "Containers/Ticker.h"
+#include "NiagaraComponent.h"
+#include "NiagaraSystem.h"
 
 
 UPPParkourParts::UPPParkourParts()
@@ -28,6 +30,7 @@ UPPParkourParts::UPPParkourParts()
 	}
 
 	ParkourSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ParkourSoundComponent"));
+	ChargingEffectComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ChargingEffectComponent"));
 
 }
 
@@ -60,6 +63,7 @@ void UPPParkourParts::OnComponentCreated()
 
 				ChargeSound = ParkourPartsData->ChargeSound;
 				JumpSound = ParkourPartsData->JumpSound;
+				ChargingEffect = ParkourPartsData->ChargingEffect;
 			}
 		}
 	}
@@ -73,6 +77,16 @@ void UPPParkourParts::OnComponentDestroyed(bool bDestroyingHierarchy)
 void UPPParkourParts::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (ChargingEffect != nullptr && IsValid(ChargingEffectComponent))
+	{
+		ChargingEffectComponent->SetAutoActivate(false);
+		ChargingEffectComponent->SetupAttachment(Owner->GetRootComponent());
+
+		ChargingEffectComponent->SetAsset(ChargingEffect);
+		ChargingEffectComponent->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -20.0f), FRotator::ZeroRotator);
+		ChargingEffectComponent->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
+	}
 }
 
 void UPPParkourParts::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -83,6 +97,7 @@ void UPPParkourParts::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 void UPPParkourParts::CleanUpParts()
 {
 	Owner->GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
+	ChargingEffectComponent->DestroyComponent();
 }
 
 void UPPParkourParts::ChargStart()
@@ -120,12 +135,19 @@ void UPPParkourParts::TickJumpCharge()
 
 		TotalJumpChargingTime = FMath::Clamp(TotalJumpChargingTime, 0.0f, TimePerChargeLevel);
 
-		UE_LOG(LogTemp, Warning, TEXT("TotalJumpChargingTime %f"), TotalJumpChargingTime);
+		//UE_LOG(LogTemp, Warning, TEXT("TotalJumpChargingTime %f"), TotalJumpChargingTime);
 
-		if (TotalJumpChargingTime >= TimePerChargeLevel)
+		if (TotalJumpChargingTime >= TimePerChargeLevel && CurrentJumpLevel < MaxJumpLevel)
 		{
 			CurrentJumpLevel = FMath::Clamp(CurrentJumpLevel + 1, 1, MaxJumpLevel);
 			TotalJumpChargingTime = 0.0f;
+
+			if (ChargingEffectComponent->GetAsset() == ChargingEffect)
+			{
+				ChargingEffectComponent->Activate(true);
+				UE_LOG(LogTemp, Warning, TEXT("ChargingEffectComponent Activate"));
+			}
+		
 			UE_LOG(LogTemp, Warning, TEXT("Current Jump Level %d"), CurrentJumpLevel);
 		}
 

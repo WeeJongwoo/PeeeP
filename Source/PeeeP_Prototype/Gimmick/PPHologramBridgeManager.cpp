@@ -64,7 +64,7 @@ void APPHologramBridgeManager::SwitchToLightCam()
 
 	if (IsValid(DefaultCamActor) && IsValid(LightCamActor))
 	{
-		PlayerController->SetViewTargetWithBlend(LightCamActor, 0.5f);
+		PlayerController->SetViewTargetWithBlend(LightCamActor, 0.0f);
 
 		GetWorld()->GetTimerManager().SetTimer(LightCamTimerHandle, this, &APPHologramBridgeManager::RevertCam, 1.0f);
 	}
@@ -80,7 +80,7 @@ void APPHologramBridgeManager::RevertCam()
 
 	if (IsValid(DefaultCamActor))
 	{
-		PlayerController->SetViewTargetWithBlend(DefaultCamActor, 0.5f);
+		PlayerController->SetViewTargetWithBlend(DefaultCamActor, 0.0f);
 	}
 	else
 	{
@@ -105,9 +105,12 @@ void APPHologramBridgeManager::PostInitializeComponents()
 			{
 				if (IsValid(this))
 				{
-					bButton1State = true;
-					SetClear();
-					UE_LOG(LogTemp, Log, TEXT("Button1 Pressed"));
+					if (!bButton1State)
+					{
+						bButton1State = true;
+						SetClear();
+						UE_LOG(LogTemp, Log, TEXT("Button1 Pressed"));
+					}
 				}
 			}
 		);
@@ -119,9 +122,12 @@ void APPHologramBridgeManager::PostInitializeComponents()
 			{
 				if (IsValid(this))
 				{
-					bButton2State = true;
-					SetClear();
-					UE_LOG(LogTemp, Log, TEXT("Button2 Pressed"));
+					if (!bButton2State)
+					{
+						bButton2State = true;
+						SetClear();
+						UE_LOG(LogTemp, Log, TEXT("Button2 Pressed"));
+					}
 				}
 			}
 		);
