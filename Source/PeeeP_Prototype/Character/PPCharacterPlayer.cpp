@@ -98,13 +98,13 @@ APPCharacterPlayer::APPCharacterPlayer()
 	bIsAllowWheelInput = true;
 
 	// Default Mesh & Animation Setting
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/Characters/PeePCharacter/rig_new.rig_new'"));
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/PeeP_Characters/new_beep/new_beep_rig.new_beep_rig'"));
 	if (MeshRef.Object)
 	{
 		DefaultSkeletonMesh = MeshRef.Object;
 		GetMesh()->SetSkeletalMesh(MeshRef.Object);
 	}
-	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBlueprintRef(TEXT("/Game/Characters/PeePCharacter/Animation/ABP_PeeeP.ABP_PeeeP_C"));
+	static ConstructorHelpers::FClassFinder<UAnimInstance> AnimBlueprintRef(TEXT("/Game/PeeP_Characters/new_beep/ABP_PeeeP.ABP_PeeeP_C"));
 	if (AnimBlueprintRef.Class)
 	{
 		DefaultAnimClass = AnimBlueprintRef.Class;
