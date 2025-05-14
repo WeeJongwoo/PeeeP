@@ -2,7 +2,7 @@
 
 
 #include "Gimmick/PPHologramBridgeManager.h"
-#include "InteractionObject/Electric/PPButton.h"
+#include "InteractionObject/PPButton.h"
 #include "LevelSequence.h"
 #include "LevelSequencePlayer.h"
 #include "MovieSceneSequence.h"
