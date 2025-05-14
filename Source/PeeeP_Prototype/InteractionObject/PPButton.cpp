@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PPButton.h"
+#include "InteractionObject/PPButton.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -11,11 +11,10 @@ APPButton::APPButton()
 	PrimaryActorTick.bCanEverTick = true;
 
 	ButtonMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ButtonMesh"));
-	ButtonMesh->SetCollisionProfileName(TEXT("ElectricObjectProfile"));
 	RootComponent = ButtonMesh;
 
-	//ButtonCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("ButtonCollider"));
-	//ButtonCollider->SetupAttachment(ButtonMesh);
+	ButtonCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("ButtonCollider"));
+	ButtonCollider->SetupAttachment(ButtonMesh);
 
 
 }
@@ -25,23 +24,18 @@ void APPButton::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	//ButtonCollider->OnComponentBeginOverlap.AddDynamic(this, &APPButton::OnButtonPressed);
+	ButtonCollider->OnComponentBeginOverlap.AddDynamic(this, &APPButton::OnButtonPressed);
 }
 
-//void APPButton::OnButtonPressed(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-//{
-//	OnButtonPressedDelegate.ExecuteIfBound();
-//}
+void APPButton::OnButtonPressed(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	OnButtonPressedDelegate.ExecuteIfBound();
+}
 
 // Called every frame
 void APPButton::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
-
-void APPButton::Charge()
-{
-	OnButtonPressedDelegate.ExecuteIfBound();
 }
 

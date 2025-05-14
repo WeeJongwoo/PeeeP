@@ -112,8 +112,6 @@ void UPPGrabParts::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 
 void UPPGrabParts::CleanUpParts()
 {
-	Super::CleanUpParts();
-
 	GrabRelease();
 }
 

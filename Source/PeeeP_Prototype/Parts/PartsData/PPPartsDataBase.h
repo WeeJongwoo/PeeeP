@@ -32,9 +32,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<class UPPPartsBase> PartsComponentClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<class UStaticMesh> PartsItemMesh;
-
 
 public:
 	virtual FPrimaryAssetId GetPrimaryAssetId() const override;
@@ -48,6 +45,10 @@ public:
 	// ������ �̹���
 	UPROPERTY(EditAnywhere, Category = Base)
 	TObjectPtr<UTexture2D> ItemTexture;
+
+	// ������ �̸�
+	UPROPERTY(EditAnywhere, Category= Base)
+	FString ItemName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<class UAnimInstance> AnimClass;

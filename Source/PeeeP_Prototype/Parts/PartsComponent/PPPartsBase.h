@@ -25,14 +25,16 @@ public:
 	// Sets default values for this component's properties
 	UPPPartsBase();
 
-	virtual void OnComponentCreated() override;
 	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
+
+	void DetachParts();
+
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	virtual void CleanUpParts();
+	virtual void CleanUpParts() {};
 
 public:	
 	// Called every frame
