@@ -22,16 +22,6 @@ UPPPartsBase::UPPPartsBase()
 
 }
 
-void UPPPartsBase::OnComponentCreated()
-{
-	Super::OnComponentCreated();
-	//Setup
-	if (IsValid(Owner))
-	{
-		Owner->GetMesh()->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
-	}
-}
-
 void UPPPartsBase::OnComponentDestroyed(bool bDestroyingHierarchy)
 {
 	// ?????? ????(with Github Copilot)
@@ -65,11 +55,6 @@ void UPPPartsBase::BeginPlay()
 
 	// ...
 	
-}
-
-void UPPPartsBase::CleanUpParts()
-{
-	Owner->GetMesh()->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
 }
 
 
