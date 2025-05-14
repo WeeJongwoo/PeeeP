@@ -67,6 +67,8 @@ void UPPCloakingParts::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UPPCloakingParts::CleanUpParts()
 {
+	Super::CleanUpParts();
+
 	StopCloaking();
 }
 
