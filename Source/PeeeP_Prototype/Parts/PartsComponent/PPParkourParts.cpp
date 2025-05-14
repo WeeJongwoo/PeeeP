@@ -96,6 +96,8 @@ void UPPParkourParts::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 void UPPParkourParts::CleanUpParts()
 {
+	Super::CleanUpParts();
+
 	Owner->GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
 	ChargingEffectComponent->DestroyComponent();
 }

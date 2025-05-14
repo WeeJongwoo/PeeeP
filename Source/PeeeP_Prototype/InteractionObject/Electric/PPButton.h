@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interface/PPElectricObjectInterface.h"
 #include "PPButton.generated.h"
 
 DECLARE_DELEGATE(FOnButtonPressed);
 
 UCLASS()
-class PEEEP_PROTOTYPE_API APPButton : public AActor
+class PEEEP_PROTOTYPE_API APPButton : public AActor, public IPPElectricObjectInterface
 {
 	GENERATED_BODY()
 	
@@ -26,14 +27,16 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UStaticMeshComponent> ButtonMesh;
 
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<class UBoxComponent> ButtonCollider;
+	//UPROPERTY(EditAnywhere)
+	//TObjectPtr<class UBoxComponent> ButtonCollider;
 
-	UFUNCTION()
-	void OnButtonPressed(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	//UFUNCTION()
+	//void OnButtonPressed(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void Charge() override;
 
 };
