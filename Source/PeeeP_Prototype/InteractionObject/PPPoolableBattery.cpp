@@ -6,6 +6,7 @@
 
 APPPoolableBattery::APPPoolableBattery()
 {
+	//오브젝트 풀 이용해 스폰할 배터리
 }
 
 void APPPoolableBattery::SetObjectPool(UPPPoolObject* InObjedtPool)
