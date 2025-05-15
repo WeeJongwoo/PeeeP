@@ -59,6 +59,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SplineController", Meta = (AllowPrivateAccess = "true"))
 	uint8 bPendingStop : 1;
 	
+	bool bStopTrain;
 	bool bIsStopping;
 
 	float CurrentSpeed;

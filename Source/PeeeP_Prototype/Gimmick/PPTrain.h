@@ -33,10 +33,12 @@ protected:
 	TObjectPtr<class USoundBase> MoveSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
-	TObjectPtr<class USoundBase> StopSound;
+	TObjectPtr<class USoundBase> HonkSound;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void PlayHonkSound();
 
 };

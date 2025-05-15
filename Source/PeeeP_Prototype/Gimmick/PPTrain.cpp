@@ -4,6 +4,7 @@
 #include "Gimmick/PPTrain.h"
 #include "Components/SplineComponent.h"
 #include "Components/AudioComponent.h"
+#include "Kismet/GamePlayStatics.h"
 
 // Sets default values
 APPTrain::APPTrain()
@@ -18,7 +19,8 @@ APPTrain::APPTrain()
 	TrainMesh->SetupAttachment(Root);
 
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
-	AudioComponent->SetupAttachment(Root);
+	AudioComponent->SetupAttachment(TrainMesh);
+	AudioComponent->bAutoActivate = false;
 
 }
 
@@ -27,8 +29,11 @@ void APPTrain::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AudioComponent->SetSound(MoveSound);
-	
+	if (MoveSound)
+	{
+		AudioComponent->SetSound(MoveSound);
+		AudioComponent->Play(0.0f);
+	}
 }
 
 // Called every frame
@@ -36,5 +41,14 @@ void APPTrain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void APPTrain::PlayHonkSound()
+{
+	if (HonkSound)
+	{
+		AudioComponent->FadeOut(5.0f, 0.0f, EAudioFaderCurve::Linear);
+		UGameplayStatics::PlaySoundAtLocation(this, HonkSound, GetActorLocation());
+	}
 }
 

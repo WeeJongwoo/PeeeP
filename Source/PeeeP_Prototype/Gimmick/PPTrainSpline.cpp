@@ -3,6 +3,7 @@
 
 #include "Gimmick/PPTrainSpline.h"
 #include "Components/SplineComponent.h"
+#include "PPTrain.h"
 
 // Sets default values
 APPTrainSpline::APPTrainSpline()
@@ -23,6 +24,7 @@ APPTrainSpline::APPTrainSpline()
 	CurrentDistance = 0.0f;
 	DecelerationRate = 0.0f;
 	bPendingStop = false;
+	bStopTrain = false;
 	bIsStopping = false;
 
 	TotalMoveTime = SplineComponent->Duration;
@@ -109,12 +111,10 @@ void APPTrainSpline::Tick(float DeltaTime)
 				UE_LOG(LogTemp, Warning, TEXT("Loop!"));
 				CurrentDistance = 0.0f;
 				
-				//SetMoveActorLocation(CurrentDistance);
 				if (bPendingStop)
 				{
-					bIsStopping = true;
+					bStopTrain = true;
 				}
-				//bCanMoveActor = true;
 			}
 			else
 			{
@@ -124,17 +124,31 @@ void APPTrainSpline::Tick(float DeltaTime)
 		}
 
 		// 정지 신호 후 경로 끝에 도달(정방향)
-		if (bIsStopping)
+		if (bStopTrain)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Current Distance: %f"), CurrentDistance);
+
+
 			if (CurrentDistance >= StopDistance)
 			{
+				if (!bIsStopping)
+				{
+					bIsStopping = true;
+					APPTrain* TrainActor = Cast<APPTrain>(ActorToMove);
+					if (TrainActor)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Train Actor Found!"));
+						TrainActor->PlayHonkSound();
+					}
+				}
+
 				MoveSpeed = FMath::FInterpTo(MoveSpeed, 0.0f, DeltaTime, DecelerationRate);
 				if (MoveSpeed <= 10.0f)
 				{
 					bPendingStop = false;
-					bIsStopping = false;
+					bStopTrain = false;
 					bCanMoveActor = false;
+					bIsStopping = false;
 					MoveSpeed = 0.0f;
 				}
 			}
