@@ -17,6 +17,8 @@ APPSplinePatrolPath::APPSplinePatrolPath()
 
 	Spline = CreateDefaultSubobject<USplineComponent>(TEXT("Spline"));
 	Spline->SetupAttachment(Root);
+
+	bIsLoop = false; // 반복 여부
 }
 
 // Called when the game starts or when spawned
