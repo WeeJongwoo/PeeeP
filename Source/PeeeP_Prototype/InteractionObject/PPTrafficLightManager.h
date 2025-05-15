@@ -29,6 +29,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="TrafficLights")
 	TArray<TObjectPtr<class APPTrafficLightBase>> TrafficLights;
 
+	// PPTrafficLightEventInterface를 상속받은 액터들을 저장하는 변수
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrafficLights")
+	TArray<TObjectPtr<AActor>> TrafficLightEventActors;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

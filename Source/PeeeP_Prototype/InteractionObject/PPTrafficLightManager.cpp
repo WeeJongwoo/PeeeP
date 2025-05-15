@@ -4,6 +4,7 @@
 #include "InteractionObject/PPTrafficLightManager.h"
 #include "InteractionObject/PPTrafficLightBase.h"
 #include "InteractionObject/Electric/PPTrafficLightController.h"
+#include "Interface/PPTrafficLightEventInterface.h"
 
 // Sets default values
 APPTrafficLightManager::APPTrafficLightManager()
@@ -61,5 +62,21 @@ void APPTrafficLightManager::CheckTrafficLightsColor(ETrafficLightColor Color)
 void APPTrafficLightManager::StartEvent()
 {
 	UE_LOG(LogTemp, Warning, TEXT("All Traffic Lights are Matched!"));
+
+	if (!TrafficLightEventActors.IsEmpty())
+	{
+		for (AActor* TrafficLightEventActor : TrafficLightEventActors)
+		{
+			IPPTrafficLightEventInterface* TrafficLightEventInterface = CastChecked<IPPTrafficLightEventInterface>(TrafficLightEventActor);
+			if (TrafficLightEventInterface != nullptr)
+			{
+				TrafficLightEventInterface->TrafficLightEvent();
+			}
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Traffic Light Event Actor Found!"));
+	}
 }
 

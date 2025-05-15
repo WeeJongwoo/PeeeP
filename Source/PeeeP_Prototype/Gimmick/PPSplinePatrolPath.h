@@ -16,13 +16,13 @@ public:
 	APPSplinePatrolPath();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SplineController")
-	USceneComponent* Root;
+	TObjectPtr<class USceneComponent> Root;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SplineController")
-	class USplineComponent* Spline;
+	TObjectPtr<class USplineComponent> Spline;
 
 	UPROPERTY(EditAnywhere, Category = "Spline")
-	uint8 bIsLoop;
+	uint8 bIsLoop : 1;
 
 	UPROPERTY(EditAnywhere, Category = "Spline")
 	TSubclassOf<class AActor> ActorToMoveClass;

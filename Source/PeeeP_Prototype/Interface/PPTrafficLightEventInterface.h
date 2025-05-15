@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "PPInteractableObjectInterface.generated.h"
+#include "PPTrafficLightEventInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UPPInteractableObjectInterface : public UInterface
+class UPPTrafficLightEventInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,11 +16,11 @@ class UPPInteractableObjectInterface : public UInterface
 /**
  * 
  */
-class PEEEP_PROTOTYPE_API IPPInteractableObjectInterface
+class PEEEP_PROTOTYPE_API IPPTrafficLightEventInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void Interact() = 0;
+	virtual void TrafficLightEvent() = 0;
 };
