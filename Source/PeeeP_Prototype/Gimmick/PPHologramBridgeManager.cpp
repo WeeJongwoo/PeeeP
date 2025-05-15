@@ -2,7 +2,7 @@
 
 
 #include "Gimmick/PPHologramBridgeManager.h"
-#include "InteractionObject/PPButton.h"
+#include "InteractionObject/Electric/PPButton.h"
 #include "LevelSequence.h"
 #include "LevelSequencePlayer.h"
 #include "MovieSceneSequence.h"
@@ -33,6 +33,11 @@ void APPHologramBridgeManager::BeginPlay()
 
 void APPHologramBridgeManager::SetClear()
 {
+	if(bSequencePlayed)
+	{
+		return;
+	}
+
 	if (bButton1State && bButton2State)
 	{
 		bIsClear = true;
@@ -40,10 +45,6 @@ void APPHologramBridgeManager::SetClear()
 		{
 			ClearSequencePlayer->Play();
 			SequenceFinished();
-			if (IsValid(HologramBridge))
-			{
-				HologramBridge->OnBridge();
-			}
 		}
 	}
 	else
@@ -55,6 +56,10 @@ void APPHologramBridgeManager::SetClear()
 void APPHologramBridgeManager::SequenceFinished()
 {
 	bSequencePlayed = true;
+	if (IsValid(HologramBridge))
+	{
+		HologramBridge->OnBridge();
+	}
 }
 
 void APPHologramBridgeManager::SwitchToLightCam()
@@ -86,6 +91,17 @@ void APPHologramBridgeManager::RevertCam()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("DefaultCamActor is not valid"));
 	}
+}
+
+void APPHologramBridgeManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (IsValid(ClearSequencePlayer))
+	{
+		ClearSequencePlayer->Stop();
+		ClearSequencePlayer->OnFinished.RemoveAll(this);
+	}
+
+	Super::EndPlay(EndPlayReason);
 }
 
 // Called every frame
@@ -143,5 +159,10 @@ void APPHologramBridgeManager::PostInitializeComponents()
 	ALevelSequenceActor* RestartSequenceActor;
 
 	ClearSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), ClearSequence, Settings, RestartSequenceActor);
+	if (ClearSequencePlayer)
+	{
+		ClearSequencePlayer->OnFinished.RemoveAll(this);
+		ClearSequencePlayer->OnFinished.AddDynamic(this, &APPHologramBridgeManager::SequenceFinished);
+	}
 }
 

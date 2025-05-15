@@ -12,10 +12,15 @@ APPLaserTrap::APPLaserTrap()
 	PrimaryActorTick.bCanEverTick = true;
 
 	LaserMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LaserMesh"));
-	LaserMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	LaserMesh->SetCollisionProfileName(TEXT("NoCollision"));
 
 	LaserCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("LaserCollider"));
 	LaserCollider->SetCollisionProfileName(TEXT("LaserTrap"));
+
+	RootComponent = LaserMesh;
+	LaserCollider->SetupAttachment(LaserMesh);
+
+	TrapDamage = 5.0f;
 }
 
 // Called when the game starts or when spawned
@@ -35,16 +40,10 @@ void APPLaserTrap::Tick(float DeltaTime)
 
 void APPLaserTrap::OnLaserOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (IsValid(OtherActor) && IsValid(OtherComp))
+	APPCharacterPlayer* Player = Cast<APPCharacterPlayer>(OtherActor);
+	if (IsValid(Player))
 	{
-		if (OtherActor->IsA<APPCharacterPlayer>())
-		{
-			APPCharacterPlayer* Player = Cast<APPCharacterPlayer>(OtherActor);
-			if (IsValid(Player))
-			{
-				Player->TakeDamage(6.0f);
-			}
-		}
+		Player->TakeDamage(TrapDamage);
 	}
 }
 

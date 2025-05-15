@@ -22,10 +22,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UStaticMeshComponent> ItemBoxMesh;
 
-	//Material
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<class UMaterialInterface> ItemBoxMaterial;
-
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UBoxComponent> TriggerBox;
 
