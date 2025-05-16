@@ -5,6 +5,8 @@
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Character/PPCharacterPlayer.h"
+#include "Inventory/PPInventoryComponent.h"
+#include "GameMode/PPGameInstance.h"
 
 // Sets default values
 APPStageTransitionTrigger::APPStageTransitionTrigger()
@@ -37,6 +39,14 @@ void APPStageTransitionTrigger::OnTriggered(UPrimitiveComponent* OverlappedCompo
 	APPCharacterPlayer* PlayerCharacter = Cast<APPCharacterPlayer>(OtherActor);
 	if (PlayerCharacter)
 	{
+		UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(this));
+
+		if (GameInstance)
+		{
+			//TArray<TObjectPtr<class UPPInventoryPartsItem>> PartsItems = PlayerCharacter->GetInventoryComponent()->GetPartsItems();
+			//GameInstance->SetPartsItems(PartsItems);
+		}
+
 		UGameplayStatics::OpenLevel(this, NextLevel);
 	}
 }
