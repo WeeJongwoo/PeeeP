@@ -40,14 +40,13 @@ void APPTrain::BeginPlay()
 void APPTrain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void APPTrain::PlayHonkSound()
 {
 	if (HonkSound)
 	{
-		AudioComponent->FadeOut(5.0f, 0.0f, EAudioFaderCurve::Linear);
+		AudioComponent->FadeOut(7.5f, 0.0f, EAudioFaderCurve::Linear);
 		UGameplayStatics::PlaySoundAtLocation(this, HonkSound, GetActorLocation());
 	}
 }
