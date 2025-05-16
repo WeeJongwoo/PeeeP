@@ -24,4 +24,13 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float CloakingTime;
+
+	UPROPERTY(EditAnywhere)
+	float Cooldown;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<class USoundBase> StartSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<class USoundBase> EndSound;
 };

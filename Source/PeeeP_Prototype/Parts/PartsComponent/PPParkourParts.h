@@ -59,7 +59,6 @@ private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UAudioComponent> ParkourSoundComponent;
 
-	//이 사운드 에셋은 파쿠르파츠 데이터에 넣으면 자동 적용 되도록 해뒀슈.
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class USoundBase> ChargeSound;
 
