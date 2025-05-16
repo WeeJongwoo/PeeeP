@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Components/AudioComponent.h"
 
 UPPCloakingParts::UPPCloakingParts()
 {
@@ -15,6 +16,10 @@ UPPCloakingParts::UPPCloakingParts()
 	{
 		PartsData = CloakingPartsDataRef.Object;
 	}
+
+	CloakingSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CloakingSoundComponent"));
+
+	bCanCloaking = true;
 }
 
 void UPPCloakingParts::OnComponentCreated()
@@ -43,6 +48,10 @@ void UPPCloakingParts::OnComponentCreated()
 
 				CloakingMaterial = CloakingPartsData->CloakingMaterial;
 				NumMaterials = CloakingPartsData->PartsMesh->GetNumMaterials();
+				Cooldown = CloakingPartsData->Cooldown;
+
+				StartSound = CloakingPartsData->StartSound;
+				EndSound = CloakingPartsData->EndSound;
 			}
 		}
 	}
@@ -70,13 +79,27 @@ void UPPCloakingParts::CleanUpParts()
 	Super::CleanUpParts();
 
 	StopCloaking();
+
+	GetWorld()->GetTimerManager().ClearTimer(CloakingCooldownTimerHandle);
+	GetWorld()->GetTimerManager().ClearTimer(CloakingTimerHandle);
+
+	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+
+	if (IsValid(CloakingSoundComponent) && CloakingSoundComponent->IsPlaying())
+	{
+		CloakingSoundComponent->Stop();
+	}
 }
 
 void UPPCloakingParts::StartCloaking()
 {
+	if (!bCanCloaking)
+	{
+		return;
+	}
+
 	if (IsValid(Owner))
 	{
-		//NumMaterials = Owner->GetMesh()->GetNumMaterials();
 		if (NumMaterials > 0 && IsValid(CloakingMaterial))
 		{
 			for (int32 i = 0; i < NumMaterials; i++)
@@ -84,12 +107,21 @@ void UPPCloakingParts::StartCloaking()
 				Owner->GetMesh()->SetMaterial(i, CloakingMaterial);
 			}
 			UE_LOG(LogTemp, Log, TEXT("CloakingMaterial Set"));
-			//Owner->GetMesh()->SetMaterial(0, CloakingMaterial);
 		}
+
+		bCanCloaking = false;
 
 		Owner->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel11, ECR_Ignore);
 
 		GetWorld()->GetTimerManager().SetTimer(CloakingTimerHandle, this, &UPPCloakingParts::StopCloaking, CloakingTime, false);
+
+		if (IsValid(CloakingSoundComponent) && IsValid(StartSound))
+		{
+			CloakingSoundComponent->SetSound(StartSound);
+			CloakingSoundComponent->SetVolumeMultiplier(0.5f);
+			CloakingSoundComponent->SetPitchMultiplier(1.0f);
+			CloakingSoundComponent->Play();
+		}
 	}
 }
 
@@ -104,9 +136,29 @@ void UPPCloakingParts::StopCloaking()
 			{
 				Owner->GetMesh()->SetMaterial(i, nullptr);
 			}
+
 			UE_LOG(LogTemp, Log, TEXT("DefaultMaterial Set"));
-			//Owner->GetMesh()->SetMaterial(0, DefaultMaterial[0]);
+
+			Owner->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel11, ECR_Overlap);
+
+			GetWorld()->GetTimerManager().SetTimer(CloakingCooldownTimerHandle, this, &UPPCloakingParts::SetCloakingState, Cooldown, false);
+
+			if (IsValid(CloakingSoundComponent) && IsValid(EndSound))
+			{
+				if (CloakingSoundComponent->IsPlaying())
+				{
+					CloakingSoundComponent->Stop();
+				}
+				CloakingSoundComponent->SetSound(EndSound);
+				CloakingSoundComponent->SetVolumeMultiplier(0.5f);
+				CloakingSoundComponent->SetPitchMultiplier(1.0f);
+				CloakingSoundComponent->Play();
+			}
 		}
-		Owner->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel11, ECR_Overlap);
 	}
+}
+
+void UPPCloakingParts::SetCloakingState()
+{
+	bCanCloaking = true;
 }

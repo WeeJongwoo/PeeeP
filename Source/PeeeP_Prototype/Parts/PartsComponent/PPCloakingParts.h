@@ -30,13 +30,26 @@ private:
 
 	void StartCloaking();
 	void StopCloaking();
+	void SetCloakingState();
 
 	TObjectPtr<class UMaterialInstance> CloakingMaterial;
 
 	int32 NumMaterials;
 
+	bool bCanCloaking;
+
 	float CloakingTime;
+	float Cooldown;
 
 	FTimerHandle CloakingTimerHandle;
+	FTimerHandle CloakingCooldownTimerHandle;
 
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UAudioComponent> CloakingSoundComponent;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class USoundBase> StartSound;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class USoundBase> EndSound;
 };
