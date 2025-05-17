@@ -74,7 +74,7 @@ void APPHologramBridgeManager::SwitchToLightCam()
 	{
 		PlayerController->SetViewTargetWithBlend(LightCamActor, CameraBlendDuration);
 
-		float ReturnCameraBlendTime = CameraViewDuration+CameraBlendDuration;
+		float ReturnCameraBlendTime = CameraViewDuration + CameraBlendDuration;
 
 		GetWorld()->GetTimerManager().SetTimer(LightCamTimerHandle, this, &APPHologramBridgeManager::RevertCam, ReturnCameraBlendTime);
 	}
