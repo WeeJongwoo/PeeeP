@@ -160,7 +160,7 @@ APPCharacterPlayer::APPCharacterPlayer()
 	// Electric Charging Level Widget
 	ElectricChargingLevelWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 	ElectricChargingLevelWidgetComponent->SetupAttachment(GetMesh());
-	ElectricChargingLevelWidgetComponent->SetRelativeLocation(FVector{ 0.0f, 0.0f, 60.0f });
+	ElectricChargingLevelWidgetComponent->SetRelativeLocation(FVector{ 0.0f, 0.0f, 24.0f });
 
 	static ConstructorHelpers::FClassFinder<UPPChargingLevelHUD> ElectricChargingLevelWidgetComponentRef = TEXT("/Game/UI/PlayerStatus/Charging/WB_ChargingLevelHUD.WB_ChargingLevelHUD_C");
 	if (ElectricChargingLevelWidgetComponentRef.Class)
