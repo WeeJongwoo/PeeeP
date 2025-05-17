@@ -22,6 +22,9 @@ APPHologramBridgeManager::APPHologramBridgeManager()
 
 	RootSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootSceneComponent"));
 	RootComponent = RootSceneComponent;
+
+	CameraBlendDuration = 0.5f;
+	CameraViewDuration = 1.0f;
 }
 
 // Called when the game starts or when spawned
@@ -69,9 +72,11 @@ void APPHologramBridgeManager::SwitchToLightCam()
 
 	if (IsValid(DefaultCamActor) && IsValid(LightCamActor))
 	{
-		PlayerController->SetViewTargetWithBlend(LightCamActor, 0.0f);
+		PlayerController->SetViewTargetWithBlend(LightCamActor, CameraBlendDuration);
 
-		GetWorld()->GetTimerManager().SetTimer(LightCamTimerHandle, this, &APPHologramBridgeManager::RevertCam, 1.0f);
+		float ReturnCameraBlendTime = CameraViewDuration + CameraBlendDuration;
+
+		GetWorld()->GetTimerManager().SetTimer(LightCamTimerHandle, this, &APPHologramBridgeManager::RevertCam, ReturnCameraBlendTime);
 	}
 	else
 	{
@@ -85,7 +90,7 @@ void APPHologramBridgeManager::RevertCam()
 
 	if (IsValid(DefaultCamActor))
 	{
-		PlayerController->SetViewTargetWithBlend(DefaultCamActor, 0.0f);
+		PlayerController->SetViewTargetWithBlend(DefaultCamActor, CameraBlendDuration);
 	}
 	else
 	{
