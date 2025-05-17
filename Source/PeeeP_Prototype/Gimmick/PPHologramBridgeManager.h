@@ -49,8 +49,14 @@ protected:
 	
 	TObjectPtr<class AActor> DefaultCamActor;
 
-	UPROPERTY(EditAnywhere, Category = "Button")
+	UPROPERTY(EditAnywhere, Category = "LightCam")
 	TObjectPtr<class AActor> LightCamActor;
+
+	UPROPERTY(EditAnywhere, Category = "LightCam")
+	float CameraViewDuration;
+
+	UPROPERTY(EditAnywhere, Category = "LightCam")
+	float CameraBlendDuration;
 
 	FTimerHandle LightCamTimerHandle;
 
