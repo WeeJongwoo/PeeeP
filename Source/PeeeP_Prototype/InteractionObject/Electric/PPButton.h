@@ -27,6 +27,12 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UStaticMeshComponent> ButtonMesh;
 
+	UPROPERTY(EditAnywhere, Category = "Material")
+	TObjectPtr<class UMaterialInstance> SwitchOnMi01;
+
+	UPROPERTY(EditAnywhere, Category = "Material")
+	TObjectPtr<class UMaterialInstance> SwitchOnMi02;
+
 	//UPROPERTY(EditAnywhere)
 	//TObjectPtr<class UBoxComponent> ButtonCollider;
 
