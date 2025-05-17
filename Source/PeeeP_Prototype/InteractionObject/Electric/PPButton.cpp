@@ -3,6 +3,7 @@
 
 #include "PPButton.h"
 #include "Components/BoxComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 // Sets default values
 APPButton::APPButton()
@@ -24,8 +25,7 @@ APPButton::APPButton()
 void APPButton::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	//ButtonCollider->OnComponentBeginOverlap.AddDynamic(this, &APPButton::OnButtonPressed);
+
 }
 
 //void APPButton::OnButtonPressed(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -43,5 +43,11 @@ void APPButton::Tick(float DeltaTime)
 void APPButton::Charge()
 {
 	OnButtonPressedDelegate.ExecuteIfBound();
+
+	if (IsValid(SwitchOnMi01) && IsValid(SwitchOnMi02))
+	{
+		ButtonMesh->SetMaterial(0, SwitchOnMi01);
+		ButtonMesh->SetMaterial(1, SwitchOnMi02);
+	}
 }
 
