@@ -29,6 +29,7 @@
 #include "Components/WidgetComponent.h"
 #include "UI/PPChargingLevelHUD.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameMode/PPGameInstance.h"
 
 APPCharacterPlayer::APPCharacterPlayer()
 {
@@ -169,6 +170,8 @@ APPCharacterPlayer::APPCharacterPlayer()
 		ElectricChargingLevelWidgetComponent->SetDrawSize(FVector2D{ 256.0f, 128.0f });
 		ElectricChargingLevelWidgetComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
+
+
 }
 
 void APPCharacterPlayer::OnDeath(uint8 bIsDead)

@@ -54,6 +54,7 @@ void APPPartsItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 			InventoryComponent = player->GetInventoryComponent();
 			int32 TempOutItemQuntity = 0;
 			InventoryComponent->AddItem(PartsData.GetFName(), 1, TempOutItemQuntity);
+			InventoryComponent->SaveInventoryToGameInstance();
 
 			if (nullptr != EarnSound)
 			{

@@ -51,6 +51,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
 	int32 MaxItemNum;
 
+	TMap<int32, TPair<FName, int32>> InventoryPartsArray;
+
 public:
 	// Getter
 	FORCEINLINE TArray<TObjectPtr<class UPPInventoryPartsItem>> GetPartsItems() { return PartsItems; }
@@ -73,6 +75,7 @@ public:
 protected:
 	// 인벤토리 초기화
 	void InitInventory();
+
 	// 아이템 삭제
 	void RemoveItem(int32 InSlotIndex, ESlotType InventoryType);
 
@@ -82,12 +85,15 @@ public:
 
 protected:
 	// 현재 선택된 슬롯 인덱스
+	UPROPERTY(VisibleAnywhere, Category = "Inventory")
 	int32 CurrentSlotIndex;
 	// 현재 장착된 파츠 슬롯 인덱스
 	int32 UsingSlotIndex;
 
 public:
 	void ModifyCurrentSlotIndex(int32 Value);
+
+	void SaveInventoryToGameInstance();
 
 private:
 	// 퀵슬롯 위젯

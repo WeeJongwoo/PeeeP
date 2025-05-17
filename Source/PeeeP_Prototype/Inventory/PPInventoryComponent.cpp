@@ -4,6 +4,8 @@
 #include "Inventory/PPInventoryComponent.h"
 #include "Character/PPCharacterPlayer.h"
 #include "Engine/AssetManager.h"
+#include "GameMode/PPGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values for this component's properties
@@ -37,6 +39,7 @@ void UPPInventoryComponent::ClearUsingItem()
 {
 	UsingSlotIndex = -1; // 미장착으로 변경
 	QuickSlotWidget->SetEquipmentTextVisible(ESlateVisibility::Hidden);
+	SaveInventoryToGameInstance();
 	// 파츠 해제부
 
 	UE_LOG(LogTemp, Log, TEXT("Parts Item Detached: %d Slot"), CurrentSlotIndex);
@@ -50,7 +53,6 @@ void UPPInventoryComponent::BeginPlay()
 	// ...
 	
 }
-
 
 bool UPPInventoryComponent::AddItem(FName InItemName, int32 InItemQuantity, int32& OutItemQuantity)
 {
@@ -237,6 +239,7 @@ void UPPInventoryComponent::UseItemCurrentIndex(ESlotType InventoryType)
 				UE_LOG(LogTemp, Log, TEXT("Parts Item Attached: %d Slot"), CurrentSlotIndex);
 			}
 			Player->PlayEquipEffect();
+			SaveInventoryToGameInstance();
 		}
 		break;
 	}
@@ -287,16 +290,26 @@ void UPPInventoryComponent::InitInventory()
 	// 태그 정보를 넘겨줘서 동일한 태그를 가진 애셋들의 목록을 배열로 반환받음
 	Manager.GetPrimaryAssetIdList(TEXT("PPPartsData"), Assets);
 
+	UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		// 인벤토리 파츠 배열을 불러온다.
+		InventoryPartsArray = GameInstance->GetInventoryPartsArray();
+	}
+
 	if (Assets.Num() > 0)
 	{
 		// Slot Index, <종류, 수량>
-		TMap<int32, TPair<FName, int32>> InventoryPartsArray;
+		//TMap<int32, TPair<FName, int32>> InventoryPartsArray;
 		//TMap<int32, TPair<FName, int32>> InventoryConstableArray;
-		
+	
+
 		// 테스트 블록(실제로는 저장된 파일에서 데이터를 읽어와야 함)
+		/*
 		{
-			//InventoryPartsArray.Add(0, { TEXT("GrabPartsData"), 1 });
+			InventoryPartsArray.Add(0, { TEXT("GrabPartsData"), 1 });
 		}
+		*/
 
 		for (const auto& InvItem : InventoryPartsArray)
 		{
@@ -326,8 +339,6 @@ void UPPInventoryComponent::InitInventory()
 			}
 		}
 	}
-
-
 }
 
 // Called every frame
@@ -362,6 +373,27 @@ void UPPInventoryComponent::ModifyCurrentSlotIndex(int32 Value)
 	}
 
 	UE_LOG(LogTemp, Log, TEXT("Current Slot Index: %d"), CurrentSlotIndex);	
+}
+
+void UPPInventoryComponent::SaveInventoryToGameInstance()
+{
+	UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance == nullptr)
+	{
+		return;
+	}
+
+	TMap<int32, TPair<FName, int32>> SaveMap;
+	for (int32 i = 0; i < PartsItems.Num(); i++)
+	{
+		if (PartsItems[i] && PartsItems[i]->PartsData)
+		{
+			SaveMap.Add(i, TPair<FName, int32>( PartsItems[i]->PartsData->GetPrimaryAssetId().PrimaryAssetName, PartsItems[i]->ItemQuantity ));
+		}
+	}
+
+	GameInstance->SetInventoryPartsArray(SaveMap);
+	GameInstance->SetCurrentSlotIndex(CurrentSlotIndex);
 }
 
 void UPPInventoryComponent::SetQuickSlotWidget(UPPQuickSlotWidget* widget)
