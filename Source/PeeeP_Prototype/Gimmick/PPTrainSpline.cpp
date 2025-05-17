@@ -4,6 +4,7 @@
 #include "Gimmick/PPTrainSpline.h"
 #include "Components/SplineComponent.h"
 #include "PPTrain.h"
+#include "PPCrossline.h"
 
 // Sets default values
 APPTrainSpline::APPTrainSpline()
@@ -143,6 +144,7 @@ void APPTrainSpline::Tick(float DeltaTime)
 				}
 
 				MoveSpeed = FMath::FInterpTo(MoveSpeed, 0.0f, DeltaTime, DecelerationRate);
+				// 정지 보정 및 정지 후 처리 부분
 				if (MoveSpeed <= 10.0f)
 				{
 					bPendingStop = false;
@@ -150,6 +152,17 @@ void APPTrainSpline::Tick(float DeltaTime)
 					bCanMoveActor = false;
 					bIsStopping = false;
 					MoveSpeed = 0.0f;
+
+					if (!CrosslineActors.IsEmpty())
+					{
+						for (APPCrossline* Crossline : CrosslineActors)
+						{
+							if (Crossline)
+							{
+								Crossline->OnCrosslineEventDelegate.ExecuteIfBound(false);
+							}
+						}
+					}
 				}
 			}
 		}

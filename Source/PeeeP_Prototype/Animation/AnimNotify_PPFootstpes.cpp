@@ -40,7 +40,7 @@ void UAnimNotify_PPFootstpes::Notify(USkeletalMeshComponent* MeshComp, UAnimSequ
 	}
 
 	FVector StartPos = Owner->GetActorLocation();
-	FVector EndPos = StartPos + Owner->GetActorUpVector() * -15.0f;
+	FVector EndPos = StartPos + Owner->GetActorUpVector() * -20.0f;
 
 	FHitResult HitResult;
 	FCollisionQueryParams CollisionParam(SCENE_QUERY_STAT(Visibility), false, Owner);

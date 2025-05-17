@@ -116,6 +116,13 @@ void UPPParkourParts::ChargStart()
 		PreviousJumpChargingTime = World->GetTimeSeconds();
 		UE_LOG(LogTemp, Warning, TEXT("Start"));
 	}
+	if (IsValid(ParkourSoundComponent) && IsValid(ChargeSound))
+	{
+		ParkourSoundComponent->SetSound(ChargeSound);
+		ParkourSoundComponent->SetVolumeMultiplier(0.5f);
+		ParkourSoundComponent->SetPitchMultiplier(1.0f);
+		ParkourSoundComponent->Play();
+	}
 }
 
 void UPPParkourParts::TickJumpCharge()
@@ -139,13 +146,6 @@ void UPPParkourParts::TickJumpCharge()
 			if (ChargingEffectComponent->GetAsset() == ChargingEffect)
 			{
 				ChargingEffectComponent->Activate(true);
-				if (IsValid(ParkourSoundComponent) && IsValid(ChargeSound))
-				{
-					ParkourSoundComponent->SetSound(ChargeSound);
-					ParkourSoundComponent->SetVolumeMultiplier(0.5f);
-					ParkourSoundComponent->SetPitchMultiplier(1.0f);
-					ParkourSoundComponent->Play();
-				}
 				UE_LOG(LogTemp, Warning, TEXT("ChargingEffectComponent Activate"));
 			}
 		

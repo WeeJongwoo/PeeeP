@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/AudioComponent.h"
 
 APPConveyorBelt::APPConveyorBelt()
 {
@@ -17,15 +18,31 @@ APPConveyorBelt::APPConveyorBelt()
     TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &APPConveyorBelt::OnOverlapBegin);
     TriggerBox->OnComponentEndOverlap.AddDynamic(this, &APPConveyorBelt::OnOverlapEnd);
 
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	AudioComponent->SetupAttachment(TriggerBox);
+	AudioComponent->bAutoActivate = true;
+
     BeltSpeed = 300.0f;
     bIsActivated = false;
     BeltLength = 1000.0f;
     Tolerance = 10.0f;
+	bPlaySound = true;
 }
 
 void APPConveyorBelt::BeginPlay()
 {
     Super::BeginPlay();
+
+	if (ConveyorSound)
+	{
+		AudioComponent->SetSound(ConveyorSound);
+		AudioComponent->SetVolumeMultiplier(0.5f);
+		AudioComponent->SetPitchMultiplier(1.0f);
+		if (bPlaySound)
+		{
+			AudioComponent->Play();
+		}
+	}
 }
 
 void APPConveyorBelt::Tick(float DeltaTime)
