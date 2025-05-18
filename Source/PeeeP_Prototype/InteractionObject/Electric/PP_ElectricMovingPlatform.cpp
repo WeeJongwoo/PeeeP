@@ -2,9 +2,10 @@
 
 
 #include "InteractionObject/Electric/PP_ElectricMovingPlatform.h"
-#include "Components/InterpToMovementComponent.h"
+#include "Component/PPInterpToMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
+#include "Components/AudioComponent.h"
 
 // Sets default values
 APP_ElectricMovingPlatform::APP_ElectricMovingPlatform()
@@ -20,7 +21,7 @@ APP_ElectricMovingPlatform::APP_ElectricMovingPlatform()
 	Mesh->SetCollisionProfileName(TEXT("ElectricObjectProfile"));	// 플레이어의 전기 방출을 받기 위한 콜리전 프로필 세팅.
 
 	// InterpToMovement 컴포넌트 부분
-	InterpToMovement = CreateDefaultSubobject<UInterpToMovementComponent>(TEXT("InterpToMovement"));
+	InterpToMovement = CreateDefaultSubobject<UPPInterpToMovementComponent>(TEXT("InterpToMovement"));
 	InterpToMovement->SetUpdatedComponent(RootComponent);
 	InterpToMovement->SetComponentTickEnabled(true);
 	StartPosition = CreateDefaultSubobject<USceneComponent>(TEXT("Start Position"));
@@ -39,6 +40,9 @@ APP_ElectricMovingPlatform::APP_ElectricMovingPlatform()
 
 	StopTimerHandle.Invalidate();											// 타이머 핸들 초기화
 	// 플랫폼 이동 시간, 이동 경로는 BP에서 설정해 주세요.
+
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio Component"));
+	AudioComponent->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -49,6 +53,14 @@ void APP_ElectricMovingPlatform::BeginPlay()
 	if (InterpToMovement)
 	{
 		InterpToMovement->OnInterpToReverse.AddDynamic(this, &APP_ElectricMovingPlatform::OnReverse);
+	}
+
+	if (AudioComponent)
+	{
+		if (PowerOnSound)
+		{
+			AudioComponent->SetSound(PowerOnSound);
+		}
 	}
 }
 
@@ -82,6 +94,7 @@ void APP_ElectricMovingPlatform::Charge()
 
 	UE_LOG(LogTemp, Log, TEXT("Platform Charged!"));
 	bIsCharged = true;
+	AudioComponent->Play();
 
 	if (InterpToMovement)
 	{
@@ -93,7 +106,9 @@ void APP_ElectricMovingPlatform::MoveBackToStart()
 {
 	if (InterpToMovement)
 	{
+		// 재게
 		InterpToMovement->SetComponentTickEnabled(true);
+		InterpToMovement->ResumeMovement();
 	}
 }
 
@@ -102,6 +117,8 @@ void APP_ElectricMovingPlatform::OnReverse(const FHitResult& ImpactResult, float
 	if (InterpToMovement)
 	{
 		InterpToMovement->SetComponentTickEnabled(false);
+		InterpToMovement->StopMovementImmediately();
+		
 	}
 	UE_LOG(LogTemp, Log, TEXT("OnReverse called!"));
 	StopTimerHandle.Invalidate();	// 타이머 핸들 초기화

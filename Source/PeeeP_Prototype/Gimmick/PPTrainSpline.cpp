@@ -61,7 +61,7 @@ void APPTrainSpline::SetMoveActorRotationAndLocation(float Distance)
 	FVector Direction = SplineComponent->GetDirectionAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World);
 	FRotator Rotator = FRotationMatrix::MakeFromX(Direction).Rotator();
 	//얻어온 값들에 플레이어를 위치시킨다.
-	UStaticMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<UStaticMeshComponent>();
+	USkeletalMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<USkeletalMeshComponent>();
 	if (ActorMesh != nullptr)
 	{
 		ActorMesh->SetWorldLocation(Position);
@@ -72,7 +72,7 @@ void APPTrainSpline::SetMoveActorRotationAndLocation(float Distance)
 void APPTrainSpline::SetMoveActorLocation(float Distance)
 {
 	FVector Position = SplineComponent->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World);
-	UStaticMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<UStaticMeshComponent>();
+	USkeletalMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<USkeletalMeshComponent>();
 	if (ActorMesh != nullptr)
 	{
 		ActorMesh->SetWorldLocation(Position);
@@ -83,7 +83,7 @@ void APPTrainSpline::SetMoveActorRotation(float Distance)
 {
 	FVector Direction = SplineComponent->GetDirectionAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World);
 	FRotator Rotator = FRotationMatrix::MakeFromX(Direction).Rotator();
-	UStaticMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<UStaticMeshComponent>();
+	USkeletalMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<USkeletalMeshComponent>();
 	if (ActorMesh != nullptr)
 	{
 		ActorMesh->SetWorldRotation(Rotator);
@@ -139,7 +139,7 @@ void APPTrainSpline::Tick(float DeltaTime)
 					if (TrainActor)
 					{
 						UE_LOG(LogTemp, Warning, TEXT("Train Actor Found!"));
-						TrainActor->PlayHonkSound();
+						TrainActor->StopTrain();
 					}
 				}
 

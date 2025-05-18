@@ -21,7 +21,7 @@ protected:
 	TObjectPtr<class UStaticMeshComponent> Mesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "InterpToMovement")
-	TObjectPtr<class UInterpToMovementComponent> InterpToMovement;
+	TObjectPtr<class UPPInterpToMovementComponent> InterpToMovement;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UMaterialInterface> NewMaterial;
@@ -35,7 +35,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "InterpToMovement")
 	float StopTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
+	TObjectPtr<class UAudioComponent> AudioComponent;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
+	TObjectPtr<class USoundBase> PowerOnSound;
+
 	FTimerHandle StopTimerHandle;
 
 	bool bIsCharged;

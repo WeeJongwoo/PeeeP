@@ -5,6 +5,7 @@
 #include "InteractionObject/PPTrafficLightBase.h"
 #include "InteractionObject/Electric/PPTrafficLightController.h"
 #include "Interface/PPTrafficLightEventInterface.h"
+#include "Components/AudioComponent.h"
 
 // Sets default values
 APPTrafficLightManager::APPTrafficLightManager()
@@ -12,12 +13,23 @@ APPTrafficLightManager::APPTrafficLightManager()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	SetRootComponent(AudioComponent);
+
 }
 
 // Called when the game starts or when spawned
 void APPTrafficLightManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (AudioComponent)
+	{
+		if (ClearSound)
+		{
+			AudioComponent->SetSound(ClearSound);
+		}
+	}
 
 	// TrafficLightManagerActor가 관리하는 신호등 제어기 배열을 가져옴
 	for (APPTrafficLightController* TrafficLightController : TrafficLightControllers)
@@ -71,6 +83,7 @@ void APPTrafficLightManager::StartEvent()
 			if (TrafficLightEventInterface != nullptr)
 			{
 				TrafficLightEventInterface->TrafficLightEvent();
+				AudioComponent->Play();
 			}
 		}
 	}
