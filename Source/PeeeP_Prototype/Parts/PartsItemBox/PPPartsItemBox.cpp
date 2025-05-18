@@ -19,17 +19,17 @@ APPPartsItemBox::APPPartsItemBox()
 	TriggerBox->SetupAttachment(ItemBoxMesh);
 	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &APPPartsItemBox::OnOverlapBegin);
 
-	if (ItemBoxMaterial)
-	{
-		ItemBoxMesh->SetMaterial(0, ItemBoxMaterial);
-	}
 }
 
 // Called when the game starts or when spawned
 void APPPartsItemBox::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (IsValid(PartsData))
+	{
+		ItemBoxMesh->SetStaticMesh(PartsData->PartsItemMesh);
+	}
 }
 
 // Called every frame
@@ -54,6 +54,7 @@ void APPPartsItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 			InventoryComponent = player->GetInventoryComponent();
 			int32 TempOutItemQuntity = 0;
 			InventoryComponent->AddItem(PartsData.GetFName(), 1, TempOutItemQuntity);
+			InventoryComponent->SaveInventoryToGameInstance();
 
 			if (nullptr != EarnSound)
 			{

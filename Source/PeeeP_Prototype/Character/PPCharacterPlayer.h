@@ -84,6 +84,9 @@ protected:
 
 	ECharacterControlType CurrentCharacterControlType;
 
+public:
+	void SetRunning(bool InIsRunning);
+
 protected:
 
 	TObjectPtr<class USkeletalMesh> DefaultSkeletonMesh;

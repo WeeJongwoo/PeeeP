@@ -29,6 +29,7 @@
 #include "Components/WidgetComponent.h"
 #include "UI/PPChargingLevelHUD.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameMode/PPGameInstance.h"
 
 APPCharacterPlayer::APPCharacterPlayer()
 {
@@ -159,7 +160,7 @@ APPCharacterPlayer::APPCharacterPlayer()
 	// Electric Charging Level Widget
 	ElectricChargingLevelWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 	ElectricChargingLevelWidgetComponent->SetupAttachment(GetMesh());
-	ElectricChargingLevelWidgetComponent->SetRelativeLocation(FVector{ 0.0f, 0.0f, 60.0f });
+	ElectricChargingLevelWidgetComponent->SetRelativeLocation(FVector{ 0.0f, 0.0f, 24.0f });
 
 	static ConstructorHelpers::FClassFinder<UPPChargingLevelHUD> ElectricChargingLevelWidgetComponentRef = TEXT("/Game/UI/PlayerStatus/Charging/WB_ChargingLevelHUD.WB_ChargingLevelHUD_C");
 	if (ElectricChargingLevelWidgetComponentRef.Class)
@@ -169,6 +170,8 @@ APPCharacterPlayer::APPCharacterPlayer()
 		ElectricChargingLevelWidgetComponent->SetDrawSize(FVector2D{ 256.0f, 128.0f });
 		ElectricChargingLevelWidgetComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
+
+
 }
 
 void APPCharacterPlayer::OnDeath(uint8 bIsDead)
@@ -416,6 +419,11 @@ void APPCharacterPlayer::OnRunningEnd(const FInputActionValue& Value)
 	GetCharacterMovement()->MaxWalkSpeed /= RunningMultiplier;
 	this->bIsRunning = false;
 	UE_LOG(LogTemp, Log, TEXT("Running End"));
+}
+
+void APPCharacterPlayer::SetRunning(bool InIsRunning)
+{
+	bIsRunning = InIsRunning;
 }
 
 void APPCharacterPlayer::SetDefaultMeshAndAnim()
