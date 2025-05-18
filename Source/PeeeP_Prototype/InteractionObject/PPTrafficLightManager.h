@@ -33,6 +33,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrafficLights")
 	TArray<TObjectPtr<AActor>> TrafficLightEventActors;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	TObjectPtr<class UAudioComponent> AudioComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	TObjectPtr<class USoundBase> ClearSound;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

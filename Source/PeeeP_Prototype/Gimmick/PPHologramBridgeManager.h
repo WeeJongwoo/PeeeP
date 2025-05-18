@@ -58,9 +58,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "LightCam")
 	float CameraBlendDuration;
 
+	UPROPERTY(EditAnywhere, Category = "LightCam")
+	TArray<TObjectPtr<class AActor>> BridgeButtonSignActors;
+
+	UPROPERTY(EditAnywhere, Category = "LightCam")
+	TObjectPtr<class UMaterialInstance> BridgeButtonSignMaterial;
+
 	FTimerHandle LightCamTimerHandle;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason);
+	void ChangeBridgeButtonSignMaterial(float Type);
 
 public:	
 	// Called every frame
