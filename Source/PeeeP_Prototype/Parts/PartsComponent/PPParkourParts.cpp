@@ -99,6 +99,7 @@ void UPPParkourParts::CleanUpParts()
 	Super::CleanUpParts();
 
 	Owner->GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
+	Owner->SetRunning(false);
 	ChargingEffectComponent->DestroyComponent();
 }
 

@@ -421,6 +421,11 @@ void APPCharacterPlayer::OnRunningEnd(const FInputActionValue& Value)
 	UE_LOG(LogTemp, Log, TEXT("Running End"));
 }
 
+void APPCharacterPlayer::SetRunning(bool InIsRunning)
+{
+	bIsRunning = InIsRunning;
+}
+
 void APPCharacterPlayer::SetDefaultMeshAndAnim()
 {
 	if (GetMesh()->GetSkeletalMeshAsset() != DefaultSkeletonMesh)
