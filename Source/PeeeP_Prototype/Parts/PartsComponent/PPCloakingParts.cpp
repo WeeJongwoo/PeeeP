@@ -60,6 +60,7 @@ void UPPCloakingParts::OnComponentCreated()
 void UPPCloakingParts::OnComponentDestroyed(bool bDestroyingHierarchy)
 {
 	Super::OnComponentDestroyed(bDestroyingHierarchy);
+
 }
 
 void UPPCloakingParts::BeginPlay()
@@ -80,10 +81,14 @@ void UPPCloakingParts::CleanUpParts()
 
 	StopCloaking();
 
-	GetWorld()->GetTimerManager().ClearTimer(CloakingCooldownTimerHandle);
-	GetWorld()->GetTimerManager().ClearTimer(CloakingTimerHandle);
-
-	GetWorld()->GetTimerManager().ClearAllTimersForObject(this);
+	if (CloakingCooldownTimerHandle.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(CloakingCooldownTimerHandle);
+	}
+	if (CloakingTimerHandle.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(CloakingTimerHandle);
+	}
 
 	if (IsValid(CloakingSoundComponent) && CloakingSoundComponent->IsPlaying())
 	{
