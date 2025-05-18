@@ -26,11 +26,24 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UStaticMeshComponent> TrafficLightControllerStaticMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Mesh)
 	TObjectPtr<class UMaterialInstance> TrafficLightControllerMaterial;
 
+	// Audio Component
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	TObjectPtr<class UAudioComponent> AudioComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	TObjectPtr<class USoundBase> IdleSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	TObjectPtr<class USoundBase> PowerOnSound;	// 전원이 켜졌을 때 재생되는 사운드
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	TObjectPtr<class USoundBase> ColorChangeSound;	// 신호등 변경 시 재생되는 사운드
+
 	// 배터리가 닿는 영역
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mesh)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Mesh)
 	TObjectPtr<class UBoxComponent> BatteryTrigger;	
 
 	UPROPERTY(EditAnywhere)
@@ -39,7 +52,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class USceneComponent> ConstraintPoint;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<class UPhysicsConstraintComponent> PhysicsConstraint;
 
 	UFUNCTION()
@@ -49,11 +62,11 @@ protected:
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	// 제어기가 관리하는 신호등 배열
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrafficLightController")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TrafficLightController")
 	TArray<TObjectPtr<class APPTrafficLightBase>> TrafficLights;
 
 	// 신호가 바뀌었을 때 신호등들의 색깔에 따른 판정을 하기 위한 TrafficLightManager
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TrafficLightController")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "TrafficLightController")
 	TObjectPtr<class APPTrafficLightManager> TrafficLightManager;
 	
 	UPROPERTY()

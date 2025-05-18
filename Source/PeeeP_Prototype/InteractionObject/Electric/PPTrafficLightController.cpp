@@ -9,6 +9,8 @@
 #include "InteractionObject/PPBattery.h"
 #include "GameplayTagContainer.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
+#include "Components/AudioComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APPTrafficLightController::APPTrafficLightController()
@@ -39,6 +41,11 @@ APPTrafficLightController::APPTrafficLightController()
 	PhysicsConstraint->SetConstrainedComponents(nullptr, NAME_None, nullptr, NAME_None);
 	PhysicsConstraint->SetDisableCollision(true);
 
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	if (AudioComponent)
+	{
+		AudioComponent->SetupAttachment(RootComponent);
+	}
 
 	bIsPowerOn = false;	// 초기값은 꺼져있음
 }
@@ -58,6 +65,10 @@ void APPTrafficLightController::Charge()
 	if (bIsPowerOn)
 	{
 		ChangeTrafficLightColor();
+		if (ColorChangeSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, ColorChangeSound, GetActorLocation());	// 전원 켜질 때 사운드 재생
+		}
 	}
 }
 
@@ -204,6 +215,18 @@ void APPTrafficLightController::OnOverlapBegin(UPrimitiveComponent* OverlappedCo
 				BatteryRoot->SetEnableGravity(false);	// 중력 비활성화
 
 				bIsPowerOn = true;
+
+				// 사운드 재생부
+				if (PowerOnSound)
+				{
+					UGameplayStatics::PlaySoundAtLocation(this, PowerOnSound, GetActorLocation());	// 전원 켜질 때 사운드 재생
+				}
+				if (AudioComponent)
+				{
+					AudioComponent->SetSound(IdleSound);
+					AudioComponent->Play();	// 사운드 재생
+				}
+				
 				Battery->SetIsGrabbed(false);	// 배터리의 IsGrabbed를 false로 설정
 				UE_LOG(LogTemp, Log, TEXT("Powered On"));
 			}

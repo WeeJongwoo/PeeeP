@@ -4,7 +4,9 @@
 #include "Gimmick/PPTrain.h"
 #include "Components/SplineComponent.h"
 #include "Components/AudioComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GamePlayStatics.h"
+#include "Animation/AnimSingleNodeInstance.h"
 
 // Sets default values
 APPTrain::APPTrain()
@@ -15,11 +17,11 @@ APPTrain::APPTrain()
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	SetRootComponent(Root);
 
-	TrainMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TrainMesh"));
-	TrainMesh->SetupAttachment(Root);
+	TrainSkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TrainSkeletalMesh"));
+	TrainSkeletalMesh->SetupAttachment(Root);
 
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
-	AudioComponent->SetupAttachment(TrainMesh);
+	AudioComponent->SetupAttachment(TrainSkeletalMesh);
 	AudioComponent->bAutoActivate = false;
 
 }
@@ -42,12 +44,22 @@ void APPTrain::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void APPTrain::PlayHonkSound()
+void APPTrain::StopTrain()
 {
+	StopAnimaionSoftly();
 	if (HonkSound)
 	{
 		AudioComponent->FadeOut(7.5f, 0.0f, EAudioFaderCurve::Linear);
 		UGameplayStatics::PlaySoundAtLocation(this, HonkSound, GetActorLocation());
+	}
+}
+
+void APPTrain::StopAnimaionSoftly()
+{
+	UAnimSingleNodeInstance* AnimInstance = TrainSkeletalMesh->GetSingleNodeInstance();
+	if (AnimInstance)
+	{
+		AnimInstance->SetPlayRate(0.0f);
 	}
 }
 
