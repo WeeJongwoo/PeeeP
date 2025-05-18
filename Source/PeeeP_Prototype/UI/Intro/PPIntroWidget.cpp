@@ -45,6 +45,7 @@ void UPPIntroWidget::PlayIntro()
 			IntroMediaTexture->SetMediaPlayer(IntroMedia);
 			IntroMediaTexture->UpdateResource();
 
+			IntroMedia->SetNativeVolume(1.0f);
 			IntroMedia->Play();
 			UE_LOG(LogTemp, Log, TEXT("Play Intro"));
 
