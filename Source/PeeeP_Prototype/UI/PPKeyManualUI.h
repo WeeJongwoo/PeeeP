@@ -19,6 +19,11 @@ enum class EKeyManual : uint8
 	UNEQUIP UMETA(DisplayName = "Unequip"),
 	GRAB UMETA(DisplayName = "Grab"),
 	GRAB_RELEASE UMETA(DisplayName = "Grab Release"),
+	CHECKPOINT UMETA(DisplayName = "CheckPoint"),
+	PAKOUR_CHARGE UMETA(DisplayName = "Pakour Charge"),
+	PAKOUR_DISCHARGE UMETA(DisplayName = "Pakour Discharge"),
+	PAKOUR_SPRINT UMETA(DisplayName = "Pakour Sprint"),
+	CLOAK UMETA(DisplayName = "Cloak"),
 };
 
 UCLASS()
@@ -54,6 +59,21 @@ protected:
 	UPROPERTY()
 	TObjectPtr <class UUserWidget> KeyManualGrabRelease;
 
+	UPROPERTY()
+	TObjectPtr <class UUserWidget> KeyManualCheckPoint;
+
+	UPROPERTY()
+	TObjectPtr <class UUserWidget> KeyManualPakourCharge;
+
+	UPROPERTY()
+	TObjectPtr <class UUserWidget> KeyManualPakourDischarge;
+
+	UPROPERTY()
+	TObjectPtr <class UUserWidget> KeyManualPakourSprint;
+
+	UPROPERTY()
+	TObjectPtr <class UUserWidget> KeyManualCloak;
+
 protected:
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	TObjectPtr <class UWidgetAnimation> MoveUIAnim;
@@ -78,6 +98,21 @@ protected:
 
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	TObjectPtr <class UWidgetAnimation> GrabReleaseUIAnim;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr <class UWidgetAnimation> CheckpointUIAnim;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr <class UWidgetAnimation> PakourChargeUIAnim;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr <class UWidgetAnimation> PakourDischargeUIAnim;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr <class UWidgetAnimation> PakourSprintUIAnim;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr <class UWidgetAnimation> CloakUIAnim;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "KeyManuals")
