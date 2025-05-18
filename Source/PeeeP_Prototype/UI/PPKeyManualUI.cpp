@@ -17,6 +17,11 @@ void UPPKeyManualUI::NativeConstruct()
 	KeyManualUnequip = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuideUnequip")));
 	KeyManualGrab = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuideGrab")));
 	KeyManualGrabRelease = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuideGrabRelease")));
+	KeyManualCheckPoint = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuideCheckPoint")));
+	KeyManualPakourCharge = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuidePakourCharge")));
+	KeyManualPakourDischarge = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuidePakourDischarge")));
+	KeyManualPakourSprint = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuidePakourSprint")));
+	KeyManualCloak = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuideCloak")));
 
 	KeyManualMove->SetVisibility(ESlateVisibility::Hidden);
 	KeyManualJump->SetVisibility(ESlateVisibility::Hidden);
@@ -26,6 +31,11 @@ void UPPKeyManualUI::NativeConstruct()
 	KeyManualUnequip->SetVisibility(ESlateVisibility::Hidden);
 	KeyManualGrab->SetVisibility(ESlateVisibility::Hidden);
 	KeyManualGrabRelease->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualCheckPoint->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualPakourCharge->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualPakourDischarge->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualPakourSprint->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualCloak->SetVisibility(ESlateVisibility::Hidden);
 
 	// 델리게이트를 위한 인터페이스(플레이어에게 상속됨)
 	IPPElectricHUDInterface* ElectricHUDInterface = Cast<IPPElectricHUDInterface>(GetOwningPlayerPawn());
@@ -88,6 +98,26 @@ void UPPKeyManualUI::StartVisibleKeyManual(EKeyManual KeyManual)
 		Widget = KeyManualGrabRelease;
 		Anim = GrabReleaseUIAnim;
 		break;
+	case EKeyManual::CHECKPOINT:
+		Widget = KeyManualCheckPoint;
+		Anim = CheckpointUIAnim;
+		break;
+	case EKeyManual::PAKOUR_CHARGE:
+		Widget = KeyManualPakourCharge;
+		Anim = PakourChargeUIAnim;
+		break;
+	case EKeyManual::PAKOUR_DISCHARGE:
+		Widget = KeyManualPakourDischarge;
+		Anim = PakourDischargeUIAnim;
+		break;
+	case EKeyManual::PAKOUR_SPRINT:
+		Widget = KeyManualPakourSprint;
+		Anim = PakourSprintUIAnim;
+		break;
+	case EKeyManual::CLOAK:
+		Widget = KeyManualCloak;
+		Anim = CloakUIAnim;
+		break;
 	default:
 		break;
 	}
@@ -118,6 +148,11 @@ void UPPKeyManualUI::SetAllKeyManualHidden()
 	KeyManualUnequip->SetVisibility(ESlateVisibility::Hidden);
 	KeyManualGrab->SetVisibility(ESlateVisibility::Hidden);
 	KeyManualGrabRelease->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualCheckPoint->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualPakourCharge->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualPakourDischarge->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualPakourSprint->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualCloak->SetVisibility(ESlateVisibility::Hidden);
 
 	bIsKeyManualVisible = false;
 }
@@ -144,6 +179,11 @@ void UPPKeyManualUI::SetKeyManualVisible(uint8 KeyManual)
 	case EKeyManual::UNEQUIP:
 	case EKeyManual::GRAB:
 	case EKeyManual::GRAB_RELEASE:
+	case EKeyManual::CHECKPOINT:
+	case EKeyManual::PAKOUR_CHARGE:
+	case EKeyManual::PAKOUR_DISCHARGE:
+	case EKeyManual::PAKOUR_SPRINT:
+	case EKeyManual::CLOAK:
 		SetAllKeyManualHidden();
 		StartVisibleKeyManual(NewKeyManual);
 		break;
@@ -162,13 +202,3 @@ uint8 UPPKeyManualUI::GetIsKeyManualVisible() const
 {
 	return bIsKeyManualVisible;
 }
-
-
-/// <summary>
-/// 키 가이드 UI 표시, 입력한 index에 해당하는 하나의 UI만 표시
-/// ///
-/// 0: 모두 비활성화
-/// 1: 기본 조작, 2: 점프, 3: 전기 충전, 4: 전기 방출
-/// 5: 파츠 장착, 6: 파츠 해제, 7: 그랩 파츠(그랩), 8: 그랩 파츠(놓기)
-/// </summary>
-/// <param name="index">표시할 UI</param>
