@@ -4,6 +4,7 @@
 #include "Gimmick/PPTrainSpline.h"
 #include "Components/SplineComponent.h"
 #include "PPTrain.h"
+#include "PPCrossline.h"
 
 // Sets default values
 APPTrainSpline::APPTrainSpline()
@@ -60,7 +61,7 @@ void APPTrainSpline::SetMoveActorRotationAndLocation(float Distance)
 	FVector Direction = SplineComponent->GetDirectionAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World);
 	FRotator Rotator = FRotationMatrix::MakeFromX(Direction).Rotator();
 	//얻어온 값들에 플레이어를 위치시킨다.
-	UStaticMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<UStaticMeshComponent>();
+	USkeletalMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<USkeletalMeshComponent>();
 	if (ActorMesh != nullptr)
 	{
 		ActorMesh->SetWorldLocation(Position);
@@ -71,7 +72,7 @@ void APPTrainSpline::SetMoveActorRotationAndLocation(float Distance)
 void APPTrainSpline::SetMoveActorLocation(float Distance)
 {
 	FVector Position = SplineComponent->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World);
-	UStaticMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<UStaticMeshComponent>();
+	USkeletalMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<USkeletalMeshComponent>();
 	if (ActorMesh != nullptr)
 	{
 		ActorMesh->SetWorldLocation(Position);
@@ -82,7 +83,7 @@ void APPTrainSpline::SetMoveActorRotation(float Distance)
 {
 	FVector Direction = SplineComponent->GetDirectionAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World);
 	FRotator Rotator = FRotationMatrix::MakeFromX(Direction).Rotator();
-	UStaticMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<UStaticMeshComponent>();
+	USkeletalMeshComponent* ActorMesh = ActorToMove->FindComponentByClass<USkeletalMeshComponent>();
 	if (ActorMesh != nullptr)
 	{
 		ActorMesh->SetWorldRotation(Rotator);
@@ -138,11 +139,12 @@ void APPTrainSpline::Tick(float DeltaTime)
 					if (TrainActor)
 					{
 						UE_LOG(LogTemp, Warning, TEXT("Train Actor Found!"));
-						TrainActor->PlayHonkSound();
+						TrainActor->StopTrain();
 					}
 				}
 
 				MoveSpeed = FMath::FInterpTo(MoveSpeed, 0.0f, DeltaTime, DecelerationRate);
+				// 정지 보정 및 정지 후 처리 부분
 				if (MoveSpeed <= 10.0f)
 				{
 					bPendingStop = false;
@@ -150,6 +152,17 @@ void APPTrainSpline::Tick(float DeltaTime)
 					bCanMoveActor = false;
 					bIsStopping = false;
 					MoveSpeed = 0.0f;
+
+					if (!CrosslineActors.IsEmpty())
+					{
+						for (APPCrossline* Crossline : CrosslineActors)
+						{
+							if (Crossline)
+							{
+								Crossline->OnCrosslineEventDelegate.ExecuteIfBound(false);
+							}
+						}
+					}
 				}
 			}
 		}

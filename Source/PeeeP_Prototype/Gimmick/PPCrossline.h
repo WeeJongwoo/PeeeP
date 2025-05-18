@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "PPCrossline.generated.h"
 
+DECLARE_DELEGATE_OneParam(FOnCrosslineEventDelegate, bool);
+
 UCLASS()
 class PEEEP_PROTOTYPE_API APPCrossline : public AActor
 {
@@ -37,10 +39,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 	TObjectPtr<class USoundBase> CrosslineSound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	TObjectPtr<class USoundBase> CrosslineOffSound;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	void SetCrosslineMeshVisibility(bool bVisible);
+
+	FOnCrosslineEventDelegate OnCrosslineEventDelegate;
 
 };

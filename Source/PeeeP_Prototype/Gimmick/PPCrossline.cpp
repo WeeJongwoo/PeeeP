@@ -37,6 +37,9 @@ APPCrossline::APPCrossline()
 void APPCrossline::BeginPlay()
 {
 	Super::BeginPlay();
+
+	OnCrosslineEventDelegate.BindUObject(this, &APPCrossline::SetCrosslineMeshVisibility);
+
 	if (CrosslineSound)
 	{
 		AudioComponent->SetSound(CrosslineSound);
@@ -63,7 +66,8 @@ void APPCrossline::SetCrosslineMeshVisibility(bool bVisible)
 		else
 		{
 			CrosslineCollisionBox->SetCollisionProfileName(TEXT("NoCollision"));
-			AudioComponent->Stop();
+			AudioComponent->SetSound(CrosslineOffSound);
+			AudioComponent->Play();
 		}
 	}
 }

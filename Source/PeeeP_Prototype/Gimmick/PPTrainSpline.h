@@ -50,6 +50,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "SplineController")
 	float TotalMoveTime;
 
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crossline")
+	TArray<TObjectPtr<class APPCrossline>> CrosslineActors;
+
 private:
 	TObjectPtr<class AActor> ActorToMove;
 
