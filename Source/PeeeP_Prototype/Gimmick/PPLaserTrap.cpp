@@ -4,6 +4,7 @@
 #include "Gimmick/PPLaserTrap.h"
 #include "Components/BoxComponent.h"
 #include "Character/PPCharacterPlayer.h"
+#include "Components/AudioComponent.h"
 
 // Sets default values
 APPLaserTrap::APPLaserTrap()
@@ -19,6 +20,8 @@ APPLaserTrap::APPLaserTrap()
 
 	RootComponent = LaserMesh;
 	LaserCollider->SetupAttachment(LaserMesh);
+
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
 
 	TrapDamage = 5.0f;
 }
@@ -44,6 +47,14 @@ void APPLaserTrap::OnLaserOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	if (IsValid(Player))
 	{
 		Player->TakeDamage(TrapDamage);
+		if (IsValid(HitSound) && IsValid(AudioComponent))
+		{
+			AudioComponent->SetSound(HitSound);
+			AudioComponent->SetVolumeMultiplier(0.5f);
+			AudioComponent->SetPitchMultiplier(1.0f);
+			AudioComponent->Play();
+		}
 	}
+	
 }
 
