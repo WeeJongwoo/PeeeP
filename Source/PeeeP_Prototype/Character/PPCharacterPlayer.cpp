@@ -456,6 +456,12 @@ void APPCharacterPlayer::SwitchParts(UPPPartsDataBase* InPartsData)
 	{
 		GetMesh()->SetSkeletalMesh(Parts->GetPartsData()->PartsMesh);
 		GetMesh()->SetAnimClass(Parts->GetPartsData()->AnimClass);
+
+		int32 MaterialCount = GetMesh()->GetNumMaterials();
+		for (int i = 0; i < MaterialCount; i++)
+		{
+			GetMesh()->SetMaterial(i, nullptr);
+		}
 	}
 }
 
