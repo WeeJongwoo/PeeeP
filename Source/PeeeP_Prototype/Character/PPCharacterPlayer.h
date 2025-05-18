@@ -82,9 +82,12 @@ protected:
 	void OnRunningStart(const FInputActionValue& Value);
 	void OnRunningEnd(const FInputActionValue& Value);
 
+
 	ECharacterControlType CurrentCharacterControlType;
 
 public:
+	void SetMaxWalkSpeed(float InMaxWalkSpeed);
+
 	void SetRunning(bool InIsRunning);
 
 protected:

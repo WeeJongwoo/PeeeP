@@ -59,6 +59,7 @@ void UPPElectricDischargeComponent::BeginPlay()
 	if (OwnerCharacter)
 	{
 		DischargeEffectComponent = OwnerCharacter->GetElectricNiagaraComponent();
+		SetChargingEnable();
 	}
 
 	BroadCastToUI();
@@ -125,7 +126,7 @@ void UPPElectricDischargeComponent::Charging()
 		APPCharacterPlayer* OwnerCharacter = Cast<APPCharacterPlayer>(GetOwner());
 		if (OwnerCharacter)
 		{
-			OwnerCharacter->ReduationMaxWalkSpeedRatio(MoveSpeedReductionRate);
+			//OwnerCharacter->ReduationMaxWalkSpeedRatio(MoveSpeedReductionRate);
 			// Set Visible Level Gauge
 			OwnerCharacter->GetElectricChargingLevelWidget()->SetVisibility(ESlateVisibility::Visible);
 		}
@@ -152,6 +153,12 @@ void UPPElectricDischargeComponent::Charging()
 			UE_LOG(LogTemp, Warning, TEXT("MaxTimer"));
 		}
 		return;
+	}
+
+	APPCharacterPlayer* OwnerCharacter = Cast<APPCharacterPlayer>(GetOwner());
+	if (OwnerCharacter)
+	{
+		OwnerCharacter->ReduationMaxWalkSpeedRatio(MoveSpeedReductionRate);
 	}
 
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
@@ -209,6 +216,11 @@ void UPPElectricDischargeComponent::Charging()
 
 void UPPElectricDischargeComponent::Discharge()
 {
+	if (!bChargingEnable)
+	{
+		return;
+	}
+
 	APPCharacterPlayer* OwnerCharacter = Cast<APPCharacterPlayer>(GetOwner());
 
 	bChargeStart = false;

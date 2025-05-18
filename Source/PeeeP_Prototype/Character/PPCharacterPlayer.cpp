@@ -407,7 +407,8 @@ void APPCharacterPlayer::OnRunningStart(const FInputActionValue& Value)
 	// Set Player Max Walk Speed for Running.
 	if (!this->bIsRunning)
 	{
-		GetCharacterMovement()->MaxWalkSpeed *= RunningMultiplier;	// Here is Running Max Walk Speed. You can Setting Running Max Walk Speed.
+		float RunnigSpeed = this->MaxWalkSpeed* RunningMultiplier;
+		GetCharacterMovement()->MaxWalkSpeed = RunnigSpeed;	// Here is Running Max Walk Speed. You can Setting Running Max Walk Speed.
 		this->bIsRunning = true;
 		UE_LOG(LogTemp, Log, TEXT("Running Start"));
 	}
@@ -419,6 +420,19 @@ void APPCharacterPlayer::OnRunningEnd(const FInputActionValue& Value)
 	GetCharacterMovement()->MaxWalkSpeed /= RunningMultiplier;
 	this->bIsRunning = false;
 	UE_LOG(LogTemp, Log, TEXT("Running End"));
+}
+
+void APPCharacterPlayer::SetMaxWalkSpeed(float InMaxWalkSpeed)
+{
+	MaxWalkSpeed = InMaxWalkSpeed;
+	if (bIsRunning)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed * RunningMultiplier;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed;
+	}
 }
 
 void APPCharacterPlayer::SetRunning(bool InIsRunning)
@@ -509,12 +523,29 @@ void APPCharacterPlayer::GrabHitCheck()
 
 void APPCharacterPlayer::ReduationMaxWalkSpeedRatio(float InReductionRatio)
 {
-	GetCharacterMovement()->MaxWalkSpeed *= InReductionRatio;
+	if (bIsRunning)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed* InReductionRatio* RunningMultiplier;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed * InReductionRatio;
+	}
+	//GetCharacterMovement()->MaxWalkSpeed *= InReductionRatio;
 }
 
 void APPCharacterPlayer::RevertMaxWalkSpeed()
 {
-	GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed;
+	if (bIsRunning)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed * RunningMultiplier;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed;
+	}
+
+	//GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed;
 }
 
 UNiagaraComponent* APPCharacterPlayer::GetElectricNiagaraComponent() const

@@ -45,7 +45,7 @@ void UPPParkourParts::OnComponentCreated()
 		DefaultJumpZVelocity = Owner->GetCharacterMovement()->JumpZVelocity;
 		DefaultMaxWalkSpeed = Owner->GetMaxWalkSpeed();
 
-		Owner->GetCharacterMovement()->MaxWalkSpeed *= ParkourSpeedMultiplier;
+		Owner->SetMaxWalkSpeed(DefaultMaxWalkSpeed * ParkourSpeedMultiplier);
 
 		APlayerController* PlayerController = CastChecked<APlayerController>(Owner->GetController());
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem
@@ -98,7 +98,7 @@ void UPPParkourParts::CleanUpParts()
 {
 	Super::CleanUpParts();
 
-	Owner->GetCharacterMovement()->MaxWalkSpeed = DefaultMaxWalkSpeed;
+	Owner->SetMaxWalkSpeed(DefaultMaxWalkSpeed);
 	Owner->SetRunning(false);
 	ChargingEffectComponent->DestroyComponent();
 }
