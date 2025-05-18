@@ -8,6 +8,7 @@
 #include "MovieSceneSequence.h"
 #include "Gimmick/PPHologramBridge.h"
 #include "Kismet/GameplayStatics.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 // Sets default values
 APPHologramBridgeManager::APPHologramBridgeManager()
@@ -49,6 +50,7 @@ void APPHologramBridgeManager::SetClear()
 			ClearSequencePlayer->Play();
 			SequenceFinished();
 		}
+		ChangeBridgeButtonSignMaterial(3);
 	}
 	else
 	{
@@ -77,6 +79,15 @@ void APPHologramBridgeManager::SwitchToLightCam()
 		float ReturnCameraBlendTime = CameraViewDuration + CameraBlendDuration;
 
 		GetWorld()->GetTimerManager().SetTimer(LightCamTimerHandle, this, &APPHologramBridgeManager::RevertCam, ReturnCameraBlendTime);
+
+		if (bButton1State)
+		{
+			ChangeBridgeButtonSignMaterial(1);
+		}
+		else if (bButton2State)
+		{
+			ChangeBridgeButtonSignMaterial(2);
+		}
 	}
 	else
 	{
@@ -107,6 +118,37 @@ void APPHologramBridgeManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	}
 
 	Super::EndPlay(EndPlayReason);
+}
+
+void APPHologramBridgeManager::ChangeBridgeButtonSignMaterial(float Type)
+{
+	UMaterialInstanceDynamic* NewMaterial = UMaterialInstanceDynamic::Create(BridgeButtonSignMaterial, this);
+
+	if (IsValid(NewMaterial))
+	{
+		NewMaterial->SetScalarParameterValue(FName("Emessive_Array_Count"), Type);
+
+		for (AActor* Actor : BridgeButtonSignActors)
+		{
+			if (IsValid(Actor))
+			{
+				TArray<UStaticMeshComponent*> MeshComponents;
+				Actor->GetComponents<UStaticMeshComponent>(MeshComponents);
+				for (UStaticMeshComponent* MeshComponent : MeshComponents)
+				{
+					if (IsValid(MeshComponent))
+					{
+						MeshComponent->SetMaterial(0, NewMaterial);
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NewMaterial is not valid"));
+	}
+
 }
 
 // Called every frame
