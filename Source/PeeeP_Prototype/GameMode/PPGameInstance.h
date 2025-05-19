@@ -24,4 +24,6 @@ public:
 
 	void SetCurrentSlotIndex(int32 NewCurrentSlotIndex);
 	FORCEINLINE int32 GetCurrentSlotIndex() { return CurrentSlotIndex; }
+
+	void ClearInventoryPartsArray();
 };

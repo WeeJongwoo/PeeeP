@@ -12,3 +12,9 @@ void UPPGameInstance::SetCurrentSlotIndex(int32 NewCurrentSlotIndex)
 {
 	CurrentSlotIndex = NewCurrentSlotIndex;
 }
+
+void UPPGameInstance::ClearInventoryPartsArray()
+{
+	InventoryPartsArray.Empty();
+	CurrentSlotIndex = 0;
+}
