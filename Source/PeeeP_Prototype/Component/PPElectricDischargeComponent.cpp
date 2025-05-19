@@ -476,3 +476,27 @@ void UPPElectricDischargeComponent::Reset()
 	BroadCastToUI();
 }
 
+void UPPElectricDischargeComponent::CancelCharging()
+{
+	APPCharacterPlayer* OwnerCharacter = Cast<APPCharacterPlayer>(GetOwner());
+
+	bChargeStart = false;
+	TempChargeLevel = 0;
+
+	// Play Discharge Sound Here
+	if (ElectricSoundComponent->IsPlaying())
+	{
+		ElectricSoundComponent->Stop();
+	}
+
+	CurrentChargeLevel = 0;
+	CurrentChargingTime = 0.0f;
+	DischargeEffectComponent->Deactivate();
+	OwnerCharacter->RevertMaxWalkSpeed();
+	SetElectricLevelHUDVisible(false);
+
+	UE_LOG(LogTemp, Warning, TEXT("Cancel Charging"));
+
+	return;
+}
+

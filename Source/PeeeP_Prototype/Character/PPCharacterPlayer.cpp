@@ -602,6 +602,8 @@ void APPCharacterPlayer::QuickSlotUse(const FInputActionValue& Value)
 	//InventoryComponent->UseItem(0, ESlotType::ST_InventoryParts);
 
 	// ?��?�� ?��?��?�� ?���??�� 기반?���? ?��?�� ?��?��?�� ?��?��
+	ElectricDischargeComponent->CancelCharging();
+
 	InventoryComponent->UseItemCurrentIndex(ESlotType::ST_InventoryParts);
 
 }
