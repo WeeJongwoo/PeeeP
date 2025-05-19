@@ -34,7 +34,7 @@ void APPRotPuzzle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsRotating)
+	if (bIsRotating && !IsBroken)
 	{
 		CurrentRotatingTime += DeltaTime;
 		float Alpha = FMath::Clamp(CurrentRotatingTime / RotationTime, 0.0f, 1.0f);

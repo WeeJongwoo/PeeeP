@@ -188,6 +188,7 @@ void APPCharacterPlayer::OnDeath(uint8 bIsDead)
 			if (!GetWorldTimerManager().IsTimerActive(RespawnTimerHandle))
 			{
 				InventoryComponent->ClearUsingItem();
+				ElectricDischargeComponent->CancelCharging();
 				RemoveParts();
 				PlayEquipEffect();
 				PlayDeadSound();
@@ -408,7 +409,12 @@ void APPCharacterPlayer::OnRunningStart(const FInputActionValue& Value)
 	if (!this->bIsRunning)
 	{
 		float RunnigSpeed = this->MaxWalkSpeed* RunningMultiplier;
-		GetCharacterMovement()->MaxWalkSpeed = RunnigSpeed;	// Here is Running Max Walk Speed. You can Setting Running Max Walk Speed.
+		// Here is Running Max Walk Speed. You can Setting Running Max Walk Speed.
+		UCharacterMovementComponent* Movement = GetCharacterMovement();
+		if (IsValid(Movement))
+		{
+			Movement->MaxWalkSpeed = RunnigSpeed;
+		}
 		this->bIsRunning = true;
 		UE_LOG(LogTemp, Log, TEXT("Running Start"));
 	}
