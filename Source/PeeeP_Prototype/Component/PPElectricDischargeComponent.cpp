@@ -216,11 +216,6 @@ void UPPElectricDischargeComponent::Charging()
 
 void UPPElectricDischargeComponent::Discharge()
 {
-	if (!bChargingEnable)
-	{
-		return;
-	}
-
 	APPCharacterPlayer* OwnerCharacter = Cast<APPCharacterPlayer>(GetOwner());
 
 	bChargeStart = false;

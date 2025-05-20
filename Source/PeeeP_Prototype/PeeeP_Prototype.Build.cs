@@ -18,12 +18,15 @@ public class PeeeP_Prototype : ModuleRules
 			"EnhancedInput", 
 			"Niagara", 
 			"UMG", 
-			"MediaAssets",
-            "MovieScene",
-            "LevelSequence",
-			"PhysicsCore",
-			"GameplayTags"
-		});
+			"MediaAssets", 
+            "MovieScene", 
+            "LevelSequence", 
+			"PhysicsCore", 
+			"GameplayTags",
+            "RenderCore",
+			"RHI",
+			"Renderer",
+        });
 
 		//PrivateDependencyModuleNames.AddRange(new string[] {  });
 
