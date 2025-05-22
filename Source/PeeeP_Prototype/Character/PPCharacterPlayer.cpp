@@ -201,13 +201,6 @@ void APPCharacterPlayer::OnDeath(uint8 bIsDead)
 				
 			}
 		}
-		else
-		{
-			if (IsValid(PlayerController))
-			{
-				this->EnableInput(PlayerController);
-			}
-		}
 	}
 	
 }

@@ -22,15 +22,24 @@ public:
 	void SetSpawnActorLocation(class AActor* InActor);
 	FVector GetSpawnLocation() { return SpawnLocation; }
 
+	void SetOwnerPlayerController(class APPPlayerController* InPlayerController);
+
 	void PlayRespawnSequence();
 
 private:
 
 	void BeginPlay() override;
 
+	UFUNCTION()
+	void ReturnInput();
+
+	UFUNCTION()
+	void StartRespawnSequence();
+
 	FVector SpawnLocation;
 	TObjectPtr<class AActor> SpawnPointActor;
 
+	TObjectPtr<class APPPlayerController> OwnerPlayerController;
 
 	UPROPERTY()
 	TObjectPtr<class ULevelSequence> RestartSequence;
