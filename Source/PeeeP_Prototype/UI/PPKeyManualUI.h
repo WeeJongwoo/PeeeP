@@ -24,6 +24,8 @@ enum class EKeyManual : uint8
 	PAKOUR_DISCHARGE UMETA(DisplayName = "Pakour Discharge"),
 	PAKOUR_SPRINT UMETA(DisplayName = "Pakour Sprint"),
 	CLOAK UMETA(DisplayName = "Cloak"),
+	SPRINT UMETA(DisplayName = "Sprint"),
+	PARTS_SELECT UMETA(DisplayName = "Parts Select(Wheel)"),
 };
 
 UCLASS()
@@ -74,6 +76,12 @@ protected:
 	UPROPERTY()
 	TObjectPtr <class UUserWidget> KeyManualCloak;
 
+	UPROPERTY()
+	TObjectPtr <class UUserWidget> KeyManualSprint;
+
+	UPROPERTY()
+	TObjectPtr <class UUserWidget> KeyManualPartsSelect;
+
 protected:
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	TObjectPtr <class UWidgetAnimation> MoveUIAnim;
@@ -113,6 +121,12 @@ protected:
 
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	TObjectPtr <class UWidgetAnimation> CloakUIAnim;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr <class UWidgetAnimation> SprintUIAnim;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr <class UWidgetAnimation> PartsSelectUIAnim;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "KeyManuals")

@@ -21,7 +21,10 @@ public:
 	float ParkourSpeedMultiplierValue;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<class UInputAction> ChargingJumpAction;
+	TObjectPtr<class UInputAction> ChargingAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<class UInputAction> JumpAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<TObjectPtr<class UNiagaraSystem>> JumpChargingEffect;

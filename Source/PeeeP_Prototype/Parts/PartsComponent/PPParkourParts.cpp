@@ -57,9 +57,10 @@ void UPPParkourParts::OnComponentCreated()
 				Subsystem->AddMappingContext(ParkourPartsData->PartsMappingContext, 1);
 				UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerController->InputComponent);
 
-				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingJumpAction, ETriggerEvent::Started, this, &UPPParkourParts::ChargStart);
-				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingJumpAction, ETriggerEvent::Ongoing, this, &UPPParkourParts::TickJumpCharge);
-				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingJumpAction, ETriggerEvent::Completed, this, &UPPParkourParts::Jump);
+				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingAction, ETriggerEvent::Started, this, &UPPParkourParts::ChargStart);
+				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingAction, ETriggerEvent::Ongoing, this, &UPPParkourParts::TickJumpCharge);
+				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingAction, ETriggerEvent::Completed, this, &UPPParkourParts::ChargingCancle);
+				EnhancedInputComponent->BindAction(ParkourPartsData->JumpAction, ETriggerEvent::Triggered, this, &UPPParkourParts::Jump);
 
 				ChargeSound = ParkourPartsData->ChargeSound;
 				JumpSound = ParkourPartsData->JumpSound;
@@ -105,6 +106,14 @@ void UPPParkourParts::CleanUpParts()
 
 void UPPParkourParts::ChargStart()
 {
+	if(IsValid(Owner))
+	{
+		if (Owner->GetMovementComponent()->IsFalling())
+		{
+			return;
+		}
+	}
+
 	bIsCharging = true;
 	if (CurrentJumpLevel > 0)
 	{
@@ -162,12 +171,22 @@ void UPPParkourParts::Jump()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Charge Jump"));
 
+	if (CurrentJumpLevel == 0)
+	{
+		bIsCharging = false;
+		Owner->Jump();
+		return;
+	}
+
 	FTimerDelegate TimerDelegate;
 	TimerDelegate.BindLambda([this]()
 		{
 			if (IsValid(this))
 			{
 				bIsCharging = false;
+				CurrentJumpLevel = 0;
+				TotalJumpChargingTime = 0.0f;
+				PreviousJumpChargingTime = 0.0f;
 			}
 		}
 	);
@@ -207,4 +226,21 @@ void UPPParkourParts::Jump()
 	}
 	
 	//Owner->Jump();
+}
+
+void UPPParkourParts::ChargingCancle()
+{
+	if (IsValid(ParkourSoundComponent) && ParkourSoundComponent->IsPlaying())
+	{
+		ParkourSoundComponent->Stop();
+	}
+	if (IsValid(ChargingEffectComponent) && ChargingEffectComponent->IsActive())
+	{
+		ChargingEffectComponent->Deactivate();
+	}
+
+	bIsCharging = false;
+	CurrentJumpLevel = 0;
+	TotalJumpChargingTime = 0.0f;
+	PreviousJumpChargingTime = 0.0f;
 }

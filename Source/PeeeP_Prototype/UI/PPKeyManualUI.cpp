@@ -22,6 +22,8 @@ void UPPKeyManualUI::NativeConstruct()
 	KeyManualPakourDischarge = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuidePakourDischarge")));
 	KeyManualPakourSprint = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuidePakourSprint")));
 	KeyManualCloak = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuideCloak")));
+	KeyManualSprint = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuideSprint")));
+	KeyManualPartsSelect = Cast<UUserWidget>(GetWidgetFromName(TEXT("WBKeyGuidePartsSelect")));
 
 	KeyManualMove->SetVisibility(ESlateVisibility::Hidden);
 	KeyManualJump->SetVisibility(ESlateVisibility::Hidden);
@@ -36,6 +38,8 @@ void UPPKeyManualUI::NativeConstruct()
 	KeyManualPakourDischarge->SetVisibility(ESlateVisibility::Hidden);
 	KeyManualPakourSprint->SetVisibility(ESlateVisibility::Hidden);
 	KeyManualCloak->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualSprint->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualPartsSelect->SetVisibility(ESlateVisibility::Hidden);
 
 	// 델리게이트를 위한 인터페이스(플레이어에게 상속됨)
 	IPPElectricHUDInterface* ElectricHUDInterface = Cast<IPPElectricHUDInterface>(GetOwningPlayerPawn());
@@ -118,6 +122,14 @@ void UPPKeyManualUI::StartVisibleKeyManual(EKeyManual KeyManual)
 		Widget = KeyManualCloak;
 		Anim = CloakUIAnim;
 		break;
+	case EKeyManual::SPRINT:
+		Widget = KeyManualSprint;
+		Anim = SprintUIAnim;
+		break;
+	case EKeyManual::PARTS_SELECT:
+		Widget = KeyManualPartsSelect;
+		Anim = PartsSelectUIAnim;
+		break;
 	default:
 		break;
 	}
@@ -153,6 +165,8 @@ void UPPKeyManualUI::SetAllKeyManualHidden()
 	KeyManualPakourDischarge->SetVisibility(ESlateVisibility::Hidden);
 	KeyManualPakourSprint->SetVisibility(ESlateVisibility::Hidden);
 	KeyManualCloak->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualSprint->SetVisibility(ESlateVisibility::Hidden);
+	KeyManualPartsSelect->SetVisibility(ESlateVisibility::Hidden);
 
 	bIsKeyManualVisible = false;
 }
@@ -184,6 +198,8 @@ void UPPKeyManualUI::SetKeyManualVisible(uint8 KeyManual)
 	case EKeyManual::PAKOUR_DISCHARGE:
 	case EKeyManual::PAKOUR_SPRINT:
 	case EKeyManual::CLOAK:
+	case EKeyManual::SPRINT:
+	case EKeyManual::PARTS_SELECT:
 		SetAllKeyManualHidden();
 		StartVisibleKeyManual(NewKeyManual);
 		break;
