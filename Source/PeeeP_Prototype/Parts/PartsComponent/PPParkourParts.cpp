@@ -60,7 +60,7 @@ void UPPParkourParts::OnComponentCreated()
 				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingAction, ETriggerEvent::Started, this, &UPPParkourParts::ChargStart);
 				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingAction, ETriggerEvent::Ongoing, this, &UPPParkourParts::TickJumpCharge);
 				EnhancedInputComponent->BindAction(ParkourPartsData->ChargingAction, ETriggerEvent::Completed, this, &UPPParkourParts::ChargingCancle);
-				EnhancedInputComponent->BindAction(ParkourPartsData->JumpAction, ETriggerEvent::Triggered, this, &UPPParkourParts::Jump);
+				EnhancedInputComponent->BindAction(ParkourPartsData->JumpAction, ETriggerEvent::Started, this, &UPPParkourParts::Jump);
 
 				ChargeSound = ParkourPartsData->ChargeSound;
 				JumpSound = ParkourPartsData->JumpSound;

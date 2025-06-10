@@ -71,10 +71,14 @@ protected:
 
 	// Move MaxWalkSpeed Variable here from ElectricDischarge Setting Section
 	// You can Setting Player's Max Walk Speed
+	float DefaultMaxWalkSpeed;
 	float MaxWalkSpeed;
 	float RunningMultiplier;
 
 	bool bIsRunning;
+
+	float DefaultFOV;
+	float MaxRunningFOV;
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
@@ -82,6 +86,7 @@ protected:
 	void OnRunningStart(const FInputActionValue& Value);
 	void OnRunningEnd(const FInputActionValue& Value);
 
+	void SetFOVBySpeed(float);
 
 	ECharacterControlType CurrentCharacterControlType;
 
