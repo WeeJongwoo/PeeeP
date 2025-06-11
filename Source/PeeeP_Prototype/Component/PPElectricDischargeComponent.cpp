@@ -59,6 +59,7 @@ void UPPElectricDischargeComponent::BeginPlay()
 	if (OwnerCharacter)
 	{
 		DischargeEffectComponent = OwnerCharacter->GetElectricNiagaraComponent();
+		SetChargingEnable();
 	}
 
 	BroadCastToUI();
@@ -125,7 +126,7 @@ void UPPElectricDischargeComponent::Charging()
 		APPCharacterPlayer* OwnerCharacter = Cast<APPCharacterPlayer>(GetOwner());
 		if (OwnerCharacter)
 		{
-			OwnerCharacter->ReduationMaxWalkSpeedRatio(MoveSpeedReductionRate);
+			//OwnerCharacter->ReduationMaxWalkSpeedRatio(MoveSpeedReductionRate);
 			// Set Visible Level Gauge
 			OwnerCharacter->GetElectricChargingLevelWidget()->SetVisibility(ESlateVisibility::Visible);
 		}
@@ -152,6 +153,12 @@ void UPPElectricDischargeComponent::Charging()
 			UE_LOG(LogTemp, Warning, TEXT("MaxTimer"));
 		}
 		return;
+	}
+
+	APPCharacterPlayer* OwnerCharacter = Cast<APPCharacterPlayer>(GetOwner());
+	if (OwnerCharacter)
+	{
+		OwnerCharacter->ReduationMaxWalkSpeedRatio(MoveSpeedReductionRate);
 	}
 
 	float DeltaTime = GetWorld()->GetDeltaSeconds();
@@ -316,8 +323,12 @@ void UPPElectricDischargeComponent::Discharge()
 	bChargingEnable = false;
 
 	UE_LOG(LogTemp, Warning, TEXT("ClearTimer"));
-	GetWorld()->GetTimerManager().ClearTimer(AutoDischargeTimeHandler);
 
+	if (AutoDischargeTimeHandler.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(AutoDischargeTimeHandler);
+	}
+	
 	GetWorld()->GetTimerManager().SetTimer(RechargingDelayTimeHandler, this, &UPPElectricDischargeComponent::SetChargingEnable, RechargingDelay, false);
 	GetWorld()->GetTimerManager().SetTimer(ElectricLevelHUDTimeHandler, FTimerDelegate::CreateLambda([this]() {SetElectricLevelHUDVisible(false); }), 1.0f, false);
 }
@@ -457,10 +468,43 @@ void UPPElectricDischargeComponent::Reset()
 	MaxElectricCapacity = 12.0f;
 	bElectricIsEmpty = false;
 
-	GetWorld()->GetTimerManager().ClearTimer(AutoDischargeTimeHandler);
-	GetWorld()->GetTimerManager().ClearTimer(RechargingDelayTimeHandler);
-	GetWorld()->GetTimerManager().ClearTimer(ElectricLevelHUDTimeHandler);
+	if (AutoDischargeTimeHandler.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(AutoDischargeTimeHandler);
+	}
+	if (RechargingDelayTimeHandler.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(RechargingDelayTimeHandler);
+	}
+	if (ElectricLevelHUDTimeHandler.IsValid())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(ElectricLevelHUDTimeHandler);
+	}
 
 	BroadCastToUI();
+}
+
+void UPPElectricDischargeComponent::CancelCharging()
+{
+	APPCharacterPlayer* OwnerCharacter = Cast<APPCharacterPlayer>(GetOwner());
+
+	bChargeStart = false;
+	TempChargeLevel = 0;
+
+	// Play Discharge Sound Here
+	if (ElectricSoundComponent->IsPlaying())
+	{
+		ElectricSoundComponent->Stop();
+	}
+
+	CurrentChargeLevel = 0;
+	CurrentChargingTime = 0.0f;
+	DischargeEffectComponent->Deactivate();
+	OwnerCharacter->RevertMaxWalkSpeed();
+	SetElectricLevelHUDVisible(false);
+
+	UE_LOG(LogTemp, Warning, TEXT("Cancel Charging"));
+
+	return;
 }
 

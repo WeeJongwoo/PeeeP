@@ -126,20 +126,24 @@ APPCharacterPlayer::APPCharacterPlayer()
 	CameraBoom->bEnableCameraRotationLag = true;
 	CameraBoom->CameraLagSpeed = 5.0f;
 	CameraBoom->CameraRotationLagSpeed = 20.0f;
-	CameraBoom->CameraLagMaxDistance = 500.f;
+	CameraBoom->CameraLagMaxDistance = 300.f;
 	CameraBoom->ProbeSize = 8.0f;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));	// FollowCamera 컴포?��?���? �??��?��
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
-	FollowCamera->FieldOfView = 90.0f;
+
+	DefaultFOV = 90.0f;
+	MaxRunningFOV = 105.0f;
+	FollowCamera->FieldOfView = DefaultFOV;
 
 	ElectricDischargeComponent = CreateDefaultSubobject<UPPElectricDischargeComponent>(TEXT("ElectricDischargeComponent"));
 
 	// Player Movement Setting
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->GravityScale = 1.6f;
-	this->MaxWalkSpeed = 100.0f;										// Setting Default Max Walk Speed
+	DefaultMaxWalkSpeed = 100.0f;
+	this->MaxWalkSpeed = DefaultMaxWalkSpeed;										// Setting Default Max Walk Speed
 	GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed;		// Apply Default Max Walk Speed
 	GetCharacterMovement()->MaxStepHeight = 5.0f;
 	GetCharacterMovement()->SetWalkableFloorAngle(50.f);
@@ -188,6 +192,7 @@ void APPCharacterPlayer::OnDeath(uint8 bIsDead)
 			if (!GetWorldTimerManager().IsTimerActive(RespawnTimerHandle))
 			{
 				InventoryComponent->ClearUsingItem();
+				ElectricDischargeComponent->CancelCharging();
 				RemoveParts();
 				PlayEquipEffect();
 				PlayDeadSound();
@@ -198,13 +203,6 @@ void APPCharacterPlayer::OnDeath(uint8 bIsDead)
 				}
 				GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &APPCharacterPlayer::PlayRespawnSequence, 2.25f, false);
 				
-			}
-		}
-		else
-		{
-			if (IsValid(PlayerController))
-			{
-				this->EnableInput(PlayerController);
 			}
 		}
 	}
@@ -261,6 +259,8 @@ void APPCharacterPlayer::Tick(float DeltaTime)
 	FHitResult OutHit;
 	GetCharacterMovement()->SafeMoveUpdatedComponent(FVector(0.f, 0.f, 0.03f), GetActorRotation(), true, OutHit);
 	GetCharacterMovement()->SafeMoveUpdatedComponent(FVector(0.f, 0.f, -0.03f), GetActorRotation(), true, OutHit);
+
+	SetFOVBySpeed(DeltaTime);
 }
 
 void APPCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -274,7 +274,7 @@ void APPCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	/// Create some function for actions about added input and bind it.
 	
 	// Jump
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 	// Move
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APPCharacterPlayer::Move);
@@ -407,7 +407,13 @@ void APPCharacterPlayer::OnRunningStart(const FInputActionValue& Value)
 	// Set Player Max Walk Speed for Running.
 	if (!this->bIsRunning)
 	{
-		GetCharacterMovement()->MaxWalkSpeed *= RunningMultiplier;	// Here is Running Max Walk Speed. You can Setting Running Max Walk Speed.
+		float RunnigSpeed = this->MaxWalkSpeed* RunningMultiplier;
+		// Here is Running Max Walk Speed. You can Setting Running Max Walk Speed.
+		UCharacterMovementComponent* Movement = GetCharacterMovement();
+		if (IsValid(Movement))
+		{
+			Movement->MaxWalkSpeed = RunnigSpeed;
+		}
 		this->bIsRunning = true;
 		UE_LOG(LogTemp, Log, TEXT("Running Start"));
 	}
@@ -419,6 +425,33 @@ void APPCharacterPlayer::OnRunningEnd(const FInputActionValue& Value)
 	GetCharacterMovement()->MaxWalkSpeed /= RunningMultiplier;
 	this->bIsRunning = false;
 	UE_LOG(LogTemp, Log, TEXT("Running End"));
+}
+
+void APPCharacterPlayer::SetFOVBySpeed(float DeltaTime)
+{
+	double Speed2D = FMath::Clamp(GetCharacterMovement()->Velocity.Size2D(), DefaultMaxWalkSpeed, MaxWalkSpeed * RunningMultiplier);
+
+	double SpeedRatio = (Speed2D - DefaultMaxWalkSpeed) / ((DefaultMaxWalkSpeed * RunningMultiplier * 2) - DefaultMaxWalkSpeed);
+
+	float TargetFOV = FMath::Lerp(DefaultFOV, MaxRunningFOV, SpeedRatio);
+
+	float SmoothSpeed = 5.0f;
+	float NewFOV = FMath::FInterpTo(FollowCamera->FieldOfView, TargetFOV, DeltaTime, SmoothSpeed);
+
+	FollowCamera->SetFieldOfView(NewFOV);
+}
+
+void APPCharacterPlayer::SetMaxWalkSpeed(float InMaxWalkSpeed)
+{
+	MaxWalkSpeed = InMaxWalkSpeed;
+	if (bIsRunning)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed * RunningMultiplier;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed;
+	}
 }
 
 void APPCharacterPlayer::SetRunning(bool InIsRunning)
@@ -509,12 +542,29 @@ void APPCharacterPlayer::GrabHitCheck()
 
 void APPCharacterPlayer::ReduationMaxWalkSpeedRatio(float InReductionRatio)
 {
-	GetCharacterMovement()->MaxWalkSpeed *= InReductionRatio;
+	if (bIsRunning)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed* InReductionRatio* RunningMultiplier;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed * InReductionRatio;
+	}
+	//GetCharacterMovement()->MaxWalkSpeed *= InReductionRatio;
 }
 
 void APPCharacterPlayer::RevertMaxWalkSpeed()
 {
-	GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed;
+	if (bIsRunning)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed * RunningMultiplier;
+	}
+	else
+	{
+		GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed;
+	}
+
+	//GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed;
 }
 
 UNiagaraComponent* APPCharacterPlayer::GetElectricNiagaraComponent() const
@@ -571,6 +621,8 @@ void APPCharacterPlayer::QuickSlotUse(const FInputActionValue& Value)
 	//InventoryComponent->UseItem(0, ESlotType::ST_InventoryParts);
 
 	// ?��?�� ?��?��?�� ?���??�� 기반?���? ?��?�� ?��?��?�� ?��?��
+	ElectricDischargeComponent->CancelCharging();
+
 	InventoryComponent->UseItemCurrentIndex(ESlotType::ST_InventoryParts);
 
 }

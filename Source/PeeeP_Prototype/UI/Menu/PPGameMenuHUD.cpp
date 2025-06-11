@@ -7,6 +7,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "PPLobbyActor.h"
+#include "GameMode/PPGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 UPPGameMenuHUD::UPPGameMenuHUD(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -54,6 +56,13 @@ void UPPGameMenuHUD::NativeConstruct()
 void UPPGameMenuHUD::StartButtonClick()
 {
 	UE_LOG(LogTemp, Log, TEXT("StartGame"));
+
+	UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		GameInstance->ClearInventoryPartsArray();
+	}
+
 	UGameplayStatics::OpenLevel(GetWorld(), TEXT("Stage1"));
 }
 

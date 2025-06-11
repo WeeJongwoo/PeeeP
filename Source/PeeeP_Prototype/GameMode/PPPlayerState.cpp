@@ -10,6 +10,7 @@
 #include "DefaultLevelSequenceInstanceData.h"
 #include "Engine/PostProcessVolume.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameMode/PPPlayerController.h"
 
 
 APPPlayerState::APPPlayerState()
@@ -31,6 +32,14 @@ void APPPlayerState::SetSpawnActorLocation(AActor* InActor)
 	}
 }
 
+void APPPlayerState::SetOwnerPlayerController(APPPlayerController* InPlayerController)
+{
+	if (IsValid(InPlayerController))
+	{
+		OwnerPlayerController = InPlayerController;
+	}
+}
+
 void APPPlayerState::PlayRespawnSequence()
 {
 	if (IsValid(SpawnPointActor) && SpawnPointActor->Implements<UPPSavepointInterface>())
@@ -39,7 +48,20 @@ void APPPlayerState::PlayRespawnSequence()
 		{
 			UE_LOG(LogTemp, Log, TEXT("Play Sequence"));
 			RestartSequencePlayer->Play();
+
+			if (IsValid(OwnerPlayerController))
+			{
+				APawn* PossessPawn = OwnerPlayerController->GetPawn();
+				if (IsValid(PossessPawn))
+				{
+					PossessPawn->DisableInput(OwnerPlayerController);
+				}
+			}
 		}
+	}
+	else
+	{
+		ReturnInput();
 	}
 }
 
@@ -63,6 +85,9 @@ void APPPlayerState::BeginPlay()
 
 		RestartSequenceActor->SetBindingByTag(FName("Player"), { GetPawn() });
 		RestartSequenceActor->bOverrideInstanceData = true;
+
+		RestartSequencePlayer->OnPlay.AddDynamic(this, &APPPlayerState::StartRespawnSequence);
+		RestartSequencePlayer->OnFinished.AddDynamic(this, &APPPlayerState::ReturnInput);
 		
 		TArray<AActor*> FoundActors;
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APostProcessVolume::StaticClass(), FoundActors);
@@ -72,5 +97,29 @@ void APPPlayerState::BeginPlay()
 		}
 
 		UE_LOG(LogTemp, Warning, TEXT("LevelSequnceSetting"));
+	}
+}
+
+void APPPlayerState::ReturnInput()
+{
+	if (IsValid(OwnerPlayerController))
+	{
+		APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		if (IsValid(PlayerPawn))
+		{
+			PlayerPawn->EnableInput(OwnerPlayerController);
+		}
+	}
+}
+
+void APPPlayerState::StartRespawnSequence()
+{
+	if (IsValid(OwnerPlayerController))
+	{
+		APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		if (PlayerPawn)
+		{
+			PlayerPawn->DisableInput(OwnerPlayerController);
+		}
 	}
 }

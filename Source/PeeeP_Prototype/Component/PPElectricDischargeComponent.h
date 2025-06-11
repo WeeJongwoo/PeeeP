@@ -103,6 +103,8 @@ public:
 	void SetCurrentCapacity(float Amount);
 	void Reset();
 
+	void CancelCharging();
+
 public:
 	void BroadCastToUI();
 

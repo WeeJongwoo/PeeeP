@@ -5,6 +5,7 @@
 #include "UI/Menu/PPPauseMenyHUD.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/PPInGameUIMain.h"
+#include "PPPlayerState.h"
 
 
 APPPlayerController::APPPlayerController()
@@ -76,5 +77,11 @@ void APPPlayerController::BeginPlay()
 			}
 		}
 
+	}
+
+	APPPlayerState* PS = GetPlayerState<APPPlayerState>();
+	if (IsValid(PS))
+	{
+		PS->SetOwnerPlayerController(this);
 	}
 }

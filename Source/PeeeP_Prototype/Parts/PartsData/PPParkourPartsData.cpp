@@ -16,9 +16,15 @@ UPPParkourPartsData::UPPParkourPartsData()
 		PartsMappingContext = PartsMappingContextRef.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UInputAction> ChargingJumpActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Parts/Parkour/IA_ParkourJumpAction.IA_ParkourJumpAction'"));
+	static ConstructorHelpers::FObjectFinder<UInputAction> ChargingJumpActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Parts/Parkour/IA_ParkourPartsAction.IA_ParkourPartsAction'"));
 	if (ChargingJumpActionRef.Object)
 	{
-		ChargingJumpAction = ChargingJumpActionRef.Object;
+		ChargingAction = ChargingJumpActionRef.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UInputAction> JumpActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Parts/Parkour/IA_ParkourJump.IA_ParkourJump'"));
+	if (JumpActionRef.Object)
+	{
+		JumpAction = JumpActionRef.Object;
 	}
 }

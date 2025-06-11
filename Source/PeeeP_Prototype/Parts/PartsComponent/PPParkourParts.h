@@ -32,6 +32,7 @@ private:
 	void ChargStart();
 	void TickJumpCharge();
 	void Jump();
+	void ChargingCancle();
 
 	int8 bIsCharging : 1;
 

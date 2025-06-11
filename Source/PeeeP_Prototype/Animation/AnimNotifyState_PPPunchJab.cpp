@@ -21,7 +21,7 @@ void UAnimNotifyState_PPPunchJab::NotifyTick(USkeletalMeshComponent* MeshComp, U
 	DrawDebugPoint(World, StartPos, 5.0f, FColor::Green, false, 2.0f);
 	DrawDebugPoint(World, EndPos, 5.0f, FColor::Green, false, 2.0f);
 
-	FVector HitBoxHalfExtent = FVector(50.0f, 60.0f, 75.0f);
+	FVector HitBoxHalfExtent = FVector(60.0f, 70.0f, 75.0f);
 
 	FCollisionQueryParams CollisionParam(TEXT("Punch"), false, MeshComp->GetOwner());
 
