@@ -65,6 +65,7 @@ protected:
 	TObjectPtr<class UMaterialInstance> BridgeButtonSignMaterial;
 
 	FTimerHandle LightCamTimerHandle;
+	FTimerHandle LightOnTimerHandle;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason);
 	void ChangeBridgeButtonSignMaterial(float Type);

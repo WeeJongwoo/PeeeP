@@ -80,13 +80,33 @@ void APPHologramBridgeManager::SwitchToLightCam()
 
 		GetWorld()->GetTimerManager().SetTimer(LightCamTimerHandle, this, &APPHologramBridgeManager::RevertCam, ReturnCameraBlendTime);
 
+		float LightOnBlendTime = (CameraViewDuration*0.5f) + CameraBlendDuration;
+
 		if (bButton1State)
 		{
-			ChangeBridgeButtonSignMaterial(1);
+			FTimerDelegate TimerDelegate1;
+			TimerDelegate1.BindLambda([this]()
+				{
+					if (IsValid(this))
+					{
+						ChangeBridgeButtonSignMaterial(1);
+					}
+				}
+			);
+			GetWorld()->GetTimerManager().SetTimer(LightOnTimerHandle, TimerDelegate1, CameraBlendDuration + 0.3f, false);
 		}
 		else if (bButton2State)
 		{
-			ChangeBridgeButtonSignMaterial(2);
+			FTimerDelegate TimerDelegate2;
+			TimerDelegate2.BindLambda([this]()
+				{
+					if (IsValid(this))
+					{
+						ChangeBridgeButtonSignMaterial(2);
+					}
+				}
+			);
+			GetWorld()->GetTimerManager().SetTimer(LightOnTimerHandle, TimerDelegate2, CameraBlendDuration + 0.3f, false);
 		}
 	}
 	else
