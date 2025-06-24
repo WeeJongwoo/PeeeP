@@ -33,6 +33,12 @@ void APPWidgetTriggerBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 
 	if (OtherActor && (OtherActor != this))
 	{
+		if (SpawnedWidget && SpawnedWidget->IsInViewport())
+		{
+			UE_LOG(LogTemp, Log, TEXT("[APPWidgetTriggerBox] Widget already exists for %s"), *OtherActor->GetName());
+			return;
+		}
+
 		APPCharacterPlayer* PlayerCharacter = Cast<APPCharacterPlayer>(OtherActor);
 		if (PlayerCharacter)
 		{
@@ -52,6 +58,7 @@ void APPWidgetTriggerBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 					SpawnedWidget->SetVisibility(ESlateVisibility::Visible);
 					UE_LOG(LogTemp, Log, TEXT("[APPWidgetTriggerBox] Widget added to viewport for %s"), *OtherActor->GetName());
 				}
+				
 			}
 			else
 			{

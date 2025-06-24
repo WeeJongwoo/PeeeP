@@ -7,6 +7,8 @@
 #include "InteractionObject/ETrafficLight.h"
 #include "PPTrafficLightManager.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FRefreshTrafficLightsColor)
+
 UCLASS()
 class PEEEP_PROTOTYPE_API APPTrafficLightManager : public AActor
 {
@@ -47,4 +49,8 @@ public:
 	void CheckTrafficLightsColor(ETrafficLightColor Color);
 
 	void StartEvent();
+
+	TArray<TObjectPtr<class APPTrafficLightBase>> GetTrafficLights() const;
+
+	FRefreshTrafficLightsColor RefreshTrafficLightsColorDelegate;
 };

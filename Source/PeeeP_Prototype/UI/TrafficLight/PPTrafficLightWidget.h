@@ -22,18 +22,25 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<class UImage> Background;
-	UPROPERTY()
-	TObjectPtr<class UImage> TrafficLightsImage;
 
-	UPROPERTY()
-	TArray<TObjectPtr<class UImage>> TrafficLight01_Color;
-	UPROPERTY()
-	TArray<TObjectPtr<class UImage>> TrafficLight02_Color;
-	UPROPERTY()
-	TArray<TObjectPtr<class UImage>> TrafficLight03_Color;
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<class UHorizontalBox> TrafficLightsBox;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Widget")
+	TSubclassOf<class UPPTrafficLightThree> TrafficLightThreeWidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Widget")
+	TSubclassOf<class UPPTrafficLightTwo> TrafficLightTwoWidgetClass;
+
+	TMap<class APPTrafficLightBase*, class UPPCustomWidget*> TrafficLightsWithWidget;
+
+protected:
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr <class UWidgetAnimation> BackgroundAppearAnim;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr <class UWidgetAnimation> BackgroundDisappearAnim;
 
 public:
-	void SetTrafficLightColorVisible(bool bFlag);
+	void RefreshTrafficLightColor();
 };
