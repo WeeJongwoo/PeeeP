@@ -48,6 +48,7 @@ APPTrafficLightController::APPTrafficLightController()
 	}
 
 	bIsPowerOn = false;	// 초기값은 꺼져있음
+	bCanChangeColor = false;
 }
 
 // Called when the game starts or when spawned
@@ -59,10 +60,8 @@ void APPTrafficLightController::BeginPlay()
 
 void APPTrafficLightController::Charge()
 {
-	UE_LOG(LogTemp, Log, TEXT("TEST"));
-
-	// 이후 신호 변화
-	if (bIsPowerOn)
+	// 제어기의 전원이 켜져 있고 색상을 변경할 수 있는 상태라면 색상 변경 함수 호출
+	if (bIsPowerOn && bCanChangeColor)
 	{
 		ChangeTrafficLightColor();
 		if (ColorChangeSound)
@@ -214,7 +213,8 @@ void APPTrafficLightController::OnOverlapBegin(UPrimitiveComponent* OverlappedCo
 				ConfigureConstraintSettings(); // 여기서 물리 세팅
 				BatteryRoot->SetEnableGravity(false);	// 중력 비활성화
 
-				bIsPowerOn = true;
+				bIsPowerOn = true;	// 컨트롤러 전원 ON
+				bCanChangeColor = true;	// 신호등 색상 변경 가능
 
 				// 사운드 재생부
 				if (PowerOnSound)

@@ -72,6 +72,9 @@ protected:
 	UPROPERTY()
 	uint8 bIsPowerOn : 1;	// 전원이 켜져 있는지 여부를 나타내는 플래그
 
+	UPROPERTY()
+	uint8 bCanChangeColor : 1;	// 신호등 색상을 변경할 수 있는지 여부를 나타내는 플래그(퍼즐 클리어 시 전원은 켜진 채 색상 변경 가능 유무를 정하기 위해)
+
 	void Charge() override;
 
 	void ConfigureConstraintSettings();
