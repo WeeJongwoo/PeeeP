@@ -10,6 +10,8 @@
 
 APPPlayerController::APPPlayerController()
 {
+	SetTickableWhenPaused(true);
+
 	static ConstructorHelpers::FClassFinder<UPPPauseMenyHUD> PauseMenuRef(TEXT("/Game/UI/MenuHUD/WBP_PauseMenu.WBP_PauseMenu_C"));
 	if (PauseMenuRef.Class)
 	{
@@ -25,13 +27,15 @@ APPPlayerController::APPPlayerController()
 
 void APPPlayerController::OpenMenu()
 {
-	//SetPause(true);
-	GetWorld()->GetWorldSettings()->SetTimeDilation(0.001f);
+	SetPause(true);
+	//GetWorld()->GetWorldSettings()->SetTimeDilation(0.03f);
 
 	PauseUI->SetVisibility(ESlateVisibility::Visible);
 	
 	FInputModeUIOnly InputUIOnly;
+	InputUIOnly.SetWidgetToFocus(PauseUI->TakeWidget());
 	SetInputMode(InputUIOnly);
+
 	bShowMouseCursor = true;
 }
 
@@ -43,8 +47,8 @@ void APPPlayerController::CloseMenu()
 	SetInputMode(GameOnlyInputMode);
 	bShowMouseCursor = false;
 
-	GetWorld()->GetWorldSettings()->SetTimeDilation(1.0f);
-	//SetPause(false);
+	//GetWorld()->GetWorldSettings()->SetTimeDilation(1.0f);
+	SetPause(false);
 }
 
 void APPPlayerController::BeginPlay()
@@ -59,6 +63,7 @@ void APPPlayerController::BeginPlay()
 	if (PauseMenu)
 	{
 		PauseMenu->AddToViewport(1);
+		PauseMenu->bIsFocusable = true;
 		CloseMenu();
 	}
 	//SetInputMode(FInputModeGameAndUI());
