@@ -20,6 +20,9 @@ public:
 	void OpenMenu();
 	void CloseMenu();
 
+	void OpenPauseWidget(TSubclassOf<class UUserWidget> InWidgetClass);
+	void ClosePauseWidget();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -33,4 +36,8 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class UPPInGameUIMain> InGameUIMain;
 
+	TObjectPtr<class UUserWidget> CurrentPauseWidget;
+
+	void SetUIInputMode();
+	void SetGameInputMode();
 };

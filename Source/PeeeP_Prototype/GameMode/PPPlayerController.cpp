@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "UI/PPInGameUIMain.h"
 #include "PPPlayerState.h"
+#include "UI/Parts/PPPartsPauseUIBase.h"
 
 
 APPPlayerController::APPPlayerController()
@@ -32,23 +33,57 @@ void APPPlayerController::OpenMenu()
 
 	PauseUI->SetVisibility(ESlateVisibility::Visible);
 	
-	FInputModeUIOnly InputUIOnly;
-	InputUIOnly.SetWidgetToFocus(PauseUI->TakeWidget());
-	SetInputMode(InputUIOnly);
-
-	bShowMouseCursor = true;
+	SetUIInputMode();
 }
 
 void APPPlayerController::CloseMenu()
 {
 	PauseUI->SetVisibility(ESlateVisibility::Hidden);
 
-	FInputModeGameOnly GameOnlyInputMode;
-	SetInputMode(GameOnlyInputMode);
-	bShowMouseCursor = false;
+	SetGameInputMode();
 
 	//GetWorld()->GetWorldSettings()->SetTimeDilation(1.0f);
-	SetPause(false);
+}
+
+void APPPlayerController::OpenPauseWidget(TSubclassOf<UUserWidget> InWidgetClass)
+{
+	SetPause(true);
+
+	if (!IsValid(InWidgetClass))
+	{
+		return;
+	}
+
+	UUserWidget* PauseWidget = CreateWidget<UUserWidget>(this, InWidgetClass);
+	if (PauseWidget)
+	{
+		if (IsValid(CurrentPauseWidget))
+		{
+			CurrentPauseWidget->RemoveFromViewport();
+		}
+
+		CurrentPauseWidget = PauseWidget;
+		PauseWidget->AddToViewport(1);
+		PauseWidget->SetVisibility(ESlateVisibility::Visible);
+
+		UPPPartsPauseUIBase* PartsUIBase = Cast<UPPPartsPauseUIBase>(PauseWidget);
+		if (PartsUIBase)
+		{
+			PartsUIBase->EndUIDelegate.BindUObject(this, &APPPlayerController::ClosePauseWidget);
+		}
+
+		SetUIInputMode();
+	}
+}
+
+void APPPlayerController::ClosePauseWidget()
+{
+	if (IsValid(CurrentPauseWidget))
+	{
+		CurrentPauseWidget->RemoveFromViewport();
+
+		SetGameInputMode();
+	}
 }
 
 void APPPlayerController::BeginPlay()
@@ -89,4 +124,26 @@ void APPPlayerController::BeginPlay()
 	{
 		PS->SetOwnerPlayerController(this);
 	}
+}
+
+void APPPlayerController::SetUIInputMode()
+{
+	FInputModeGameAndUI InputMode;
+	InputMode.SetWidgetToFocus(PauseUI->TakeWidget());
+	SetInputMode(InputMode);
+
+	/*FInputModeUIOnly InputUIOnly;
+	InputUIOnly.SetWidgetToFocus(PauseUI->TakeWidget());
+	SetInputMode(InputUIOnly);*/
+
+	bShowMouseCursor = true;
+}
+
+void APPPlayerController::SetGameInputMode()
+{
+	FInputModeGameOnly GameOnlyInputMode;
+	SetInputMode(GameOnlyInputMode);
+	bShowMouseCursor = false;
+
+	SetPause(false);
 }
