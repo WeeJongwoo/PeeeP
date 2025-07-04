@@ -33,7 +33,7 @@ void APPPlayerController::OpenMenu()
 
 	PauseUI->SetVisibility(ESlateVisibility::Visible);
 	
-	SetUIInputMode();
+	SetUIInputMode(PauseUI);
 }
 
 void APPPlayerController::CloseMenu()
@@ -45,7 +45,7 @@ void APPPlayerController::CloseMenu()
 	//GetWorld()->GetWorldSettings()->SetTimeDilation(1.0f);
 }
 
-void APPPlayerController::OpenPauseWidget(TSubclassOf<UUserWidget> InWidgetClass)
+void APPPlayerController::OpenPartsPauseWidget(TSubclassOf<UUserWidget> InWidgetClass, const TArray<TSoftObjectPtr<UTexture2D>>& InPartsInfo)
 {
 	SetPause(true);
 
@@ -69,14 +69,15 @@ void APPPlayerController::OpenPauseWidget(TSubclassOf<UUserWidget> InWidgetClass
 		UPPPartsPauseUIBase* PartsUIBase = Cast<UPPPartsPauseUIBase>(PauseWidget);
 		if (PartsUIBase)
 		{
-			PartsUIBase->EndUIDelegate.BindUObject(this, &APPPlayerController::ClosePauseWidget);
+			PartsUIBase->EndUIDelegate.BindUObject(this, &APPPlayerController::ClosePartsPauseWidget);
+			PartsUIBase->SetPartsInfoImageArray(InPartsInfo);
 		}
 
-		SetUIInputMode();
+		SetUIInputMode(CurrentPauseWidget);
 	}
 }
 
-void APPPlayerController::ClosePauseWidget()
+void APPPlayerController::ClosePartsPauseWidget()
 {
 	if (IsValid(CurrentPauseWidget))
 	{
@@ -126,15 +127,15 @@ void APPPlayerController::BeginPlay()
 	}
 }
 
-void APPPlayerController::SetUIInputMode()
+void APPPlayerController::SetUIInputMode(TObjectPtr<class UUserWidget> FocusTarget)
 {
-	FInputModeGameAndUI InputMode;
-	InputMode.SetWidgetToFocus(PauseUI->TakeWidget());
-	SetInputMode(InputMode);
+	/*FInputModeGameAndUI InputMode;
+	InputMode.SetWidgetToFocus(FocusTarget->TakeWidget());
+	SetInputMode(InputMode);*/
 
-	/*FInputModeUIOnly InputUIOnly;
-	InputUIOnly.SetWidgetToFocus(PauseUI->TakeWidget());
-	SetInputMode(InputUIOnly);*/
+	FInputModeUIOnly InputUIOnly;
+	InputUIOnly.SetWidgetToFocus(FocusTarget->TakeWidget());
+	SetInputMode(InputUIOnly);
 
 	bShowMouseCursor = true;
 }

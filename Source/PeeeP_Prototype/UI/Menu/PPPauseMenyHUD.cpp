@@ -15,6 +15,7 @@
 UPPPauseMenyHUD::UPPPauseMenyHUD(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
 {
 	LobbyActorClass = APPLobbyActor::StaticClass();
+	bIsFocusable = true;
 }
 
 void UPPPauseMenyHUD::NativeConstruct()
@@ -48,13 +49,13 @@ void UPPPauseMenyHUD::NativeConstruct()
 	}
 }
 
-FReply UPPPauseMenyHUD::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+FReply UPPPauseMenyHUD::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-	Super::NativeOnKeyDown(InGeometry, InKeyEvent);
+	Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);
 
 	FKey PressedKey = InKeyEvent.GetKey();
 
-	if (PressedKey.IsValid())
+	if (!PressedKey.IsValid())
 	{
 		return FReply::Handled();
 	}

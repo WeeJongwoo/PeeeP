@@ -17,10 +17,29 @@ class PEEEP_PROTOTYPE_API UPPPartsPauseUIBase : public UUserWidget
 {
 	GENERATED_BODY()
 	
+	
+	UPPPartsPauseUIBase(const FObjectInitializer& ObjectInitializer);
+	
 	void End();
 	
+protected:
+	UPROPERTY(VisibleAnywhere, Category = Button, meta = (BindWidget))
+	TObjectPtr<class UImage> Parts_Info;
+
+	UPROPERTY(VisibleAnywhere)
+	TArray<TObjectPtr<UTexture2D>> PartsInfoImages;
+
+	int16 CurrentPartsIndex = 0;
+
+	virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
+	void SetPartsInfoImage(const int16 InCurrentPartsIndex);
+
 public:
 
 	FPartsUIEndDelegate EndUIDelegate;
+
+	void SetPartsInfoImageArray(const TArray<TSoftObjectPtr<UTexture2D>>& InPartsInfo);
 
 };
