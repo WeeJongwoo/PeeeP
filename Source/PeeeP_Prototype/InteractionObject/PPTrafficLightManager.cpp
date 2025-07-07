@@ -81,7 +81,7 @@ void APPTrafficLightManager::StartEvent()
 {
 	UE_LOG(LogTemp, Warning, TEXT("All Traffic Lights are Matched!"));
 
-	if (!TrafficLightEventActors.IsEmpty())
+	if (!TrafficLightEventActors.IsEmpty() && !TrafficLightControllers.IsEmpty())
 	{
 		for (AActor* TrafficLightEventActor : TrafficLightEventActors)
 		{
@@ -91,6 +91,18 @@ void APPTrafficLightManager::StartEvent()
 				TrafficLightEventInterface->TrafficLightEvent();
 				AudioComponent->Play();
 			}
+		}
+
+		for (APPTrafficLightController* TrafficLightController : TrafficLightControllers)
+		{
+			TrafficLightController->SetCanChangeColor(false);
+			TrafficLightController->SetTrafficLightControllerState(ETrafficLightControllerState::TLC_WORKING);
+		}
+
+		// Disable the Traffic Light Widget
+		if (DisableTrafficLightWidgetDelegate.IsBound())
+		{
+			DisableTrafficLightWidgetDelegate.Broadcast();
 		}
 	}
 	else

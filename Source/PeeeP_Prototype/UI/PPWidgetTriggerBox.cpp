@@ -18,6 +18,8 @@ APPWidgetTriggerBox::APPWidgetTriggerBox()
 	SetRootComponent(TriggerBox);
 	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &APPWidgetTriggerBox::OnOverlapBegin);
 
+	bCanSpawnOnlyOnce = true; // 기본값으로 한 번만 생성 가능하도록 설정
+
 }
 
 // Called when the game starts or when spawned
@@ -57,6 +59,11 @@ void APPWidgetTriggerBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AA
 					SpawnedWidget->AddToViewport();
 					SpawnedWidget->SetVisibility(ESlateVisibility::Visible);
 					UE_LOG(LogTemp, Log, TEXT("[APPWidgetTriggerBox] Widget added to viewport for %s"), *OtherActor->GetName());
+				}
+				if (bCanSpawnOnlyOnce)
+				{
+					// TriggerBox를 제거하여 더 이상 오버랩 이벤트가 발생하지 않도록 함
+					TriggerBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				}
 				
 			}

@@ -8,6 +8,7 @@
 #include "PPTrafficLightManager.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FRefreshTrafficLightsColor)
+DECLARE_MULTICAST_DELEGATE(FDisableTrafficLightWidget);
 
 UCLASS()
 class PEEEP_PROTOTYPE_API APPTrafficLightManager : public AActor
@@ -53,4 +54,5 @@ public:
 	TArray<TObjectPtr<class APPTrafficLightBase>> GetTrafficLights() const;
 
 	FRefreshTrafficLightsColor RefreshTrafficLightsColorDelegate;
+	FDisableTrafficLightWidget DisableTrafficLightWidgetDelegate;
 };

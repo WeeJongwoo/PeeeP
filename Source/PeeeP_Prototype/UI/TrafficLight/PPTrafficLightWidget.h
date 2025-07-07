@@ -41,6 +41,12 @@ protected:
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	TObjectPtr <class UWidgetAnimation> BackgroundDisappearAnim;
 
+	FTimerHandle ExitAnimationTimerHandle;
+
+	void OnExitAnimationFinished();
+
 public:
 	void RefreshTrafficLightColor();
+
+	void DisableTrafficLightWidget();
 };

@@ -26,6 +26,18 @@ APPTrafficLightController::APPTrafficLightController()
 	TrafficLightControllerMaterial = CreateDefaultSubobject<UMaterialInstance>(TEXT("TrafficLightControllerMaterial"));
 	TrafficLightControllerStaticMesh->SetMaterial(0, TrafficLightControllerMaterial);
 
+	TrafficLightControllerStateFrameStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TrafficLightControllerStatePlaneStaticMesh"));
+	TrafficLightControllerStateFrameStaticMesh->SetupAttachment(TrafficLightControllerStaticMesh);
+
+	TrafficLightControllerScreenStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TrafficLightControllerScreenStaticMesh"));
+	TrafficLightControllerScreenStaticMesh->SetupAttachment(TrafficLightControllerStaticMesh);
+	TrafficLightControllerScreenStaticMesh->SetSimulatePhysics(false);	// 물리를 사용하지 않으므로 비활성화
+	TrafficLightControllerScreenStaticMesh->SetCollisionProfileName(TEXT("NoCollision"));	// 콜리전 프로필을 NoCollision으로 설정
+
+	TrafficLightControllerOffMaterial = CreateDefaultSubobject<UMaterialInterface>(TEXT("TrafficLightControllerOffMaterial"));
+	TrafficLightControllerOnMaterial = CreateDefaultSubobject<UMaterialInterface>(TEXT("TrafficLightControllerOnMaterial"));
+	TrafficLightControllerWorkingMaterial = CreateDefaultSubobject<UMaterialInterface>(TEXT("TrafficLightControllerWorkingMaterial"));
+
 	BatteryTrigger = CreateDefaultSubobject<UBoxComponent>(TEXT("BatteryTrigger"));
 	BatteryTrigger->SetupAttachment(TrafficLightControllerStaticMesh);
 	BatteryTrigger->OnComponentBeginOverlap.AddDynamic(this, &APPTrafficLightController::OnOverlapBegin);
@@ -47,7 +59,7 @@ APPTrafficLightController::APPTrafficLightController()
 		AudioComponent->SetupAttachment(RootComponent);
 	}
 
-	bIsPowerOn = false;	// 초기값은 꺼져있음
+	TrafficLightControllerState = ETrafficLightControllerState::TLC_OFF;	// 초기 상태는 꺼져있는 상태
 	bCanChangeColor = false;
 }
 
@@ -56,18 +68,24 @@ void APPTrafficLightController::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SetTrafficLightControllerState(ETrafficLightControllerState::TLC_OFF);	// 초기 상태를 꺼져있는 상태로 설정
 }
 
 void APPTrafficLightController::Charge()
 {
-	// 제어기의 전원이 켜져 있고 색상을 변경할 수 있는 상태라면 색상 변경 함수 호출
-	if (bIsPowerOn && bCanChangeColor)
+	// 제어기의 전원이 켜져 있고 색상을 변경할 수 있는 상태(TLC_ON)라면 색상 변경 함수 호출
+	if (TrafficLightControllerState == ETrafficLightControllerState::TLC_ON && bCanChangeColor)
 	{
 		ChangeTrafficLightColor();
 		if (ColorChangeSound)
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, ColorChangeSound, GetActorLocation());	// 전원 켜질 때 사운드 재생
 		}
+		SetTrafficLightControllerState(ETrafficLightControllerState::TLC_WORKING);	// 상태를 작업 중으로 변경
+
+		GetWorldTimerManager().ClearTimer(WorkingCooldownTimerHandle);	// 타이머를 초기화
+		WorkingCooldownDelegate.BindUObject(this, &APPTrafficLightController::SetTrafficLightControllerState, ETrafficLightControllerState::TLC_ON);
+		GetWorldTimerManager().SetTimer(WorkingCooldownTimerHandle, WorkingCooldownDelegate, 1.0f, false);
 	}
 }
 
@@ -87,6 +105,66 @@ void APPTrafficLightController::ConfigureConstraintSettings()
 
 	PhysicsConstraint->SetAngularDriveMode(EAngularDriveMode::SLERP);
 	PhysicsConstraint->SetAngularOrientationDrive(true, true);
+}
+
+void APPTrafficLightController::SetTrafficLightControllerState(ETrafficLightControllerState NewState)
+{
+	TrafficLightControllerState = NewState;
+
+	switch (TrafficLightControllerState)
+	{
+	case ETrafficLightControllerState::TLC_OFF:
+	{
+		if (TrafficLightControllerScreenStaticMesh && TrafficLightControllerOffMaterial)
+		{
+			TrafficLightControllerScreenStaticMesh->SetMaterial(0, TrafficLightControllerOffMaterial);
+		}
+		UE_LOG(LogTemp, Log, TEXT("Traffic Light Controller State: Off"));
+	}
+	break;
+	case ETrafficLightControllerState::TLC_ON:
+	{
+		if (TrafficLightControllerScreenStaticMesh && TrafficLightControllerOnMaterial)
+		{
+			TrafficLightControllerScreenStaticMesh->SetMaterial(0, TrafficLightControllerOnMaterial);
+		}
+		UE_LOG(LogTemp, Log, TEXT("Traffic Light Controller State: On"));
+	}
+	break;
+	case ETrafficLightControllerState::TLC_WORKING:
+	{
+		if (TrafficLightControllerScreenStaticMesh && TrafficLightControllerWorkingMaterial)
+		{
+			TrafficLightControllerScreenStaticMesh->SetMaterial(0, TrafficLightControllerWorkingMaterial);
+		}
+		UE_LOG(LogTemp, Log, TEXT("Traffic Light Controller State: Working"));
+	}
+	break;
+	default:
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Invalid Traffic Light Controller State"));
+	}
+	break;
+	}
+
+}
+
+void APPTrafficLightController::SetCanChangeColor(bool bCanChange)
+{
+	bCanChangeColor = bCanChange;
+	if (bCanChangeColor)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Traffic Light Controller can change color now."));
+	}
+	else
+	{
+		if (TrafficLightControllerState == ETrafficLightControllerState::TLC_WORKING)
+		{
+			GetWorldTimerManager().ClearTimer(WorkingCooldownTimerHandle);
+			WorkingCooldownTimerHandle.Invalidate();	// 타이머 핸들 무효화
+		}
+		UE_LOG(LogTemp, Log, TEXT("Traffic Light Controller cannot change color now."));
+	}
 }
 
 // Called every frame
@@ -185,7 +263,7 @@ TArray<TObjectPtr<class APPTrafficLightBase>> APPTrafficLightController::GetTraf
 void APPTrafficLightController::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogTemp, Log, TEXT("Overlap Begin"));
-	if (OtherActor && (OtherActor != this) && !bIsPowerOn)
+	if (OtherActor && (OtherActor != this) && TrafficLightControllerState == ETrafficLightControllerState::TLC_OFF)
 	{
 		UE_LOG(LogTemp, Log, TEXT("OtherActor"));
 		if (APPBattery* Battery = Cast<APPBattery>(OtherActor))
@@ -213,7 +291,7 @@ void APPTrafficLightController::OnOverlapBegin(UPrimitiveComponent* OverlappedCo
 				ConfigureConstraintSettings(); // 여기서 물리 세팅
 				BatteryRoot->SetEnableGravity(false);	// 중력 비활성화
 
-				bIsPowerOn = true;	// 컨트롤러 전원 ON
+				SetTrafficLightControllerState(ETrafficLightControllerState::TLC_ON);
 				bCanChangeColor = true;	// 신호등 색상 변경 가능
 
 				// 사운드 재생부

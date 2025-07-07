@@ -25,6 +25,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 	TSubclassOf<class UPPCustomWidget> WidgetClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	uint8 bCanSpawnOnlyOnce : 1;
+
 	class UPPCustomWidget* SpawnedWidget;
 	class UPPTrafficLightWidget* TrafficLightWidget;
 

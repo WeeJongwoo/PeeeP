@@ -11,6 +11,7 @@
 #include "InteractionObject/ETrafficLight.h"
 #include "UI/TrafficLight/PPTrafficLightThree.h"
 #include "UI/TrafficLight/PPTrafficLightTwo.h"
+#include "Animation/WidgetAnimation.h"
 
 void UPPTrafficLightWidget::NativeConstruct()
 {
@@ -21,6 +22,7 @@ void UPPTrafficLightWidget::NativeConstruct()
 	{
 		// Bind the delegate to refresh traffic light colors
 		TrafficLightManager->RefreshTrafficLightsColorDelegate.AddUObject(this, &UPPTrafficLightWidget::RefreshTrafficLightColor);
+		TrafficLightManager->DisableTrafficLightWidgetDelegate.AddUObject(this, &UPPTrafficLightWidget::DisableTrafficLightWidget);
 		UE_LOG(LogTemp, Log, TEXT("[UPPTrafficLightWidget] TrafficLightManager found: %s"), *TrafficLightManager->GetName());
 	}
 
@@ -101,6 +103,12 @@ void UPPTrafficLightWidget::NativeConstruct()
 	RefreshTrafficLightColor();
 }
 
+void UPPTrafficLightWidget::OnExitAnimationFinished()
+{
+	ExitAnimationTimerHandle.Invalidate();
+	RemoveFromParent();
+}
+
 void UPPTrafficLightWidget::RefreshTrafficLightColor()
 {
 	// TrafficLightsWithWidget에 있는 신호등 위젯을 모두 갱신
@@ -122,3 +130,14 @@ void UPPTrafficLightWidget::RefreshTrafficLightColor()
 		}
 	}
 }
+
+void UPPTrafficLightWidget::DisableTrafficLightWidget()
+{
+	if (BackgroundDisappearAnim)
+	{
+		PlayAnimation(BackgroundDisappearAnim);
+		GetWorld()->GetTimerManager().ClearTimer(ExitAnimationTimerHandle); // 이전 타이머를 정리
+		GetWorld()->GetTimerManager().SetTimer(ExitAnimationTimerHandle, this, &UPPTrafficLightWidget::OnExitAnimationFinished, BackgroundDisappearAnim->GetEndTime(), false);
+	}
+}
+
