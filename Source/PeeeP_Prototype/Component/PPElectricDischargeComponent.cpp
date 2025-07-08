@@ -210,8 +210,8 @@ void UPPElectricDischargeComponent::Charging()
 		}
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("Charging Time: %f"), CurrentChargingTime);
-	UE_LOG(LogTemp, Log, TEXT("Electric Capacity: %f / %f"), CurrentElectricCapacity, MaxElectricCapacity);
+	//UE_LOG(LogTemp, Log, TEXT("Charging Time: %f"), CurrentChargingTime);
+	//UE_LOG(LogTemp, Log, TEXT("Electric Capacity: %f / %f"), CurrentElectricCapacity, MaxElectricCapacity);
 }
 
 void UPPElectricDischargeComponent::Discharge()

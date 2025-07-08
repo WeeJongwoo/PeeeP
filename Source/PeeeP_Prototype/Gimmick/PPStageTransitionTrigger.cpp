@@ -7,6 +7,7 @@
 #include "Character/PPCharacterPlayer.h"
 #include "Inventory/PPInventoryComponent.h"
 #include "GameMode/PPGameInstance.h"
+#include "GameMode/PPLevelLoadGIS.h"
 
 // Sets default values
 APPStageTransitionTrigger::APPStageTransitionTrigger()
@@ -39,15 +40,21 @@ void APPStageTransitionTrigger::OnTriggered(UPrimitiveComponent* OverlappedCompo
 	APPCharacterPlayer* PlayerCharacter = Cast<APPCharacterPlayer>(OtherActor);
 	if (PlayerCharacter)
 	{
-		UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(this));
+		//UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(this));
 
-		if (GameInstance)
+		//if (GameInstance)
+		//{
+		//	//TArray<TObjectPtr<class UPPInventoryPartsItem>> PartsItems = PlayerCharacter->GetInventoryComponent()->GetPartsItems();
+		//	//GameInstance->SetPartsItems(PartsItems);
+		//}
+
+		UPPLevelLoadGIS* LevelLoader = GetWorld()->GetGameInstance()->GetSubsystem<UPPLevelLoadGIS>();
+		if (LevelLoader)
 		{
-			//TArray<TObjectPtr<class UPPInventoryPartsItem>> PartsItems = PlayerCharacter->GetInventoryComponent()->GetPartsItems();
-			//GameInstance->SetPartsItems(PartsItems);
+			LevelLoader->LoadLevel(NextLevel);
 		}
 
-		UGameplayStatics::OpenLevel(this, NextLevel);
+		//UGameplayStatics::OpenLevel(this, NextLevelName);
 	}
 }
 
