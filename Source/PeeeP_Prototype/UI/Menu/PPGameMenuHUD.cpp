@@ -9,6 +9,7 @@
 #include "PPLobbyActor.h"
 #include "GameMode/PPGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/Menu/PPSettingMenu.h"
 
 UPPGameMenuHUD::UPPGameMenuHUD(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -31,6 +32,7 @@ void UPPGameMenuHUD::NativeConstruct()
 		UE_LOG(LogTemp, Log, TEXT("Start"));
 		WBP_StartButton->Button->OnClicked.AddDynamic(this, &UPPGameMenuHUD::StartButtonClick);
 		WBP_StartButton->Button->OnHovered.AddDynamic(this, &UPPGameMenuHUD::StartButtonHover);
+		WBP_StartButton->Button->OnUnhovered.AddDynamic(this, &UPPGameMenuHUD::StartButtonHoverEnd);
 	}
 
 	if (WBP_LoadButton && WBP_LoadButton->Button)
@@ -38,18 +40,26 @@ void UPPGameMenuHUD::NativeConstruct()
 		UE_LOG(LogTemp, Log, TEXT("Load"));
 		WBP_LoadButton->Button->OnClicked.AddDynamic(this, &UPPGameMenuHUD::LoadButtonClick);
 		WBP_LoadButton->Button->OnHovered.AddDynamic(this, &UPPGameMenuHUD::LoadButtonHover);
+		WBP_LoadButton->Button->OnUnhovered.AddDynamic(this, &UPPGameMenuHUD::LoadButtonHoverEnd);
 	}
 
 	if (WBP_SettingButton && WBP_SettingButton->Button)
 	{
 		WBP_SettingButton->Button->OnClicked.AddDynamic(this, &UPPGameMenuHUD::SettingButtonClick);
 		WBP_SettingButton->Button->OnHovered.AddDynamic(this, &UPPGameMenuHUD::SettingButtonHover);
+		WBP_SettingButton->Button->OnUnhovered.AddDynamic(this, &UPPGameMenuHUD::SettingButtonHoverEnd);
 	}
 
 	if (WBP_ExitButton && WBP_ExitButton->Button)
 	{
 		WBP_ExitButton->Button->OnClicked.AddDynamic(this, &UPPGameMenuHUD::ExitButtonClick);
 		WBP_ExitButton->Button->OnHovered.AddDynamic(this, &UPPGameMenuHUD::ExitButtonHover);
+		WBP_ExitButton->Button->OnUnhovered.AddDynamic(this, &UPPGameMenuHUD::ExitButtonHoverEnd);
+	}
+
+	if (WBP_SettingMenu)
+	{
+		WBP_SettingMenu->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 
@@ -74,6 +84,8 @@ void UPPGameMenuHUD::LoadButtonClick()
 void UPPGameMenuHUD::SettingButtonClick()
 {
 	UE_LOG(LogTemp, Log, TEXT("SettingOpen"));
+	WBP_SettingMenu->SetVisibility(ESlateVisibility::Visible);
+	WBP_SettingMenu->PlaySettingWindowAppearAnim();
 }
 
 void UPPGameMenuHUD::ExitButtonClick()
@@ -84,23 +96,47 @@ void UPPGameMenuHUD::ExitButtonClick()
 void UPPGameMenuHUD::StartButtonHover()
 {
 	UE_LOG(LogTemp, Log, TEXT("Hovered"));
+	PlayAnimation(StartButtonHoverStartAnim);
 	LobbyActor->ChangeEmessive(2);
 }
 
 void UPPGameMenuHUD::LoadButtonHover()
 {
 	UE_LOG(LogTemp, Log, TEXT("Hovered"));
+	PlayAnimation(LoadButtonHoverStartAnim);
 	LobbyActor->ChangeEmessive(1);
 }
 
 void UPPGameMenuHUD::SettingButtonHover()
 {
 	UE_LOG(LogTemp, Log, TEXT("Hovered"));
+	PlayAnimation(SettingButtonHoverStartAnim);
 	LobbyActor->ChangeEmessive(0);
 }
 
 void UPPGameMenuHUD::ExitButtonHover()
 {
 	UE_LOG(LogTemp, Log, TEXT("Hovered"));
+	PlayAnimation(ExitButtonHoverStartAnim);
 	LobbyActor->ChangeEmessive(3);
+}
+
+void UPPGameMenuHUD::StartButtonHoverEnd()
+{
+	PlayAnimation(StartButtonHoverEndAnim);
+}
+
+void UPPGameMenuHUD::LoadButtonHoverEnd()
+{
+	PlayAnimation(LoadButtonHoverEndAnim);
+}
+
+void UPPGameMenuHUD::SettingButtonHoverEnd()
+{
+	PlayAnimation(SettingButtonHoverEndAnim);
+}
+
+void UPPGameMenuHUD::ExitButtonHoverEnd()
+{
+	PlayAnimation(ExitButtonHoverEndAnim);
 }

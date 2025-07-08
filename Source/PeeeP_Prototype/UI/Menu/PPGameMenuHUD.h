@@ -38,6 +38,30 @@ protected:
 
 	TSubclassOf<class APPLobbyActor> LobbyActorClass;
 
+	UPROPERTY(VisibleAnywhere, Category = Widget, meta = (BindWidget))
+	TObjectPtr<class UPPSettingMenu> WBP_SettingMenu;
+
+protected:
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> StartButtonHoverStartAnim;
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> StartButtonHoverEndAnim;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> LoadButtonHoverStartAnim;
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> LoadButtonHoverEndAnim;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> SettingButtonHoverStartAnim;
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> SettingButtonHoverEndAnim;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> ExitButtonHoverStartAnim;
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> ExitButtonHoverEndAnim;
+
 protected:
 
 	UFUNCTION()
@@ -63,4 +87,16 @@ protected:
 
 	UFUNCTION()
 	void ExitButtonHover();
+
+	UFUNCTION()
+	void StartButtonHoverEnd();
+
+	UFUNCTION()
+	void LoadButtonHoverEnd();
+
+	UFUNCTION()
+	void SettingButtonHoverEnd();
+
+	UFUNCTION()
+	void ExitButtonHoverEnd();
 };
