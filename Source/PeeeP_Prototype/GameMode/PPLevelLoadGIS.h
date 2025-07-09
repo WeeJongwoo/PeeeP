@@ -18,6 +18,8 @@ class PEEEP_PROTOTYPE_API UPPLevelLoadGIS : public UGameInstanceSubsystem
 	
 public:
 
+	UPPLevelLoadGIS();
+
 	void LoadLevel(const TSoftObjectPtr<class UWorld>& InTartgetLevel);
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;

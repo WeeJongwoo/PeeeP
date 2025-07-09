@@ -67,6 +67,7 @@ void UPPLoadingWidget::OnFadeInFinishedCallback()
 {
 	if (OnFadeInFinished.IsBound())
 	{
+		UE_LOG(LogTemp, Log, TEXT("FadeIn Opacity %f"), FadeImage->ColorAndOpacity.A);
 		OnFadeInFinished.Execute();
 	}
 }
@@ -75,7 +76,7 @@ void UPPLoadingWidget::OnFadeOutFinishedCallback()
 {
 	if (OnFadeOutFinished.IsBound())
 	{
+		UE_LOG(LogTemp, Log, TEXT("FadeOut Opacity %f, Time %f"), FadeImage->ColorAndOpacity.A, FadeOut->GetEndTime());
 		OnFadeOutFinished.Execute();
 	}
-
 }

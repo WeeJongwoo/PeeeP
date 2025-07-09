@@ -9,13 +9,21 @@
 #include "UI/PPLoadingWidget.h"
 
 
+UPPLevelLoadGIS::UPPLevelLoadGIS()
+{
+	static ConstructorHelpers::FClassFinder<UPPLoadingWidget> LoadingWidgetClassRef(TEXT("/Game/UI/Loading/WBP_LoadingWidget.WBP_LoadingWidget_C"));
+	if (LoadingWidgetClassRef.Class)
+	{
+		LoadingWidgetClass = LoadingWidgetClassRef.Class;
+	}
+}
 void UPPLevelLoadGIS::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
 	UE_LOG(LogTemp, Log, TEXT("PPLevelLoadGI Initialized"));
 
-	FString LoadingWidgetPath = TEXT("/Game/UI/Loading/WBP_LoadingWidget.WBP_LoadingWidget_C");
+	/*FString LoadingWidgetPath = TEXT("/Game/UI/Loading/WBP_LoadingWidget.WBP_LoadingWidget_C");
 
 	UClass* FoundLoadingWidgetClass = StaticLoadClass(UPPLoadingWidget::StaticClass(), nullptr, *LoadingWidgetPath);
 	if (FoundLoadingWidgetClass)
@@ -25,9 +33,10 @@ void UPPLevelLoadGIS::Initialize(FSubsystemCollectionBase& Collection)
 		{
 			UE_LOG(LogTemp, Log, TEXT("LoadingWidgetClass loaded unsuccessfully"));
 		}
-	}
+	}*/
 
 }
+
 
 void UPPLevelLoadGIS::LoadLevel(const TSoftObjectPtr<class UWorld>& InTartgetLevel)
 {
@@ -40,9 +49,10 @@ void UPPLevelLoadGIS::LoadLevel(const TSoftObjectPtr<class UWorld>& InTartgetLev
 	{
 		LoadingWidget->AddToViewport(100);
 		LoadingWidget->PlayFadeOutAnimation();
+		LoadingWidget->SetOnFadeOutFinished(FSimpleDelegate::CreateUObject(this, &UPPLevelLoadGIS::OnMinTimeReached));
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(LoadingTimerHandle, this, &UPPLevelLoadGIS::OnMinTimeReached, 1.0f, false);
+	//GetWorld()->GetTimerManager().SetTimer(LoadingTimerHandle, this, &UPPLevelLoadGIS::OnMinTimeReached, 3.0f, false);
 
 	LevelHandle = UAssetManager::GetStreamableManager().RequestAsyncLoad(
 		InTartgetLevel.ToSoftObjectPath(),
@@ -69,7 +79,7 @@ void UPPLevelLoadGIS::OnLevelLoaded()
 
 void UPPLevelLoadGIS::OnPostLoadLevel(UWorld* LoadedWorld)
 {
-	DeleteLoadingWidget();
+	//DeleteLoadingWidget();
 
 	UGameInstance* GameInstance = GetGameInstance();
 	LoadingWidget = CreateWidget<UPPLoadingWidget>(GameInstance, LoadingWidgetClass);
@@ -103,6 +113,7 @@ void UPPLevelLoadGIS::TryToLoadLevel()
 {
 	if (bMinTimeMet && bIsLoading)
 	{
+		UE_LOG(LogTemp, Log, TEXT("TryToLoadLevel"));
 		DoOpenLevel();
 		/*if (IsValid(LoadingWidget))
 		{
