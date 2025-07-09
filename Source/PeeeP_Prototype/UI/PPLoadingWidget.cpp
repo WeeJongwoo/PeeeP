@@ -11,7 +11,6 @@ UPPLoadingWidget::UPPLoadingWidget(const FObjectInitializer& ObjectInitializer) 
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
-
 void UPPLoadingWidget::PlayFadeInAnimation()
 {
 	if (IsValid(FadeIn))
