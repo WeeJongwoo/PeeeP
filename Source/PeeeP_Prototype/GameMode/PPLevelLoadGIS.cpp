@@ -43,11 +43,13 @@ void UPPLevelLoadGIS::LoadLevel(const TSoftObjectPtr<class UWorld>& InTartgetLev
 
 	UGameInstance* GameInstance = GetGameInstance();
 
+	DeleteLoadingWidget();
+
 	LoadingWidget = CreateWidget<UPPLoadingWidget>(GameInstance, LoadingWidgetClass);
 
 	if (IsValid(LoadingWidget))
 	{
-		LoadingWidget->AddToViewport(100);
+		LoadingWidget->AddToViewport(1);
 		LoadingWidget->PlayFadeOutAnimation();
 		LoadingWidget->SetOnFadeOutFinished(FSimpleDelegate::CreateUObject(this, &UPPLevelLoadGIS::OnMinTimeReached));
 	}
@@ -79,7 +81,7 @@ void UPPLevelLoadGIS::OnLevelLoaded()
 
 void UPPLevelLoadGIS::OnPostLoadLevel(UWorld* LoadedWorld)
 {
-	//DeleteLoadingWidget();
+	DeleteLoadingWidget();
 
 	UGameInstance* GameInstance = GetGameInstance();
 	LoadingWidget = CreateWidget<UPPLoadingWidget>(GameInstance, LoadingWidgetClass);
@@ -96,6 +98,7 @@ void UPPLevelLoadGIS::OnPostLoadLevel(UWorld* LoadedWorld)
 
 void UPPLevelLoadGIS::DoOpenLevel()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Tartget Level Open"));
 	UGameplayStatics::OpenLevelBySoftObjectPtr(this, TargetLevel, true);
 
 	LevelHandle->ReleaseHandle();

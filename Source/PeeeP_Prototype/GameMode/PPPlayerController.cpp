@@ -63,7 +63,7 @@ void APPPlayerController::OpenPartsPauseWidget(TSubclassOf<UUserWidget> InWidget
 		}
 
 		CurrentPauseWidget = PauseWidget;
-		PauseWidget->AddToViewport(1);
+		PauseWidget->AddToViewport(2);
 		PauseWidget->SetVisibility(ESlateVisibility::Visible);
 
 		UPPPartsPauseUIBase* PartsUIBase = Cast<UPPPartsPauseUIBase>(PauseWidget);

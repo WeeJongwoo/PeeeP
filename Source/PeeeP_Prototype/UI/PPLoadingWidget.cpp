@@ -9,7 +9,6 @@
 UPPLoadingWidget::UPPLoadingWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	SetVisibility(ESlateVisibility::HitTestInvisible);
-	SetIsEnabled(false);
 }
 
 
@@ -76,7 +75,7 @@ void UPPLoadingWidget::OnFadeOutFinishedCallback()
 {
 	if (OnFadeOutFinished.IsBound())
 	{
-		UE_LOG(LogTemp, Log, TEXT("FadeOut Opacity %f, Time %f"), FadeImage->ColorAndOpacity.A, FadeOut->GetEndTime());
+		UE_LOG(LogTemp, Log, TEXT("FadeOut Opacity %f, Time %f"), FadeImage->ColorAndOpacity.A, GetAnimationCurrentTime(FadeOut));
 		OnFadeOutFinished.Execute();
 	}
 }
