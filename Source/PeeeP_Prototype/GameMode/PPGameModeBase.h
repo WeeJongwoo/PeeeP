@@ -27,6 +27,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	TObjectPtr<class UPPGameInstance> GameInstance;
+
 	/*UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMG_Game")
 	TSubclassOf<UUserWidget> StartingWidgetClass;
 

@@ -14,9 +14,15 @@ class PEEEP_PROTOTYPE_API UPPGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
+	UPPGameInstance();
+
+
 protected:
 	TMap<int32, TPair<FName, int32>> InventoryPartsArray;
 	int32 CurrentSlotIndex;
+
+	UPROPERTY()
+	TObjectPtr<class USoundMix> MasterSoundMix;
 
 public:
 	void SetInventoryPartsArray(TMap<int32, TPair<FName, int32>> NewInventoryPartsArray);
@@ -26,4 +32,10 @@ public:
 	FORCEINLINE int32 GetCurrentSlotIndex() { return CurrentSlotIndex; }
 
 	void ClearInventoryPartsArray();
+
+	void ApplySavedAudioSettings();
+
+	float MasterVolume;
+	float MusicVolume;
+	float SFXVolume;
 };

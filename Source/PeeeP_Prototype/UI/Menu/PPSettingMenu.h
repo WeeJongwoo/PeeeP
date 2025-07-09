@@ -23,6 +23,7 @@ public:
 protected:
 	void InitializeResolutionComboBox();
 
+	UFUNCTION()
 	void HideSettingWidget();
 
 	UFUNCTION()
@@ -31,8 +32,20 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class UGameUserSettings> GameUserSettings;
 
+	UPROPERTY()
+	TObjectPtr<class UPPGameInstance> GameInstance;
+
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<class UComboBoxString> ResolutionComboBox;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class USlider> MasterVolumeSlider;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class USlider> MusicVolumeSlider;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class USlider> SFXVolumeSlider;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<class UPPMenuButtonWidget> WBPSettingExitButton;
@@ -50,6 +63,15 @@ private:
 	UFUNCTION()
 	void ExitButtonClick();
 
-	FTimerHandle SettingWindowDisappearAnimTimerHandle;
+	UFUNCTION()
+	void OnMasterVolumeChanged(float Volume);
+
+	UFUNCTION()
+	void OnMusicVolumeChanged(float Volume);
+
+	UFUNCTION()
+	void OnSFXVolumeChanged(float Volume);
+
+	FWidgetAnimationDynamicEvent EndDelegate;
 	
 };

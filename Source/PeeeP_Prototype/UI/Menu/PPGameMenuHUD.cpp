@@ -61,6 +61,11 @@ void UPPGameMenuHUD::NativeConstruct()
 	{
 		WBP_SettingMenu->SetVisibility(ESlateVisibility::Hidden);
 	}
+
+	if (LogoLoopAnim)
+	{
+		PlayAnimation(LogoLoopAnim, 0.0f, 9999);
+	}
 }
 
 void UPPGameMenuHUD::StartButtonClick()

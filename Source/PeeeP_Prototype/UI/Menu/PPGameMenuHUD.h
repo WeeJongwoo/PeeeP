@@ -62,6 +62,9 @@ protected:
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	TObjectPtr<class UWidgetAnimation> ExitButtonHoverEndAnim;
 
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> LogoLoopAnim;
+
 protected:
 
 	UFUNCTION()

@@ -2,12 +2,15 @@
 
 
 #include "UI/Menu/PPSettingMenu.h"
+#include "GameMode/PPGameInstance.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/ComboBoxString.h"
 #include "Animation/WidgetAnimation.h"
 #include "UI/Menu/PPMenuButtonWidget.h"
 #include "Components/Button.h"
+#include "Components/Slider.h"
+#include "Sound/SoundClass.h"
 
 
 void UPPSettingMenu::NativeConstruct()
@@ -15,21 +18,56 @@ void UPPSettingMenu::NativeConstruct()
 	Super::NativeConstruct();
 
 	GameUserSettings = UGameUserSettings::GetGameUserSettings();
+	GameInstance = Cast<UPPGameInstance>(GetGameInstance());
 
 	InitializeResolutionComboBox();
+
+	if (MasterVolumeSlider)
+	{
+		MasterVolumeSlider->OnValueChanged.AddDynamic(this, &UPPSettingMenu::OnMasterVolumeChanged);
+	}
+	if (MusicVolumeSlider)
+	{
+		MusicVolumeSlider->OnValueChanged.AddDynamic(this, &UPPSettingMenu::OnMusicVolumeChanged);
+	}
+	if (SFXVolumeSlider)
+	{
+		SFXVolumeSlider->OnValueChanged.AddDynamic(this, &UPPSettingMenu::OnSFXVolumeChanged);
+	}
 
 	if (WBPSettingExitButton && WBPSettingExitButton->Button)
 	{
 		WBPSettingExitButton->Button->OnClicked.AddDynamic(this, &UPPSettingMenu::ExitButtonClick);
 	}
 
+	if (GameInstance)
+	{
+		if (MasterVolumeSlider)
+		{
+			MasterVolumeSlider->SetValue(GameInstance->MasterVolume);
+		}
+		if (MusicVolumeSlider)
+		{
+			MusicVolumeSlider->SetValue(GameInstance->MusicVolume);
+		}
+		if (SFXVolumeSlider)
+		{
+			SFXVolumeSlider->SetValue(GameInstance->SFXVolume);
+		}
+		GameInstance->ApplySavedAudioSettings();
+	}
+
+	EndDelegate.BindDynamic(this, &UPPSettingMenu::HideSettingWidget);
+	BindToAnimationFinished(SettingWindowDisappearAnim, EndDelegate);
 }
 
 void UPPSettingMenu::PlaySettingWindowAppearAnim()
 {
 	if (SettingWindowAppearAnim)
 	{
+		this->SetVisibility(ESlateVisibility::Visible);
 		PlayAnimation(SettingWindowAppearAnim);
+		this->bIsFocusable = true;
 	}
 }
 
@@ -72,7 +110,8 @@ void UPPSettingMenu::InitializeResolutionComboBox()
 
 void UPPSettingMenu::HideSettingWidget()
 {
-	SetVisibility(ESlateVisibility::Hidden);
+	this->SetVisibility(ESlateVisibility::Collapsed);
+	this->bIsFocusable = false;
 }
 
 void UPPSettingMenu::OnResolutionChanged(FString InSelectedItem, ESelectInfo::Type InSelectionType)
@@ -86,6 +125,31 @@ void UPPSettingMenu::ExitButtonClick()
 {
 	UE_LOG(LogTemp, Log, TEXT("Clicked"));
 	PlaySettingWindowDisappearAnim();
-	GetWorld()->GetTimerManager().ClearTimer(SettingWindowDisappearAnimTimerHandle); // Clear any previous timer
-	GetWorld()->GetTimerManager().SetTimer(SettingWindowDisappearAnimTimerHandle, this, &UPPSettingMenu::HideSettingWidget, SettingWindowDisappearAnim->GetEndTime(), false);
+}
+
+void UPPSettingMenu::OnMasterVolumeChanged(float Value)
+{
+	if (GameInstance)
+	{
+		GameInstance->MasterVolume = Value;
+		GameInstance->ApplySavedAudioSettings();
+	}
+}
+
+void UPPSettingMenu::OnMusicVolumeChanged(float Volume)
+{
+	if (GameInstance)
+	{
+		GameInstance->MusicVolume = Volume;
+		GameInstance->ApplySavedAudioSettings();
+	}
+}
+
+void UPPSettingMenu::OnSFXVolumeChanged(float Volume)
+{
+	if (GameInstance)
+	{
+		GameInstance->SFXVolume = Volume;
+		GameInstance->ApplySavedAudioSettings();
+	}
 }
