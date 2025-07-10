@@ -17,11 +17,25 @@ void UPPPartsPauseUIBase::End()
 	}
 }
 
+void UPPPartsPauseUIBase::NativeConstruct()
+{
+	Super::NativeConstruct();
+	if (PartsUIWidgetAppearAnim)
+	{
+		PlayAnimation(PartsUIWidgetAppearAnim);
+	}
+	if (PartsUIWidgetDisappearAnim)
+	{
+		DisappearAnimEndDelegate.BindDynamic(this, &UPPPartsPauseUIBase::End);
+		BindToAnimationFinished(PartsUIWidgetDisappearAnim, DisappearAnimEndDelegate);
+	}
+}
+
 FReply UPPPartsPauseUIBase::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
 	Super::NativeOnKeyDown(InGeometry, InKeyEvent);
 
-	if (InKeyEvent.GetKey() == EKeys::SpaceBar)
+	if (InKeyEvent.GetKey() == EKeys::SpaceBar && CurrentPartsIndex < PartsInfoImages.Num())
 	{
 		CurrentPartsIndex++;
 		SetPartsInfoImage(CurrentPartsIndex);
@@ -34,7 +48,7 @@ FReply UPPPartsPauseUIBase::NativeOnMouseButtonDown(const FGeometry& InGeometry,
 {
 	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 
-	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
+	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton && CurrentPartsIndex < PartsInfoImages.Num())
 	{
 		CurrentPartsIndex++;
 		SetPartsInfoImage(CurrentPartsIndex);
@@ -52,7 +66,14 @@ void UPPPartsPauseUIBase::SetPartsInfoImage(const int16 InCurrentPartsIndex)
 
 	if (InCurrentPartsIndex >= PartsInfoImages.Num())
 	{
-		End();
+		if (PartsUIWidgetDisappearAnim)
+		{
+			PlayAnimation(PartsUIWidgetDisappearAnim);
+		}
+		else
+		{
+			End();
+		}
 		return;
 	}
 	

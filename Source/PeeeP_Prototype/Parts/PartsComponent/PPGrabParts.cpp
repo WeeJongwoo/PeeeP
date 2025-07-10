@@ -171,7 +171,7 @@ void UPPGrabParts::Grab()
 	float CapsuleHalfHeight = 5.0f * 0.5f;
 	FColor DrawColor = HitDetected ? FColor::Green : FColor::Red;
 
-	DrawDebugCapsule(GetWorld(), CapsuleOrigin, CapsuleHalfHeight, 10.0f, FRotationMatrix::MakeFromZ(Owner->GetActorForwardVector()).ToQuat(), DrawColor, false, 5.0f);
+	// DrawDebugCapsule(GetWorld(), CapsuleOrigin, CapsuleHalfHeight, 10.0f, FRotationMatrix::MakeFromZ(Owner->GetActorForwardVector()).ToQuat(), DrawColor, false, 5.0f);
 #endif
 
 }

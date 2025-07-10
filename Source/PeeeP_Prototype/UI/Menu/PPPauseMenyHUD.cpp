@@ -71,6 +71,7 @@ FReply UPPPauseMenyHUD::NativeOnPreviewKeyDown(const FGeometry& InGeometry, cons
 
 	if (PressedKey == EKeys::Escape)
 	{
+		WBPSettingMenu->SetVisibility(ESlateVisibility::Collapsed);
 		ContinueButtonClick();
 	}
 
