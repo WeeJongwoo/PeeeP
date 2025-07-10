@@ -6,6 +6,7 @@
 #include "Character/PPCharacterPlayer.h"
 #include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerStart.h"
+#include "GameMode/PPGameInstance.h"
 
 APPGameModeBase::APPGameModeBase()
 {
@@ -88,4 +89,11 @@ void APPGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 	//ChangeMenuWidget(StartingWidgetClass);
+
+	GameInstance = Cast<UPPGameInstance>(GetGameInstance());
+
+	if (GameInstance)
+	{
+		GameInstance->ApplySavedAudioSettings();
+	}
 }
