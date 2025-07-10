@@ -49,6 +49,12 @@ void APPTrafficLightManager::Tick(float DeltaTime)
 
 void APPTrafficLightManager::CheckTrafficLightsColor(ETrafficLightColor Color)
 {
+	// Traffic Light UI
+	if (RefreshTrafficLightsColorDelegate.IsBound())
+	{
+		RefreshTrafficLightsColorDelegate.Broadcast();
+	}
+	
 	// TrafficLights안에 있는 신호등들의 색깔을 모두 검사
 	for (APPTrafficLightBase* TrafficLight : TrafficLights)
 	{
@@ -75,7 +81,7 @@ void APPTrafficLightManager::StartEvent()
 {
 	UE_LOG(LogTemp, Warning, TEXT("All Traffic Lights are Matched!"));
 
-	if (!TrafficLightEventActors.IsEmpty())
+	if (!TrafficLightEventActors.IsEmpty() && !TrafficLightControllers.IsEmpty())
 	{
 		for (AActor* TrafficLightEventActor : TrafficLightEventActors)
 		{
@@ -86,10 +92,27 @@ void APPTrafficLightManager::StartEvent()
 				AudioComponent->Play();
 			}
 		}
+
+		for (APPTrafficLightController* TrafficLightController : TrafficLightControllers)
+		{
+			TrafficLightController->SetCanChangeColor(false);
+			TrafficLightController->SetTrafficLightControllerState(ETrafficLightControllerState::TLC_WORKING);
+		}
+
+		// Disable the Traffic Light Widget
+		if (DisableTrafficLightWidgetDelegate.IsBound())
+		{
+			DisableTrafficLightWidgetDelegate.Broadcast();
+		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No Traffic Light Event Actor Found!"));
 	}
+}
+
+TArray<TObjectPtr<class APPTrafficLightBase>> APPTrafficLightManager::GetTrafficLights() const
+{
+	return TrafficLights;
 }
 

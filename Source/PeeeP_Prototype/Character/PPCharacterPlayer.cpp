@@ -588,7 +588,7 @@ void APPCharacterPlayer::QuickSlotMove(const FInputActionValue& Value)
 	float MoveDir = Value.Get<float>();
 
 	// 마우?�� ?�� ?��?��?�� ?��?�� 방�??
-	float InputInterval = 0.4f;	// ?��?�� ?��?��까�?? 간격
+	float InputInterval = 0.1f;	// ?��?�� ?��?��까�?? 간격
 	if (bIsAllowWheelInput)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Quick Slot Move: %f"), MoveDir);
