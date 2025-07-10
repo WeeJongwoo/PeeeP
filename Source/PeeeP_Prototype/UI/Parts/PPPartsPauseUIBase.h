@@ -20,7 +20,11 @@ class PEEEP_PROTOTYPE_API UPPPartsPauseUIBase : public UUserWidget
 	
 	UPPPartsPauseUIBase(const FObjectInitializer& ObjectInitializer);
 	
+	UFUNCTION()
 	void End();
+
+public:
+	virtual void NativeConstruct() override;
 	
 protected:
 	UPROPERTY(VisibleAnywhere, Category = Button, meta = (BindWidget))
@@ -36,10 +40,21 @@ protected:
 
 	void SetPartsInfoImage(const int16 InCurrentPartsIndex);
 
+protected:
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> PartsUIWidgetAppearAnim;
+
+	UPROPERTY(meta = (BindWidgetAnim), Transient)
+	TObjectPtr<class UWidgetAnimation> PartsUIWidgetDisappearAnim;
+
+	FWidgetAnimationDynamicEvent DisappearAnimEndDelegate;
+
 public:
 
 	FPartsUIEndDelegate EndUIDelegate;
 
 	void SetPartsInfoImageArray(const TArray<TSoftObjectPtr<UTexture2D>>& InPartsInfo);
+
+
 
 };
