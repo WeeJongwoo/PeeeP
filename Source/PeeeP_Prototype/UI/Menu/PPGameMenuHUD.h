@@ -16,7 +16,12 @@ class PEEEP_PROTOTYPE_API UPPGameMenuHUD : public UUserWidget
 	
 public:
 	UPPGameMenuHUD(const FObjectInitializer& ObjectInitializer);
-	
+
+protected:
+
+	UPROPERTY(EditAnywhere, Category = StartMap)
+	TSoftObjectPtr<class UWorld> StartLevel;
+
 protected:
 
 	virtual void NativeConstruct() override;
