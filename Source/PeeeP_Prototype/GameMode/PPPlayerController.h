@@ -20,6 +20,9 @@ public:
 	void OpenMenu();
 	void CloseMenu();
 
+	void OpenPartsPauseWidget(TSubclassOf<class UUserWidget> InWidgetClass, const TArray<TSoftObjectPtr<UTexture2D>>& InPartsInfo);
+	void ClosePartsPauseWidget();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -33,4 +36,8 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class UPPInGameUIMain> InGameUIMain;
 
+	TObjectPtr<class UUserWidget> CurrentPauseWidget;
+
+	void SetUIInputMode(TObjectPtr<class UUserWidget> FocusTarget);
+	void SetGameInputMode();
 };

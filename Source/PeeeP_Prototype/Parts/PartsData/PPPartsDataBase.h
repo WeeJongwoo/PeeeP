@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "UI/Parts/PPPartsPauseUIBase.h"
 #include "PPPartsDataBase.generated.h"
 
 UENUM(BlueprintType)
@@ -22,7 +23,10 @@ class PEEEP_PROTOTYPE_API UPPPartsDataBase : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 	
+	
 public:
+	UPPPartsDataBase();
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<class USkeletalMesh> PartsMesh;
 
@@ -52,4 +56,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<class UAnimInstance> AnimClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
+	TArray<TSoftObjectPtr<class UTexture2D>> PartsInfoTextures;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
+	TSubclassOf<class UPPPartsPauseUIBase> PartsPauseUI;
 };

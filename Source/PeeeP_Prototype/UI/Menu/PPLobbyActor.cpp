@@ -12,9 +12,11 @@ APPLobbyActor::APPLobbyActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bTickEvenWhenPaused = true;
 
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	RootComponent = Mesh;
+	Mesh->PrimaryComponentTick.bTickEvenWhenPaused = true;
 	
 	static ConstructorHelpers::FObjectFinder<UMaterialInstance> MaterialRef(TEXT("/Script/Engine.MaterialInstanceConstant'/Game/Characters/PeePCharacter/Mat/MI_PeepCharcater.MI_PeepCharcater'"));
 	if (MaterialRef.Object)
@@ -27,7 +29,7 @@ APPLobbyActor::APPLobbyActor()
 	SceneCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("Capture"));
 	SceneCapture->SetupAttachment(RootComponent);
 	SceneCapture->PrimitiveRenderMode = ESceneCapturePrimitiveRenderMode::PRM_UseShowOnlyList;
-	
+	SceneCapture->PrimaryComponentTick.bTickEvenWhenPaused = true;
 
 	static ConstructorHelpers::FObjectFinder<UTextureRenderTarget2D> RenderTargetRef(TEXT("/Script/Engine.TextureRenderTarget2D'/Game/UI/MenuHUD/NewTextureRenderTarget2D.NewTextureRenderTarget2D'"));
 	if (RenderTargetRef.Object)

@@ -22,8 +22,11 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UBoxComponent> Trigger;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Level, Meta = (AllowPrivateAccess = "true"))
-	FName NextLevel;
+	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<class UWorld> NextLevel;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Level, Meta = (AllowPrivateAccess = "true"))
+	//FName NextLevelName;
 
 public:	
 	// Called every frame

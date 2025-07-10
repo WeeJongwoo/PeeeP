@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "Character/PPCharacterPlayer.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameMode/PPPlayerController.h"
 
 // Sets default values
 APPPartsItemBox::APPPartsItemBox()
@@ -59,6 +60,12 @@ void APPPartsItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 			if (nullptr != EarnSound)
 			{
 				UGameplayStatics::PlaySound2D(GetWorld(), EarnSound, 0.75f);
+			}
+
+			APPPlayerController* PlayerController = Cast<APPPlayerController>(player->GetController());
+			if (PlayerController)
+			{
+				PlayerController->OpenPartsPauseWidget(TSubclassOf<UUserWidget>(PartsData->PartsPauseUI), PartsData->PartsInfoTextures);
 			}
 
 			Destroy();

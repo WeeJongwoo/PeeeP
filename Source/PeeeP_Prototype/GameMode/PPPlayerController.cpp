@@ -6,10 +6,13 @@
 #include "Blueprint/UserWidget.h"
 #include "UI/PPInGameUIMain.h"
 #include "PPPlayerState.h"
+#include "UI/Parts/PPPartsPauseUIBase.h"
 
 
 APPPlayerController::APPPlayerController()
 {
+	SetTickableWhenPaused(true);
+
 	static ConstructorHelpers::FClassFinder<UPPPauseMenyHUD> PauseMenuRef(TEXT("/Game/UI/MenuHUD/WBP_PauseMenu.WBP_PauseMenu_C"));
 	if (PauseMenuRef.Class)
 	{
@@ -25,26 +28,63 @@ APPPlayerController::APPPlayerController()
 
 void APPPlayerController::OpenMenu()
 {
-	//SetPause(true);
-	GetWorld()->GetWorldSettings()->SetTimeDilation(0.001f);
+	SetPause(true);
+	//GetWorld()->GetWorldSettings()->SetTimeDilation(0.03f);
 
 	PauseUI->SetVisibility(ESlateVisibility::Visible);
 	
-	FInputModeUIOnly InputUIOnly;
-	SetInputMode(InputUIOnly);
-	bShowMouseCursor = true;
+	SetUIInputMode(PauseUI);
 }
 
 void APPPlayerController::CloseMenu()
 {
 	PauseUI->SetVisibility(ESlateVisibility::Hidden);
 
-	FInputModeGameOnly GameOnlyInputMode;
-	SetInputMode(GameOnlyInputMode);
-	bShowMouseCursor = false;
+	SetGameInputMode();
 
-	GetWorld()->GetWorldSettings()->SetTimeDilation(1.0f);
-	//SetPause(false);
+	//GetWorld()->GetWorldSettings()->SetTimeDilation(1.0f);
+}
+
+void APPPlayerController::OpenPartsPauseWidget(TSubclassOf<UUserWidget> InWidgetClass, const TArray<TSoftObjectPtr<UTexture2D>>& InPartsInfo)
+{
+	SetPause(true);
+
+	if (!IsValid(InWidgetClass))
+	{
+		return;
+	}
+
+	UUserWidget* PauseWidget = CreateWidget<UUserWidget>(this, InWidgetClass);
+	if (PauseWidget)
+	{
+		if (IsValid(CurrentPauseWidget))
+		{
+			CurrentPauseWidget->RemoveFromViewport();
+		}
+
+		CurrentPauseWidget = PauseWidget;
+		PauseWidget->AddToViewport(2);
+		PauseWidget->SetVisibility(ESlateVisibility::Visible);
+
+		UPPPartsPauseUIBase* PartsUIBase = Cast<UPPPartsPauseUIBase>(PauseWidget);
+		if (PartsUIBase)
+		{
+			PartsUIBase->EndUIDelegate.BindUObject(this, &APPPlayerController::ClosePartsPauseWidget);
+			PartsUIBase->SetPartsInfoImageArray(InPartsInfo);
+		}
+
+		SetUIInputMode(CurrentPauseWidget);
+	}
+}
+
+void APPPlayerController::ClosePartsPauseWidget()
+{
+	if (IsValid(CurrentPauseWidget))
+	{
+		CurrentPauseWidget->RemoveFromViewport();
+
+		SetGameInputMode();
+	}
 }
 
 void APPPlayerController::BeginPlay()
@@ -59,6 +99,7 @@ void APPPlayerController::BeginPlay()
 	if (PauseMenu)
 	{
 		PauseMenu->AddToViewport(1);
+		PauseMenu->bIsFocusable = true;
 		CloseMenu();
 	}
 	//SetInputMode(FInputModeGameAndUI());
@@ -84,4 +125,26 @@ void APPPlayerController::BeginPlay()
 	{
 		PS->SetOwnerPlayerController(this);
 	}
+}
+
+void APPPlayerController::SetUIInputMode(TObjectPtr<class UUserWidget> FocusTarget)
+{
+	/*FInputModeGameAndUI InputMode;
+	InputMode.SetWidgetToFocus(FocusTarget->TakeWidget());
+	SetInputMode(InputMode);*/
+
+	FInputModeUIOnly InputUIOnly;
+	InputUIOnly.SetWidgetToFocus(FocusTarget->TakeWidget());
+	SetInputMode(InputUIOnly);
+
+	bShowMouseCursor = true;
+}
+
+void APPPlayerController::SetGameInputMode()
+{
+	FInputModeGameOnly GameOnlyInputMode;
+	SetInputMode(GameOnlyInputMode);
+	bShowMouseCursor = false;
+
+	SetPause(false);
 }
