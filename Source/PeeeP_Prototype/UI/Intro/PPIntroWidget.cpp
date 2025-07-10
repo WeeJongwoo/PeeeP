@@ -5,6 +5,8 @@
 #include "MediaPlayer.h"
 #include "MediaTexture.h"
 #include "Kismet/GameplayStatics.h"
+#include "MediaSoundComponent.h"
+
 
 void UPPIntroWidget::NativeConstruct()
 {
@@ -32,6 +34,7 @@ FReply UPPIntroWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, cons
 
 void UPPIntroWidget::StartGame()
 {
+	IntroMedia->Close();
 	UGameplayStatics::OpenLevel(this, TEXT("MainLobby"));
 }
 
@@ -47,6 +50,7 @@ void UPPIntroWidget::PlayIntro()
 
 			IntroMedia->SetNativeVolume(1.0f);
 			IntroMedia->Play();
+			
 			UE_LOG(LogTemp, Log, TEXT("Play Intro"));
 
 			IntroMedia->OnEndReached.AddDynamic(this, &UPPIntroWidget::PlayLoop);
