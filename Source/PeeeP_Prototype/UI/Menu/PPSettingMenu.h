@@ -20,14 +20,20 @@ public:
 	void PlaySettingWindowAppearAnim();
 	void PlaySettingWindowDisappearAnim();
 
+	void SyncComboBoxWithCurrentSetting();
+
 protected:
 	void InitializeResolutionComboBox();
+	void InitializeDisplayModeComboBox();
 
 	UFUNCTION()
 	void HideSettingWidget();
 
 	UFUNCTION()
 	void OnResolutionChanged(FString InSelectedItem, ESelectInfo::Type InSelectionType);
+
+	UFUNCTION()
+	void OnDisplayModeChanged(FString InSelectedItem, ESelectInfo::Type InSelectionType);
 
 	UPROPERTY()
 	TObjectPtr<class UGameUserSettings> GameUserSettings;
@@ -37,6 +43,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<class UComboBoxString> ResolutionComboBox;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UComboBoxString> DisplayModeComboBox;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<class USlider> MasterVolumeSlider;

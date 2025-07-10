@@ -20,8 +20,17 @@ void UPPSettingMenu::NativeConstruct()
 	GameUserSettings = UGameUserSettings::GetGameUserSettings();
 	GameInstance = Cast<UPPGameInstance>(GetGameInstance());
 
-	InitializeResolutionComboBox();
+	if (!GameUserSettings)
+	{
+		UE_LOG(LogTemp, Error, TEXT("GameUserSettings is null!"));
+		return;
+	}
 
+	// Video Settings Init
+	InitializeResolutionComboBox();
+	InitializeDisplayModeComboBox();
+
+	// Audio Settings Init
 	if (MasterVolumeSlider)
 	{
 		MasterVolumeSlider->OnValueChanged.AddDynamic(this, &UPPSettingMenu::OnMasterVolumeChanged);
@@ -79,12 +88,37 @@ void UPPSettingMenu::PlaySettingWindowDisappearAnim()
 	}
 }
 
+void UPPSettingMenu::SyncComboBoxWithCurrentSetting()
+{
+	EWindowMode::Type CurrentDisplayMode = GameUserSettings->GetFullscreenMode();
+
+	FString ModeText;
+	switch (CurrentDisplayMode)
+	{
+	case EWindowMode::Fullscreen:
+		ModeText = TEXT("Fullscreen");
+		break;
+	case EWindowMode::WindowedFullscreen:
+		ModeText = TEXT("Borderless Windowed");
+		break;
+	case EWindowMode::Windowed:
+		ModeText = TEXT("Windowed");
+		break;
+	default:
+		ModeText = TEXT("Unknown");
+		break;
+	}
+
+	DisplayModeComboBox->SetSelectedOption(ModeText);
+}
+
 void UPPSettingMenu::InitializeResolutionComboBox()
 {
 	Resolutions.Reset();
 	UKismetSystemLibrary::GetSupportedFullscreenResolutions(Resolutions);
 
 	// Set Resolution options
+	ResolutionComboBox->ClearOptions();
 	ResolutionComboBox->ClearOptions();
 	for (const FIntPoint& Resolution : Resolutions)
 	{
@@ -108,6 +142,15 @@ void UPPSettingMenu::InitializeResolutionComboBox()
 	ResolutionComboBox->OnSelectionChanged.AddDynamic(this, &UPPSettingMenu::OnResolutionChanged);
 }
 
+void UPPSettingMenu::InitializeDisplayModeComboBox()
+{
+	if (DisplayModeComboBox)
+	{
+		DisplayModeComboBox->OnSelectionChanged.AddDynamic(this, &UPPSettingMenu::OnDisplayModeChanged);
+		SyncComboBoxWithCurrentSetting();
+	}
+}
+
 void UPPSettingMenu::HideSettingWidget()
 {
 	this->SetVisibility(ESlateVisibility::Collapsed);
@@ -119,6 +162,29 @@ void UPPSettingMenu::OnResolutionChanged(FString InSelectedItem, ESelectInfo::Ty
 	const auto SelectedIndex = Resolutions[ResolutionComboBox->GetSelectedIndex()];
 	GameUserSettings->SetScreenResolution(SelectedIndex);
 	GameUserSettings->ApplyResolutionSettings(false);
+}
+
+void UPPSettingMenu::OnDisplayModeChanged(FString InSelectedItem, ESelectInfo::Type InSelectionType)
+{
+	if (InSelectedItem == TEXT("Fullscreen"))
+	{
+		GameUserSettings->SetFullscreenMode(EWindowMode::Fullscreen);
+	}
+	else if (InSelectedItem == TEXT("Borderless Windowed"))
+	{
+		GameUserSettings->SetFullscreenMode(EWindowMode::WindowedFullscreen);
+	}
+	else if (InSelectedItem == TEXT("Windowed"))
+	{
+		GameUserSettings->SetFullscreenMode(EWindowMode::Windowed);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Unknown display mode selected: %s"), *InSelectedItem);
+		return;
+	}
+
+	GameUserSettings->ApplySettings(false);
 }
 
 void UPPSettingMenu::ExitButtonClick()
