@@ -43,6 +43,11 @@ void UPPLevelLoadGIS::LoadLevel(const TSoftObjectPtr<class UWorld>& InTartgetLev
 
 	UGameInstance* GameInstance = GetGameInstance();
 
+	if (InTartgetLevel.IsNull())
+	{
+		return;
+	}
+
 	DeleteLoadingWidget();
 
 	LoadingWidget = CreateWidget<UPPLoadingWidget>(GameInstance, LoadingWidgetClass);

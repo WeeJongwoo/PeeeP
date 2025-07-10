@@ -10,6 +10,7 @@
 #include "GameMode/PPGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Menu/PPSettingMenu.h"
+#include "GameMode/PPLevelLoadGIS.h"
 
 UPPGameMenuHUD::UPPGameMenuHUD(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -76,9 +77,20 @@ void UPPGameMenuHUD::StartButtonClick()
 	if (GameInstance)
 	{
 		GameInstance->ClearInventoryPartsArray();
-	}
 
-	UGameplayStatics::OpenLevel(GetWorld(), TEXT("Stage1"));
+		UPPLevelLoadGIS* LevelLoadGIS = GameInstance->GetSubsystem<UPPLevelLoadGIS>();
+		if (LevelLoadGIS)
+		{
+			if (!StartLevel.IsNull())
+			{
+				LevelLoadGIS->LoadLevel(StartLevel);
+			}
+			else
+			{
+				UGameplayStatics::OpenLevel(GetWorld(), TEXT("Stage1"));
+			}
+		}
+	}
 }
 
 void UPPGameMenuHUD::LoadButtonClick()
