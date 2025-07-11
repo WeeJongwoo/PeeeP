@@ -1,6 +1,6 @@
 #include "Gimmick/PPSnowMobile.h"
 #include "Character/PPCharacterPlayer.h"
-#include "Kismet/KismetMathLibrary.h"
+#include "GameFramework/Character.h"
 
 APPSnowMobile::APPSnowMobile()
 {
@@ -17,22 +17,16 @@ APPSnowMobile::APPSnowMobile()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// BeginPlay
 void APPSnowMobile::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (PathSpline->GetNumberOfSplinePoints() < 2)
-	{
-		UE_LOG(LogTemp, Warning,
-			TEXT("PPSnowMobile(%s): 스플라인 점이 2개 미만이라 이동 불가!"),
-			*GetName());
-	}
 }
 
 void APPSnowMobile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (bIsPaused) return;
 
 	const float SplineLength = PathSpline->GetSplineLength();
 	if (SplineLength <= 0.f) return;
@@ -49,24 +43,35 @@ void APPSnowMobile::Tick(float DeltaTime)
 		DistanceAlongSpline = FMath::Clamp(DistanceAlongSpline, 0.f, SplineLength);
 	}
 
-	// 위치
-	const FVector NewLoc = PathSpline->GetLocationAtDistanceAlongSpline(
-		DistanceAlongSpline, ESplineCoordinateSpace::World);
-
-	// 진행 방향
-	const FVector Dir = PathSpline->GetTangentAtDistanceAlongSpline(
-		DistanceAlongSpline, ESplineCoordinateSpace::World).GetSafeNormal();
-
+	const FVector NewLoc = PathSpline->GetLocationAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World);
+	const FVector Dir = PathSpline->GetTangentAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World).GetSafeNormal();
+	LastDirection = Dir;
 	FRotator NewRot = Dir.Rotation() + MeshRotationOffset;
 
-	// 이동·회전
 	SnowmobileMesh->SetWorldLocationAndRotation(NewLoc, NewRot);
 }
 
-void APPSnowMobile::OnSnowmobileOverlap(UPrimitiveComponent*, AActor* OtherActor, UPrimitiveComponent*, int32, bool, const FHitResult&)
+void APPSnowMobile::OnSnowmobileOverlap(UPrimitiveComponent*, AActor* OtherActor,
+	UPrimitiveComponent*, int32, bool,
+	const FHitResult&)
 {
 	if (APPCharacterPlayer* Player = Cast<APPCharacterPlayer>(OtherActor))
 	{
 		Player->TakeDamage(DamageAmount);
+		if (ACharacter* Char = Cast<ACharacter>(Player))
+		{
+			Char->LaunchCharacter(LastDirection * KnockbackStrength, true, true);
+		}
 	}
+
+	if (!bIsPaused)
+	{
+		bIsPaused = true;
+		GetWorldTimerManager().SetTimer(PauseTimerHandle, this, &APPSnowMobile::ResumeMovement, StopDuration, false);
+	}
+}
+
+void APPSnowMobile::ResumeMovement()
+{
+	bIsPaused = false;
 }
