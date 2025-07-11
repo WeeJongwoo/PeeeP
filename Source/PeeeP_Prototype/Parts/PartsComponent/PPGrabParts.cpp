@@ -82,29 +82,6 @@ void UPPGrabParts::PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData)
 	}
 }
 
-void UPPGrabParts::PlayHitAnimation()
-{
-	if (Owner && GrabAnimMontage)
-	{
-		if (IsGrabbed)
-		{
-			Owner->GetMesh()->GetAnimInstance()->Montage_JumpToSection(FName(TEXT("Grab_Hit")), GrabAnimMontage);
-			Owner->GetMesh()->GetAnimInstance()->Montage_Play(GrabAnimMontage, 1.0f);
-
-				//PlayAnimMontage(GrabAnimMontage, 1.0f, FName(TEXT("Grab_Hit")));
-		}
-		else
-		{
-			Owner->GetMesh()->GetAnimInstance()->Montage_JumpToSection(FName(TEXT("Hit")), GrabAnimMontage);
-			Owner->GetMesh()->GetAnimInstance()->Montage_Play(GrabAnimMontage, 1.0f);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Owner or GrabAnimMontage is not valid."));
-	}
-}
-
 void UPPGrabParts::BeginPlay()
 {
 	Super::BeginPlay();

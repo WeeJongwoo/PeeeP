@@ -24,7 +24,6 @@ public:
 	bool GetIsGrabbed() const { return IsGrabbed; }
 
 	virtual void PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData) override;
-	virtual void PlayHitAnimation() override;
 
 protected:
 	virtual void BeginPlay() override;
