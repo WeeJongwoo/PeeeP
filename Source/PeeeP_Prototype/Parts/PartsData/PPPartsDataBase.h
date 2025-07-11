@@ -61,4 +61,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
 	TSubclassOf<class UPPPartsPauseUIBase> PartsPauseUI;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<class UAnimMontage> HitAnimMontage;
 };

@@ -34,9 +34,14 @@ UPPParkourParts::UPPParkourParts()
 
 }
 
-void UPPParkourParts::OnComponentCreated()
+void UPPParkourParts::OnComponentDestroyed(bool bDestroyingHierarchy)
 {
-	Super::OnComponentCreated();
+	Super::OnComponentDestroyed(bDestroyingHierarchy);
+}
+
+void UPPParkourParts::PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData)
+{
+	Super::PartsInit(InPartsData);
 
 	Owner = Cast<APPCharacterPlayer>(GetOwner());
 
@@ -68,11 +73,6 @@ void UPPParkourParts::OnComponentCreated()
 			}
 		}
 	}
-}
-
-void UPPParkourParts::OnComponentDestroyed(bool bDestroyingHierarchy)
-{
-	Super::OnComponentDestroyed(bDestroyingHierarchy);
 }
 
 void UPPParkourParts::BeginPlay()

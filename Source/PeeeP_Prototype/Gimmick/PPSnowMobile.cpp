@@ -1,4 +1,4 @@
-#include "Gimmick/PPSnowMobile.h"
+﻿#include "Gimmick/PPSnowMobile.h"
 #include "Character/PPCharacterPlayer.h"
 #include "GameFramework/Character.h"
 
@@ -64,11 +64,11 @@ void APPSnowMobile::OnSnowmobileOverlap(UPrimitiveComponent*, AActor* OtherActor
 		}
 	}
 
-	if (!bIsPaused)
+	/*if (!bIsPaused)
 	{
 		bIsPaused = true;
 		GetWorldTimerManager().SetTimer(PauseTimerHandle, this, &APPSnowMobile::ResumeMovement, StopDuration, false);
-	}
+	}*/
 }
 
 void APPSnowMobile::ResumeMovement()

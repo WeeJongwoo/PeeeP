@@ -22,16 +22,6 @@ UPPPartsBase::UPPPartsBase()
 
 }
 
-void UPPPartsBase::OnComponentCreated()
-{
-	Super::OnComponentCreated();
-	//Setup
-	if (IsValid(Owner))
-	{
-		Owner->GetMesh()->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
-	}
-}
-
 void UPPPartsBase::OnComponentDestroyed(bool bDestroyingHierarchy)
 {
 	// ?????? ????(with Github Copilot)
@@ -79,6 +69,32 @@ void UPPPartsBase::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UPPPartsBase::PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData)
+{
+	if (IsValid(Owner))
+	{
+		Owner->GetMesh()->SetRelativeScale3D(FVector(0.4f, 0.4f, 0.4f));
+		if (IsValid(InPartsData))
+		{
+			PartsData = InPartsData;
+			HitAnimMontage = PartsData->HitAnimMontage;
+		}
+	}
+}
+
+void UPPPartsBase::PlayHitAnimation()
+{
+	if (IsValid(Owner) && IsValid(HitAnimMontage))
+	{
+		Owner->GetMesh()->GetAnimInstance()->Montage_JumpToSection(FName(TEXT("Hit")), HitAnimMontage);
+		Owner->GetMesh()->GetAnimInstance()->Montage_Play(HitAnimMontage, 1.0f);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("HitAnimMontage is not valid!"));
+	}
 }
 
 

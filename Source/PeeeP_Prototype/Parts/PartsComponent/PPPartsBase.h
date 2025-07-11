@@ -25,7 +25,6 @@ public:
 	// Sets default values for this component's properties
 	UPPPartsBase();
 
-	virtual void OnComponentCreated() override;
 	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
 
 protected:
@@ -39,7 +38,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	inline TObjectPtr<class UPPPartsDataBase> GetPartsData() { return PartsData; }
+	virtual void PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData);
 
+	virtual void PlayHitAnimation();
 
 protected:
 
@@ -50,4 +51,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<class APPCharacterPlayer> Owner;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> HitAnimMontage;
 };
