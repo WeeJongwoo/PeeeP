@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/SplineComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "TimerManager.h"
 #include "PPSnowMobile.generated.h"
 
 class APPCharacterPlayer;
@@ -27,23 +28,30 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Snowmobile", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* SnowmobileMesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Snowmobile|Movement",
-		meta = (ClampMin = "0", AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Snowmobile|Movement", meta = (ClampMin = "0", AllowPrivateAccess = "true"))
 	float MovementSpeed = 400.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Snowmobile|Movement",
-		meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Snowmobile|Movement", meta = (AllowPrivateAccess = "true"))
 	bool bLoopPath = true;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Snowmobile|Movement",
-		meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Snowmobile|Movement", meta = (AllowPrivateAccess = "true"))
 	FRotator MeshRotationOffset = FRotator::ZeroRotator;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Snowmobile|Damage",
-		meta = (ClampMin = "0", AllowPrivateAccess = "true"))
-	float DamageAmount = 10.f;  // 플레이어 충돌 데미지
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Snowmobile|Damage", meta = (ClampMin = "0", AllowPrivateAccess = "true"))
+	float DamageAmount = 10.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Snowmobile|Collision", meta = (ClampMin = "0", AllowPrivateAccess = "true"))
+	float KnockbackStrength = 600.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Snowmobile|Collision", meta = (ClampMin = "0", AllowPrivateAccess = "true"))
+	float StopDuration = 1.0f;
 
 	float DistanceAlongSpline = 0.f;
+	bool bIsPaused = false;
+	FTimerHandle PauseTimerHandle;
+	FVector LastDirection = FVector::ForwardVector;
+
+	void ResumeMovement();
 
 	UFUNCTION()
 	void OnSnowmobileOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
