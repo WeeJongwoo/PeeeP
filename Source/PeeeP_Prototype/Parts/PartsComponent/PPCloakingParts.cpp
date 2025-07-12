@@ -22,10 +22,16 @@ UPPCloakingParts::UPPCloakingParts()
 	bCanCloaking = true;
 }
 
-void UPPCloakingParts::OnComponentCreated()
+void UPPCloakingParts::OnComponentDestroyed(bool bDestroyingHierarchy)
 {
-	Super::OnComponentCreated();
+	Super::OnComponentDestroyed(bDestroyingHierarchy);
 
+}
+
+void UPPCloakingParts::PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData)
+{
+	Super::PartsInit(InPartsData);
+	
 	Owner = Cast<APPCharacterPlayer>(GetOwner());
 
 	//Setup
@@ -55,12 +61,6 @@ void UPPCloakingParts::OnComponentCreated()
 			}
 		}
 	}
-}
-
-void UPPCloakingParts::OnComponentDestroyed(bool bDestroyingHierarchy)
-{
-	Super::OnComponentDestroyed(bDestroyingHierarchy);
-
 }
 
 void UPPCloakingParts::BeginPlay()

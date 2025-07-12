@@ -23,7 +23,7 @@ public:
 	void SetIsGrabbed(bool b) { IsGrabbed = b; }
 	bool GetIsGrabbed() const { return IsGrabbed; }
 
-	virtual void OnComponentCreated() override;
+	virtual void PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData) override;
 
 protected:
 	virtual void BeginPlay() override;

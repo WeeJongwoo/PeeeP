@@ -25,5 +25,5 @@ public:
 
 private:
 	TSubclassOf<AActor> PoolingObjectClass;
-	TArray<class AActor*> Pool;
+	TQueue<class AActor*> Pool;
 };

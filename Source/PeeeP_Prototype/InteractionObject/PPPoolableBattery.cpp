@@ -18,7 +18,7 @@ void APPPoolableBattery::ReturnSelf()
 	if (ObjectPool != nullptr)
 	{
 		ObjectPool->ReturnObject(this);
-		Mesh->SetSimulatePhysics(false);
+		//Mesh->SetSimulatePhysics(false);
 	}
 	this->SetActive(false);
 }
@@ -27,6 +27,6 @@ void APPPoolableBattery::SetActive(bool IsActive)
 {
 	Mesh->SetPhysicsLinearVelocity(FVector::ZeroVector);
 	Mesh->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
-	Mesh->SetSimulatePhysics(true);
+	Mesh->SetSimulatePhysics(IsActive);
 	this->SetActorHiddenInGame(!IsActive);
 }

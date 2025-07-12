@@ -185,6 +185,11 @@ void APPCharacterPlayer::OnDeath(uint8 bIsDead)
 	UPPAnimInstance* AnimInstance = Cast<UPPAnimInstance>(GetMesh()->GetAnimInstance());
 	if (IsValid(AnimInstance))
 	{
+		if (AnimInstance->Montage_IsPlaying(HitAnimMontage))
+		{
+			AnimInstance->Montage_Stop(0, HitAnimMontage);
+		}
+
 		AnimInstance->SetbIsDead(bIsDead);
 		APlayerController* PlayerController = Cast<APlayerController>(GetController());
 		if (bIsDead)
@@ -487,8 +492,9 @@ void APPCharacterPlayer::SwitchParts(UPPPartsDataBase* InPartsData)
 	Parts = CastChecked<UPPPartsBase>(PartsComponent);
 	if (Parts)
 	{
-		GetMesh()->SetSkeletalMesh(Parts->GetPartsData()->PartsMesh);
-		GetMesh()->SetAnimClass(Parts->GetPartsData()->AnimClass);
+		Parts->PartsInit(InPartsData);
+		GetMesh()->SetSkeletalMesh(InPartsData->PartsMesh);
+		GetMesh()->SetAnimClass(InPartsData->AnimClass);
 
 		int32 MaterialCount = GetMesh()->GetNumMaterials();
 		for (int i = 0; i < MaterialCount; i++)
@@ -504,6 +510,7 @@ void APPCharacterPlayer::RemoveParts()
     {
         UE_LOG(LogTemp, Log, TEXT("Destroy Parts"));
         Parts->DestroyComponent();
+		Parts = nullptr;
     }
 }
 
@@ -661,7 +668,16 @@ void APPCharacterPlayer::PlayDeadSound()
 
 void APPCharacterPlayer::TakeDamage(float Amount)
 {
+	if (IsValid(Parts))
+	{
+		Parts->PlayHitAnimation();
+	}
+	else
+	{
+		GetMesh()->GetAnimInstance()->Montage_Play(HitAnimMontage, 1.0f);
+	}
 	ElectricDischargeComponent->AddCurrentCapacity(-Amount);
+	
 }
 
 void APPCharacterPlayer::SetElectricCapacity(float Amount)

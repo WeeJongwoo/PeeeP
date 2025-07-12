@@ -16,11 +16,11 @@ UPPGrabParts::UPPGrabParts()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// 파츠에 대한 데이터 갖고있는 파츠 데이터 연결
-	static ConstructorHelpers::FObjectFinder<UPPGrabPartsData> GrabPartsDataRef(TEXT("/Game/Parts/Grab/GrabPartsData.GrabPartsData"));
+	/*static ConstructorHelpers::FObjectFinder<UPPGrabPartsData> GrabPartsDataRef(TEXT("/Game/Parts/Grab/GrabPartsData.GrabPartsData"));
 	if (GrabPartsDataRef.Object)
 	{
 		PartsData = GrabPartsDataRef.Object;
-	}
+	}*/
 
 
 	/*static ConstructorHelpers::FObjectFinder<UAnimMontage> GrabAnimMontageRef(TEXT("/Script/Engine.AnimMontage'/Game/Parts/Grab/AM_GrabParts.AM_GrabParts'"));
@@ -50,36 +50,36 @@ void UPPGrabParts::BeginDestroy()
 	}
 }
 
-void UPPGrabParts::OnComponentCreated()
+void UPPGrabParts::PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData)
 {
-    Super::OnComponentCreated();
+	Super::PartsInit(InPartsData);
 
-    Owner = Cast<APPCharacterPlayer>(GetOwner());
+	Owner = Cast<APPCharacterPlayer>(GetOwner());
 
-    //Setup
-    APPCharacterPlayer* PlayerCharacter = Cast<APPCharacterPlayer>(Owner);
-    if (PlayerCharacter)
-    {
-        UActorComponent* GrabComponent = PlayerCharacter->AddComponentByClass(UPhysicsHandleComponent::StaticClass(), true, FTransform::Identity, false);
-        GrabHandle = CastChecked<UPhysicsHandleComponent>(GrabComponent);
+	//Setup
+	APPCharacterPlayer* PlayerCharacter = Cast<APPCharacterPlayer>(Owner);
+	if (PlayerCharacter)
+	{
+		UActorComponent* GrabComponent = PlayerCharacter->AddComponentByClass(UPhysicsHandleComponent::StaticClass(), true, FTransform::Identity, false);
+		GrabHandle = CastChecked<UPhysicsHandleComponent>(GrabComponent);
 
-        APlayerController* PlayerController = CastChecked<APlayerController>(PlayerCharacter->GetController());
-        if (UEnhancedInputLocalPlayerSubsystem* Subsystem
-            = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-        {
-            UPPGrabPartsData* GrabPartsData = Cast<UPPGrabPartsData>(PartsData);
-            if (GrabPartsData)
-            {
-                Subsystem->AddMappingContext(GrabPartsData->PartsMappingContext, 1);
-                UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerController->InputComponent);
+		APlayerController* PlayerController = CastChecked<APlayerController>(PlayerCharacter->GetController());
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem
+			= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			UPPGrabPartsData* GrabPartsData = Cast<UPPGrabPartsData>(PartsData);
+			if (GrabPartsData)
+			{
+				Subsystem->AddMappingContext(GrabPartsData->PartsMappingContext, 1);
+				UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerController->InputComponent);
 
-                EnhancedInputComponent->BindAction(GrabPartsData->GrabAction, ETriggerEvent::Started, this, &UPPGrabParts::HandleGrabAnimation);
-                EnhancedInputComponent->BindAction(GrabPartsData->GrabAction, ETriggerEvent::Completed, this, &UPPGrabParts::GrabRelease);
+				EnhancedInputComponent->BindAction(GrabPartsData->GrabAction, ETriggerEvent::Started, this, &UPPGrabParts::HandleGrabAnimation);
+				EnhancedInputComponent->BindAction(GrabPartsData->GrabAction, ETriggerEvent::Completed, this, &UPPGrabParts::GrabRelease);
 
 				this->GrabAnimMontage = GrabPartsData->GrabAnimMontage;
-            }
-        }
-    }
+			}
+		}
+	}
 }
 
 void UPPGrabParts::BeginPlay()
@@ -121,7 +121,8 @@ void UPPGrabParts::HandleGrabAnimation()
 {
 	if (!IsGrabbed)
 	{
-		Owner->PlayAnimation(GrabAnimMontage);
+		Owner->PlayAnimMontage(GrabAnimMontage, 1.0f, FName(TEXT("Grab")));
+		//Owner->PlayAnimation(GrabAnimMontage);
 	}
 	
 }

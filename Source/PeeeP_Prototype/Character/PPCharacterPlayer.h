@@ -166,6 +166,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Effect)
 	TObjectPtr<class USoundBase> DeadSound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> HitAnimMontage;
+
 	float ChargeTime;
 
 public:

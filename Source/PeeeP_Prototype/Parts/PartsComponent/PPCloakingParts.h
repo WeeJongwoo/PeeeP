@@ -18,8 +18,9 @@ public:
 
 	UPPCloakingParts();
 
-	virtual void OnComponentCreated() override;
 	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
+
+	virtual void PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData) override;
 
 private:
 

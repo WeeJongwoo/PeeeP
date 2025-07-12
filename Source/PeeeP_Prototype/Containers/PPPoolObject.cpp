@@ -33,14 +33,18 @@ AActor* UPPPoolObject::GetPoolObject()
 			return nullptr;
 		}
 	}
-	return Pool.Pop();
+
+	AActor* PooledObject;
+	Pool.Dequeue(PooledObject);
+
+	return PooledObject;
 }
 
 void UPPPoolObject::ReturnObject(AActor* InPoolObject)
 {
 	if (InPoolObject->Implements<UPPPoolableInterface>())
 	{
-		Pool.Emplace(InPoolObject);
+		Pool.Enqueue(InPoolObject);
 	}
 }
 
@@ -51,6 +55,21 @@ bool UPPPoolObject::SetPoolingObjectClass(TSubclassOf<AActor> InPoolingObjectCla
 		if (InPoolingObjectClass->ImplementsInterface(UPPPoolableInterface::StaticClass()))
 		{
 			PoolingObjectClass = InPoolingObjectClass;
+
+			for (int i = 0; i < 10; i++)
+			{
+				AActor* PoolableObject = GetWorld()->SpawnActor<AActor>(PoolingObjectClass, FVector::ZeroVector, FRotator::ZeroRotator);
+				PoolableObject->SetActorHiddenInGame(true);
+
+				IPPPoolableInterface* PoolingActor = Cast<IPPPoolableInterface>(PoolableObject);
+				if (PoolingActor)
+				{
+					PoolingActor->SetObjectPool(this);
+				}
+
+				Pool.Enqueue(PoolableObject);
+			}
+
 			return true;
 		}
 		UE_LOG(Pooling, Warning, TEXT("InPoolingObject is not a PoolableObject."));
