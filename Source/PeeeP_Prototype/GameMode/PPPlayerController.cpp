@@ -82,6 +82,7 @@ void APPPlayerController::ClosePartsPauseWidget()
 	if (IsValid(CurrentPauseWidget))
 	{
 		CurrentPauseWidget->RemoveFromViewport();
+		CurrentPauseWidget = nullptr;
 
 		SetGameInputMode();
 	}

@@ -70,6 +70,12 @@ void UPPParkourParts::PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData)
 				ChargeSound = ParkourPartsData->ChargeSound;
 				JumpSound = ParkourPartsData->JumpSound;
 				ChargingEffect = ParkourPartsData->ChargingEffect;
+				if (ChargingEffect != nullptr && IsValid(ChargingEffectComponent))
+				{
+					ChargingEffectComponent->SetAsset(ChargingEffect);
+					ChargingEffectComponent->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -20.0f), FRotator::ZeroRotator);
+					ChargingEffectComponent->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
+				}
 			}
 		}
 	}
@@ -79,15 +85,12 @@ void UPPParkourParts::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (ChargingEffect != nullptr && IsValid(ChargingEffectComponent))
+	if (IsValid(ChargingEffectComponent) && IsValid(Owner))
 	{
-		ChargingEffectComponent->SetAutoActivate(false);
 		ChargingEffectComponent->SetupAttachment(Owner->GetRootComponent());
-
-		ChargingEffectComponent->SetAsset(ChargingEffect);
-		ChargingEffectComponent->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -20.0f), FRotator::ZeroRotator);
-		ChargingEffectComponent->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
+		ChargingEffectComponent->SetAutoActivate(false);
 	}
+	
 }
 
 void UPPParkourParts::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
