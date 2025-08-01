@@ -31,11 +31,11 @@ private:
 	void OnLoadingUpdate(TSharedRef<FStreamableHandle> Handle);
 
 	// Callback function when the level is loaded
-	void OnLevelLoaded();
+	//void OnLevelLoaded();
 
 	void OnPostLoadLevel(UWorld* LoadedWorld);
 
-	void DoOpenLevel();
+	//void DoOpenLevel();
 
 	TSoftObjectPtr<class UWorld> TargetLevel; // The level we want to load
 	
@@ -46,10 +46,10 @@ private:
 
 	FTimerHandle LoadingTimerHandle; // Timer handle for managing loading time
 
-	bool bIsLoading = false; // Flag to check if we are currently loading a level
-	bool bMinTimeMet = false;
+	//bool bIsLoading = false; // Flag to check if we are currently loading a level
+	//bool bMinTimeMet = false;
 
-	void OnMinTimeReached();
+	//void OnMinTimeReached();
 
 	void TryToLoadLevel();
 
