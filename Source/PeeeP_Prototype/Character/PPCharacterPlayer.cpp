@@ -370,9 +370,15 @@ void APPCharacterPlayer::Look(const FInputActionValue& Value)
 {
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
+	// Set Custom Mouse Sensitivity Coefficient.
+	// Because Unreal Default Mouse Sensitivity is too high.
+	float MouseSensitivityCoefficient = 0.05f;
+
 	// Multiply MouseSensivity
-	float InteropolatedMouseSensitivity = MouseSensitivity * 0.05f;
-	LookAxisVector *= InteropolatedMouseSensitivity;
+	float ManipulatedMouseSensitivity = MouseSensitivity * MouseSensitivityCoefficient;
+
+	// Apply Mouse Sensitivity to LookAxisVector
+	LookAxisVector *= ManipulatedMouseSensitivity;
 
 	AddControllerYawInput(LookAxisVector.X);
 	AddControllerPitchInput(LookAxisVector.Y);
