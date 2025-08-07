@@ -250,12 +250,8 @@ void APPCharacterPlayer::BeginPlay()
 
 	DeadEventDelegate.BindUObject(this, &APPCharacterPlayer::OnDeath);
 
-	//Test_EquipGrabParts();
+	InitInputSettings();
 
-	//// Parts ?��?���? ?��?��?��?��?�� �??��?��
-	//// ?��?�� �?분�?? ?��중에 ?��벤토리에?�� ?��?��?�� ?��?��?��?�� ?���? �?경하?�� ?��?�� ?���? 만들?��?�� ?��?��?���? ?�� ?��
-	//UActorComponent* PartsComponent = AddComponentByClass(UPPGrabParts::StaticClass(), true, FTransform::Identity, false);
-	//Parts = CastChecked<UPPPartsBase>(PartsComponent);
 }
 
 void APPCharacterPlayer::Tick(float DeltaTime)
@@ -374,6 +370,10 @@ void APPCharacterPlayer::Look(const FInputActionValue& Value)
 {
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
+	// Multiply MouseSensivity
+	float InteropolatedMouseSensitivity = MouseSensitivity * 0.05f;
+	LookAxisVector *= InteropolatedMouseSensitivity;
+
 	AddControllerYawInput(LookAxisVector.X);
 	AddControllerPitchInput(LookAxisVector.Y);
 }
@@ -446,6 +446,15 @@ void APPCharacterPlayer::SetFOVBySpeed(float DeltaTime)
 	FollowCamera->SetFieldOfView(NewFOV);
 }
 
+void APPCharacterPlayer::InitInputSettings()
+{
+	UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		MouseSensitivity = GameInstance->MouseSensitivity;
+	}
+}
+
 void APPCharacterPlayer::SetMaxWalkSpeed(float InMaxWalkSpeed)
 {
 	MaxWalkSpeed = InMaxWalkSpeed;
@@ -462,6 +471,12 @@ void APPCharacterPlayer::SetMaxWalkSpeed(float InMaxWalkSpeed)
 void APPCharacterPlayer::SetRunning(bool InIsRunning)
 {
 	bIsRunning = InIsRunning;
+}
+
+void APPCharacterPlayer::SetMouseSensitivity(float NewMouseSensitivity)
+{
+	MouseSensitivity = NewMouseSensitivity;
+	UE_LOG(LogTemp, Log, TEXT("Mouse Sensitivity Set: %f"), MouseSensitivity);
 }
 
 void APPCharacterPlayer::SetDefaultMeshAndAnim()

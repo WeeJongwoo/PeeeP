@@ -16,9 +16,13 @@ UPPGameInstance::UPPGameInstance()
 		MasterSoundMix = MasterSoundMixRef.Object;
 	}
 
+	// Default
 	MasterVolume = 1.0f;
 	MusicVolume = 1.0f;
 	SFXVolume = 1.0f;
+
+	// Default
+	MouseSensitivity = 15.0f;
 }
 
 void UPPGameInstance::SetInventoryPartsArray(TMap<int32, TPair<FName, int32>> NewInventoryPartsArray)
@@ -47,4 +51,9 @@ void UPPGameInstance::ApplySavedAudioSettings()
 
 		UGameplayStatics::PushSoundMixModifier(GetWorld(), MasterSoundMix);
 	}
+}
+
+void UPPGameInstance::ApplySavedControlSettings()
+{
+
 }

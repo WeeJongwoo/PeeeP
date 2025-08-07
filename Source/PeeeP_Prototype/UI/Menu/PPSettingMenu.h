@@ -47,6 +47,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<class UComboBoxString> DisplayModeComboBox;
 
+	// Audio Settings
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<class USlider> MasterVolumeSlider;
 
@@ -55,6 +56,15 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<class USlider> SFXVolumeSlider;
+
+	// Control Settings
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class USlider> MouseSensitivitySlider;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UEditableText> MouseSensitivityText;
+
+
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<class UPPMenuButtonWidget> WBPSettingExitButton;
@@ -72,6 +82,7 @@ private:
 	UFUNCTION()
 	void ExitButtonClick();
 
+	// Audio Settings
 	UFUNCTION()
 	void OnMasterVolumeChanged(float Volume);
 
@@ -80,6 +91,18 @@ private:
 
 	UFUNCTION()
 	void OnSFXVolumeChanged(float Volume);
+
+	// Control Settings
+	UFUNCTION()
+	void OnMouseSensitivityChanged(float Sensitivity);
+
+	UFUNCTION()
+	void OnMouseSensitivityTextChanged(const FText& ValueText);
+
+	UFUNCTION()
+	void OnMouseSensitivityTextCommitted(const FText& ValueText, ETextCommit::Type CommitMethod);
+
+	void ApplyMouseSensitivity();
 
 	FWidgetAnimationDynamicEvent EndDelegate;
 	

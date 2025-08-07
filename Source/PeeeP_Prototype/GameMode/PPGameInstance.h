@@ -33,9 +33,15 @@ public:
 
 	void ClearInventoryPartsArray();
 
-	void ApplySavedAudioSettings();
-
+	// Audio
 	float MasterVolume;
 	float MusicVolume;
 	float SFXVolume;
+
+	void ApplySavedAudioSettings();
+
+	// Control
+	float MouseSensitivity;
+
+	void ApplySavedControlSettings();
 };

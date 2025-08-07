@@ -11,6 +11,9 @@
 #include "Components/Button.h"
 #include "Components/Slider.h"
 #include "Sound/SoundClass.h"
+#include "Components/EditableText.h"
+#include "Character/PPCharacterPlayer.h"
+#include "Kismet/GameplayStatics.h"
 
 
 void UPPSettingMenu::NativeConstruct()
@@ -44,6 +47,17 @@ void UPPSettingMenu::NativeConstruct()
 		SFXVolumeSlider->OnValueChanged.AddDynamic(this, &UPPSettingMenu::OnSFXVolumeChanged);
 	}
 
+	// Control Settings Init
+	if (MouseSensitivitySlider)
+	{
+		MouseSensitivitySlider->OnValueChanged.AddDynamic(this, &UPPSettingMenu::OnMouseSensitivityChanged);
+	}
+	if (MouseSensitivityText)
+	{
+		MouseSensitivityText->OnTextChanged.AddDynamic(this, &UPPSettingMenu::OnMouseSensitivityTextChanged);
+		MouseSensitivityText->OnTextCommitted.AddDynamic(this, &UPPSettingMenu::OnMouseSensitivityTextCommitted);
+	}
+
 	if (WBPSettingExitButton && WBPSettingExitButton->Button)
 	{
 		WBPSettingExitButton->Button->OnClicked.AddDynamic(this, &UPPSettingMenu::ExitButtonClick);
@@ -51,6 +65,7 @@ void UPPSettingMenu::NativeConstruct()
 
 	if (GameInstance)
 	{
+		// Audio
 		if (MasterVolumeSlider)
 		{
 			MasterVolumeSlider->SetValue(GameInstance->MasterVolume);
@@ -63,11 +78,22 @@ void UPPSettingMenu::NativeConstruct()
 		{
 			SFXVolumeSlider->SetValue(GameInstance->SFXVolume);
 		}
+
+		// Control
+		if (MouseSensitivitySlider)
+		{
+			MouseSensitivitySlider->SetValue(GameInstance->MouseSensitivity);
+		}
+		if (MouseSensitivityText)
+		{
+			MouseSensitivityText->SetText(FText::AsNumber(GameInstance->MouseSensitivity));
+		}
 		GameInstance->ApplySavedAudioSettings();
 	}
 
 	EndDelegate.BindDynamic(this, &UPPSettingMenu::HideSettingWidget);
 	BindToAnimationFinished(SettingWindowDisappearAnim, EndDelegate);
+
 }
 
 void UPPSettingMenu::PlaySettingWindowAppearAnim()
@@ -217,5 +243,72 @@ void UPPSettingMenu::OnSFXVolumeChanged(float Volume)
 	{
 		GameInstance->SFXVolume = Volume;
 		GameInstance->ApplySavedAudioSettings();
+	}
+}
+
+void UPPSettingMenu::OnMouseSensitivityChanged(float Sensitivity)
+{
+	MouseSensitivityText->SetText(FText::AsNumber(Sensitivity));
+	if (GameInstance)
+	{
+		GameInstance->MouseSensitivity = Sensitivity;
+		ApplyMouseSensitivity();
+	}
+}
+
+void UPPSettingMenu::OnMouseSensitivityTextChanged(const FText& ValueText)
+{
+	FString Input = ValueText.ToString();
+	FString FilteredInput;
+
+	for (TCHAR Char : Input)
+	{
+		if (FChar::IsDigit(Char) || Char == '.')
+		{
+			FilteredInput.AppendChar(Char);
+		}
+	}
+
+	if (FilteredInput != Input && MouseSensitivityText)
+	{
+		MouseSensitivityText->SetText(FText::FromString(FilteredInput));
+	}
+}
+
+void UPPSettingMenu::OnMouseSensitivityTextCommitted(const FText& ValueText, ETextCommit::Type CommitMethod)
+{
+	FString Input = ValueText.ToString();
+	float NewSensitivity = FCString::Atof(*Input);
+	// Value check(0.1 <= x <= 100.0)
+	NewSensitivity = FMath::Clamp(NewSensitivity, 0.1f, 100.0f);
+
+	if (MouseSensitivitySlider)
+	{
+		MouseSensitivitySlider->SetValue(NewSensitivity);
+	}
+	if (MouseSensitivityText)
+	{
+		MouseSensitivityText->SetText(FText::AsNumber(NewSensitivity));
+	}
+
+	if (GameInstance)
+	{
+		GameInstance->MouseSensitivity = NewSensitivity;
+		ApplyMouseSensitivity();
+	}
+}
+
+
+void UPPSettingMenu::ApplyMouseSensitivity()
+{
+	APPCharacterPlayer* Player = Cast<APPCharacterPlayer>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	float TempMouseSensitivity = GameInstance->MouseSensitivity;
+	if (Player)
+	{
+		Player->SetMouseSensitivity(TempMouseSensitivity);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player is not valid!"));
 	}
 }
