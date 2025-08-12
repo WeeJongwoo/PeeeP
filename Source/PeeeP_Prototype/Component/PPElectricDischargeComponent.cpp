@@ -484,6 +484,11 @@ void UPPElectricDischargeComponent::Reset()
 	BroadCastToUI();
 }
 
+const float UPPElectricDischargeComponent::GetCurrentCapacity()
+{
+	return CurrentElectricCapacity;
+}
+
 void UPPElectricDischargeComponent::CancelCharging()
 {
 	APPCharacterPlayer* OwnerCharacter = Cast<APPCharacterPlayer>(GetOwner());

@@ -13,6 +13,13 @@ enum class EItemType : uint8
 	IT_Parts,	// ����
 };
 
+UENUM()
+enum class EConsumptionType : uint8
+{
+	OneShot,
+	PerSecond	// ����
+};
+
 //파츠를 생성하기 위한 데이터를 보관하는 클래스
 //기본적으로 파츠 매쉬, 맵핑 컨텍스트, 해당 파츠 컴포넌트 클래스에 대한 정보를 갖고있음
 //해당 클래스를 상속받아서 각 개별 파츠에 대한 정보를 추가 구성한다(인풋 액션 등)
@@ -39,6 +46,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<class UStaticMesh> PartsItemMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float ElectricConsumption;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	EConsumptionType ConsumptionType;
+
 
 public:
 	virtual FPrimaryAssetId GetPrimaryAssetId() const override;
@@ -64,4 +77,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<class UAnimMontage> HitAnimMontage;
+
+	
 };

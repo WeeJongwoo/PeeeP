@@ -22,32 +22,6 @@ UPPPartsBase::UPPPartsBase()
 
 }
 
-void UPPPartsBase::OnComponentDestroyed(bool bDestroyingHierarchy)
-{
-	// ?????? ????(with Github Copilot)
-	Super::OnComponentDestroyed(bDestroyingHierarchy);
-
-	CleanUpParts();
-
-	APPCharacterPlayer* PlayerCharacter = Cast<APPCharacterPlayer>(GetOwner());
-	if (PlayerCharacter)
-	{
-		APlayerController* PlayerController = Cast<APlayerController>(PlayerCharacter->GetController());
-		if (!PlayerController)
-		{
-			return;
-		}
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem
-			= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			if (PartsData)
-			{
-				Subsystem->RemoveMappingContext(PartsData->PartsMappingContext);
-			}
-		}
-	}
-}
-
 // Called when the game starts
 void UPPPartsBase::BeginPlay()
 {
@@ -80,6 +54,33 @@ void UPPPartsBase::PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData)
 		{
 			PartsData = InPartsData;
 			HitAnimMontage = PartsData->HitAnimMontage;
+			ConsumptionType = PartsData->ConsumptionType;
+			ElectricConsumption = PartsData->ElectricConsumption;
+		}
+	}
+}
+
+void UPPPartsBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	// Clean up the parts when the component ends play
+	CleanUpParts();
+
+	APPCharacterPlayer* PlayerCharacter = Cast<APPCharacterPlayer>(GetOwner());
+	if (PlayerCharacter)
+	{
+		APlayerController* PlayerController = Cast<APlayerController>(PlayerCharacter->GetController());
+		if (!PlayerController)
+		{
+			return;
+		}
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem
+			= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			if (PartsData)
+			{
+				Subsystem->RemoveMappingContext(PartsData->PartsMappingContext);
+			}
 		}
 	}
 }

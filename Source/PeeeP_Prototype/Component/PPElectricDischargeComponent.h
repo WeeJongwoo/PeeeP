@@ -103,6 +103,8 @@ public:
 	void SetCurrentCapacity(float Amount);
 	void Reset();
 
+	const float GetCurrentCapacity();
+
 	void CancelCharging();
 
 public:

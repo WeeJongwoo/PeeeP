@@ -666,18 +666,21 @@ void APPCharacterPlayer::PlayDeadSound()
 	}
 }
 
-void APPCharacterPlayer::TakeDamage(float Amount)
+void APPCharacterPlayer::TakeDamage(float Amount, bool bPlayAnim)
 {
-	if (IsValid(Parts))
+	if (bPlayAnim)
 	{
-		Parts->PlayHitAnimation();
+		if (IsValid(Parts))
+		{
+			Parts->PlayHitAnimation();
+		}
+		else
+		{
+			GetMesh()->GetAnimInstance()->Montage_Play(HitAnimMontage, 1.0f);
+		}
 	}
-	else
-	{
-		GetMesh()->GetAnimInstance()->Montage_Play(HitAnimMontage, 1.0f);
-	}
-	ElectricDischargeComponent->AddCurrentCapacity(-Amount);
 	
+	ElectricDischargeComponent->AddCurrentCapacity(-Amount);
 }
 
 void APPCharacterPlayer::SetElectricCapacity(float Amount)

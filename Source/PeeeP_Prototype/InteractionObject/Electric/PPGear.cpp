@@ -78,7 +78,7 @@ void APPGear::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveCo
 					ApplyKnockback(CharacterMovementComponent, normalDir, 500.0f);
 				}
 
-				Player->TakeDamage(1.0f);
+				Player->TakeDamage(1.0f, true);
 			}
 		}
 	}

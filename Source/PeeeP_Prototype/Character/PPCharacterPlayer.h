@@ -234,5 +234,5 @@ public:
 	void PlayDeadSound();
 
 public:
-	virtual void TakeDamage(float Amount);
+	virtual void TakeDamage(float Amount, bool bPlayAnim);
 };

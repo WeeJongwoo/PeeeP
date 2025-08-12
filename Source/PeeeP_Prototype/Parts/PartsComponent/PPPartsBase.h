@@ -25,8 +25,6 @@ public:
 	// Sets default values for this component's properties
 	UPPPartsBase();
 
-	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -39,6 +37,8 @@ public:
 
 	inline TObjectPtr<class UPPPartsDataBase> GetPartsData() { return PartsData; }
 	virtual void PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData);
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	virtual void PlayHitAnimation();
 
@@ -53,4 +53,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	TObjectPtr<class UAnimMontage> HitAnimMontage;
+
+	float ElectricConsumption;
+
+	EConsumptionType ConsumptionType;
 };

@@ -46,7 +46,7 @@ void APPLaserTrap::OnLaserOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	APPCharacterPlayer* Player = Cast<APPCharacterPlayer>(OtherActor);
 	if (IsValid(Player))
 	{
-		Player->TakeDamage(TrapDamage);
+		Player->TakeDamage(TrapDamage, true);
 		if (IsValid(HitSound) && IsValid(AudioComponent))
 		{
 			AudioComponent->SetSound(HitSound);

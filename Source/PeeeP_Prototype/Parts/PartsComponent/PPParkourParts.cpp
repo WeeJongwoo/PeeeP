@@ -11,6 +11,7 @@
 #include "Containers/Ticker.h"
 #include "NiagaraComponent.h"
 #include "NiagaraSystem.h"
+#include "Component/PPElectricDischargeComponent.h"
 
 
 UPPParkourParts::UPPParkourParts()
@@ -32,11 +33,6 @@ UPPParkourParts::UPPParkourParts()
 	ParkourSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ParkourSoundComponent"));
 	ChargingEffectComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ChargingEffectComponent"));
 
-}
-
-void UPPParkourParts::OnComponentDestroyed(bool bDestroyingHierarchy)
-{
-	Super::OnComponentDestroyed(bDestroyingHierarchy);
 }
 
 void UPPParkourParts::PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData)
@@ -143,9 +139,27 @@ void UPPParkourParts::TickJumpCharge()
 	UE_LOG(LogTemp, Warning, TEXT("Charge"));
 	if (bIsCharging)
 	{
-		CurrentJumpChargingTime = GetWorld()->GetTimeSeconds();
+		if (CurrentJumpLevel == MaxJumpLevel)
+		{
+			return;
+		}
 
-		TotalJumpChargingTime += CurrentJumpChargingTime - PreviousJumpChargingTime;
+		float CurrentCapacity = Owner->GetElectricDischargeComponent()->GetCurrentCapacity();
+
+		if (!(CurrentCapacity > ElectricConsumption * (TimePerChargeLevel - TotalJumpChargingTime)))
+		{
+			return;
+		}
+
+		CurrentJumpChargingTime = GetWorld()->GetTimeSeconds();
+		float DeltaTime = CurrentJumpChargingTime - PreviousJumpChargingTime;;
+
+		if (ConsumptionType == EConsumptionType::PerSecond)
+		{
+			Owner->TakeDamage(ElectricConsumption * DeltaTime, false);
+		}
+
+		TotalJumpChargingTime += DeltaTime;
 
 		TotalJumpChargingTime = FMath::Clamp(TotalJumpChargingTime, 0.0f, TimePerChargeLevel);
 

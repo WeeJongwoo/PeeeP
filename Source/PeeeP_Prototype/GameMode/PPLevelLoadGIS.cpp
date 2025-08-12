@@ -83,18 +83,12 @@ void UPPLevelLoadGIS::OnPostLoadLevel(UWorld* LoadedWorld)
 					GetWorld()->GetTimerManager().ClearTimer(LoadingTimerHandle);
 
 					LoadingWidget->PlayFadeInAnimation();
-					LoadingWidget->SetOnFadeInFinished(
-						FSimpleDelegate::CreateUObject(this, &UPPLevelLoadGIS::DeleteLoadingWidget)
-					);
+					LoadingWidget->SetOnFadeInFinished(FSimpleDelegate::CreateUObject(this, &UPPLevelLoadGIS::DeleteLoadingWidget));
 				}
-			});
-
-		GetWorld()->GetTimerManager().SetTimer(
-			LoadingTimerHandle,
-			PollLoadingDelegate,
-			0.1f,
-			true
+			}
 		);
+
+		GetWorld()->GetTimerManager().SetTimer(LoadingTimerHandle, PollLoadingDelegate, 0.1f, true);
 
 	}
 }

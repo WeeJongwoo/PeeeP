@@ -10,6 +10,7 @@
 #include "Camera/CameraComponent.h"
 #include "Character/PPCharacterPlayer.h"
 #include "InteractionObject/PPGrabableObject.h"
+#include "Component/PPElectricDischargeComponent.h"
 
 UPPGrabParts::UPPGrabParts()
 {
@@ -121,7 +122,20 @@ void UPPGrabParts::HandleGrabAnimation()
 {
 	if (!IsGrabbed)
 	{
+		float CurrentCapacity = Owner->GetElectricDischargeComponent()->GetCurrentCapacity();
+
+		if (!(CurrentCapacity > ElectricConsumption))
+		{
+			return;
+		}
+
+		if (ConsumptionType == EConsumptionType::OneShot)
+		{
+			Owner->TakeDamage(ElectricConsumption, false);
+		}
+
 		Owner->PlayAnimMontage(GrabAnimMontage, 1.0f, FName(TEXT("Grab")));
+
 		//Owner->PlayAnimation(GrabAnimMontage);
 	}
 	
@@ -130,6 +144,8 @@ void UPPGrabParts::HandleGrabAnimation()
 void UPPGrabParts::Grab()
 {
 	UE_LOG(LogTemp, Log, TEXT("Grab Start"));
+
+	float CurrentCapacity = Owner->GetElectricDischargeComponent()->GetCurrentCapacity();
 
 	FHitResult HitResult;
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(Grab), false, Owner);

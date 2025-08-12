@@ -47,7 +47,7 @@ void UAnimNotifyState_PPPunchJab::NotifyTick(USkeletalMeshComponent* MeshComp, U
 				APPCharacterPlayer* CharacterPlayer = Cast<APPCharacterPlayer>(HitCharacter);
 				if (nullptr != CharacterPlayer)
 				{
-					CharacterPlayer->TakeDamage(10.0f * FrameDeltaTime);
+					CharacterPlayer->TakeDamage(10.0f * FrameDeltaTime, true);
 				}
 				UE_LOG(LogTemp, Warning, TEXT("Hit"));
 			}
