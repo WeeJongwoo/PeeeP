@@ -14,7 +14,7 @@
 #include "Components/EditableText.h"
 #include "Character/PPCharacterPlayer.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "UI/UIStringRow.h"
 
 void UPPSettingMenu::NativeConstruct()
 {	
@@ -28,6 +28,7 @@ void UPPSettingMenu::NativeConstruct()
 		UE_LOG(LogTemp, Error, TEXT("GameUserSettings is null!"));
 		return;
 	}
+
 
 	// Video Settings Init
 	InitializeResolutionComboBox();
@@ -93,6 +94,12 @@ void UPPSettingMenu::NativeConstruct()
 
 	EndDelegate.BindDynamic(this, &UPPSettingMenu::HideSettingWidget);
 	BindToAnimationFinished(SettingWindowDisappearAnim, EndDelegate);
+
+	// UIString Data Table Test
+	if (FUIStringRow* UIStringRow = GameInstance->GetUIStringTable()->FindRow<FUIStringRow>(TEXT("Setting_Title_Video"), TEXT("")))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Found Setting_Title_Video: %s"), *UIStringRow->Text.ToString());
+	}
 
 }
 

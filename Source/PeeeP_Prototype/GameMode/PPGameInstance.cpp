@@ -5,6 +5,7 @@
 #include "Sound/SoundClass.h"
 #include "Sound/SoundMix.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/UIStringRow.h"
 
 
 UPPGameInstance::UPPGameInstance()
@@ -15,6 +16,13 @@ UPPGameInstance::UPPGameInstance()
 	{
 		MasterSoundMix = MasterSoundMixRef.Object;
 	}
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> UIStringTableRef(TEXT("/Game/Data/UI/UIString.UIString"));
+	if (nullptr != UIStringTableRef.Object)
+	{
+		UIStringTable = UIStringTableRef.Object;
+	}
+
 
 	// Default
 	MasterVolume = 1.0f;
@@ -56,4 +64,9 @@ void UPPGameInstance::ApplySavedAudioSettings()
 void UPPGameInstance::ApplySavedControlSettings()
 {
 
+}
+
+UDataTable* UPPGameInstance::GetUIStringTable()
+{
+	return UIStringTable;
 }

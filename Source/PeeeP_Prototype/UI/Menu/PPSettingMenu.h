@@ -13,7 +13,7 @@ UCLASS()
 class PEEEP_PROTOTYPE_API UPPSettingMenu : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 public:
 	virtual void NativeConstruct() override;
 
@@ -79,6 +79,7 @@ protected:
 	TObjectPtr<class UWidgetAnimation> SettingWindowDisappearAnim;
 
 private:
+
 	UFUNCTION()
 	void ExitButtonClick();
 

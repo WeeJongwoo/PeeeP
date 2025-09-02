@@ -44,4 +44,9 @@ public:
 	float MouseSensitivity;
 
 	void ApplySavedControlSettings();
+
+	UDataTable* GetUIStringTable();
+
+private:
+	class UDataTable* UIStringTable;
 };
