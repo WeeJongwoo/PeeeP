@@ -96,11 +96,14 @@ void UPPSettingMenu::NativeConstruct()
 	BindToAnimationFinished(SettingWindowDisappearAnim, EndDelegate);
 
 	// UIString Data Table Test
-	if (FUIStringRow* UIStringRow = GameInstance->GetUIStringTable()->FindRow<FUIStringRow>(TEXT("Setting_Title_Video"), TEXT("")))
+	/*if (FUIStringRow* UIStringRow = GameInstance->GetUIStringTable()->FindRow<FUIStringRow>(TEXT("Setting_Title_Video"), TEXT("")))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Found Setting_Title_Video: %s"), *UIStringRow->Text.ToString());
-	}
+	}*/
 
+	// UI String Initialize
+	MappingTextBoxString();
+	InitializeUIStrings();
 }
 
 void UPPSettingMenu::PlaySettingWindowAppearAnim()
@@ -317,5 +320,48 @@ void UPPSettingMenu::ApplyMouseSensitivity()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Player is not valid!"));
+	}
+}
+
+void UPPSettingMenu::MappingTextBoxString()
+{
+	UIStringMap.Add("Setting_Title", WidgetTitleText);
+	UIStringMap.Add("Setting_Title_Video", VideoSettingsText);
+	UIStringMap.Add("Setting_Resolution", ResolutionText);
+	UIStringMap.Add("Setting_DisplayMode", DisplayModeText);
+	UIStringMap.Add("Setting_Title_Sound", SoundSettingsText);
+	UIStringMap.Add("Setting_MasterVolume", MasterVolumeText);
+	UIStringMap.Add("Setting_MusicVolume", MusicVolumeText);
+	UIStringMap.Add("Setting_SFXVolume", SFXVolumeText);
+	UIStringMap.Add("Setting_Title_Control", ControlSettingsText);
+	UIStringMap.Add("Setting_MouseSensitivity", MouseSensitivityLabelText);
+}
+
+void UPPSettingMenu::InitializeUIStrings()
+{
+	// umg에 있는 텍스트들을 변수로 가져올 수 있도록 한 후
+	// 그 변수들에다가 데이터테이블에서 가져온 텍스트를 넣어주면 됨
+	// 그러면 만약 text ui 요소들이 많다면 어떻게 할 것인가?
+	// 각 요소를 NativeConstruct에서 맵핑을 해준다?
+	if (GameInstance)
+	{
+		for (auto& Item : UIStringMap)
+		{
+			FName Key = Item.Key;
+			UTextBlock* TextBlock = Item.Value;
+
+			if (!TextBlock)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("TextBlock for key %s is null!"), *Key.ToString());
+				continue;
+			}
+
+			if (FUIStringRow* UIStringRow = GameInstance->GetUIStringTable()->FindRow<FUIStringRow>(Key, TEXT("")))
+			{
+				TextBlock->SetText(FText::FromString(UIStringRow->Text.ToString()));
+			}
+			//FString Text = GameInstance->GetUIStringTable()->FindRow<FUIStringRow>(Key, TEXT(""))->Text.ToString();
+			//TextBlock->SetText(FText::FromString(Text));
+		}
 	}
 }

@@ -41,6 +41,8 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class UPPGameInstance> GameInstance;
 
+	// UI Elements
+
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<class UComboBoxString> ResolutionComboBox;
 
@@ -65,7 +67,7 @@ protected:
 	TObjectPtr<class UEditableText> MouseSensitivityText;
 
 
-
+	// Widget
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<class UPPMenuButtonWidget> WBPSettingExitButton;
 
@@ -77,6 +79,40 @@ protected:
 
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
 	TObjectPtr<class UWidgetAnimation> SettingWindowDisappearAnim;
+
+	// Text
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UTextBlock> WidgetTitleText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UTextBlock> VideoSettingsText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UTextBlock> ResolutionText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UTextBlock> DisplayModeText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UTextBlock> SoundSettingsText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UTextBlock> MasterVolumeText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UTextBlock> MusicVolumeText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UTextBlock> SFXVolumeText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UTextBlock> ControlSettingsText;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UTextBlock> MouseSensitivityLabelText;
+
+	TMap<FName, UTextBlock*> UIStringMap;
 
 private:
 
@@ -104,6 +140,9 @@ private:
 	void OnMouseSensitivityTextCommitted(const FText& ValueText, ETextCommit::Type CommitMethod);
 
 	void ApplyMouseSensitivity();
+
+	void MappingTextBoxString();
+	void InitializeUIStrings();
 
 	FWidgetAnimationDynamicEvent EndDelegate;
 	
