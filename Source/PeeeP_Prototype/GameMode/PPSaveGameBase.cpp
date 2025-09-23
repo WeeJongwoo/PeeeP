@@ -10,7 +10,7 @@ void UPPSaveGameBase::InitializeSaveGameBase(const FString& inSlotName, int32 in
 	UserIndex = inUserIndex;
 }
 
-void UPPSaveGameBase::SaveDate()
+void UPPSaveGameBase::SaveData()
 {
 	UGameplayStatics::SaveGameToSlot(this, SlotName, UserIndex);
 }

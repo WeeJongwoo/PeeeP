@@ -11,7 +11,7 @@ void UPPSaveGameSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	// 테스트
 	// 슬롯 이름 프리픽스 등록
-	SlotNamePrefixMap.Add(UPPSaveGameBase::StaticClass(), TEXT("TestSave"));
+	SlotNamePrefixMap.Add(UPPSaveGame::StaticClass(), TEXT("UPPSaveGame"));
 }
 
 UPPSaveGameSubsystem* UPPSaveGameSubsystem::GetSaveGameSubsystem(UObject* inObj)

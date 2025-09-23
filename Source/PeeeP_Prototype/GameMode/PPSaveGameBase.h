@@ -19,7 +19,7 @@ public:
 	void InitializeSaveGameBase(const FString& inSlotName, int32 inUserIndex);
 
 	// Save
-	void SaveDate();
+	void SaveData();
 
 protected:
 	// 식별 정보

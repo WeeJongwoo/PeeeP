@@ -6,6 +6,7 @@
 #include "Component/PPElectricDischargeComponent.h"
 #include "GameMode/PPPlayerState.h"
 #include "Components/AudioComponent.h"
+#include "GameMode/PPSaveGame.h"
 
 
 // Sets default values
@@ -100,6 +101,12 @@ void APPElectricCharageStation::SaveGame(APPCharacterPlayer* InPlayer)
 		if (nullptr != ActiveMaterial)
 		{
 			TriggerFloorMesh->SetMaterial(1, ActiveMaterial);
+		}
+		if (UPPSaveGame* SaveData = UPPSaveGame::LoadSaveData(this, TEXT("0"), 0))
+		{
+			SaveData->TestValue = TEXT("ElectricCharageStation Save");
+			SaveData->SaveData();
+			UE_LOG(LogTemp, Log, TEXT("SaveGame Success"));
 		}
 	}
 	bIsActivate = true;
