@@ -235,4 +235,14 @@ public:
 
 public:
 	virtual void TakeDamage(float Amount, bool bPlayAnim);
+
+private:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> GuideToggleAction;
+
+	void ToggleGuide(const FInputActionValue& Value);
+
+	bool bIsGuideOn = false;
+
 };
