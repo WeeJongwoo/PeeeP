@@ -7,6 +7,7 @@
 #include "GameMode/PPPlayerState.h"
 #include "Components/AudioComponent.h"
 #include "GameMode/PPSaveGame.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -102,13 +103,44 @@ void APPElectricCharageStation::SaveGame(APPCharacterPlayer* InPlayer)
 		{
 			TriggerFloorMesh->SetMaterial(1, ActiveMaterial);
 		}
+
+		// Data Save Section
 		if (UPPSaveGame* SaveData = UPPSaveGame::LoadSaveData(this, TEXT("0"), 0))
 		{
-			SaveData->TestValue = TEXT("ElectricCharageStation Save");
-			SaveData->SaveData();
-			UE_LOG(LogTemp, Log, TEXT("SaveGame Success"));
+			bool SaveResult = false;
+			SaveResult =  SetSaveData(SaveData, InPlayer);
+			if (SaveResult)
+			{
+				SaveData->SaveData();
+				UE_LOG(LogTemp, Log, TEXT("Set Save Data Success"));
+				UE_LOG(LogTemp, Log, TEXT("SaveGame Success"));
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Set Save Data Fail"));
+			}
 		}
 	}
 	bIsActivate = true;
+}
+
+bool APPElectricCharageStation::SetSaveData(UPPSaveGame* SaveData, APPCharacterPlayer* InPlayer)
+{
+	if (SaveData == nullptr || InPlayer == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SaveData or InPlayer is null"));
+		return false;
+	}
+
+	// TestValue String
+	SaveData->TestValue = TEXT("ElectricCharageStation Save");
+	// Player Location
+	SaveData->PlayerLocation = InPlayer->GetActorLocation();
+	// Player Rotation
+	SaveData->PlayerRotation = InPlayer->GetActorRotation();
+	// Level Name
+	SaveData->LevelName = UGameplayStatics::GetCurrentLevelName(this, true);
+
+	return true;
 }
 

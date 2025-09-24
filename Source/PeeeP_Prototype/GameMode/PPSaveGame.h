@@ -22,4 +22,14 @@ public:
 	// Test
 	UPROPERTY()
 	FString TestValue;
+
+	// Player Location
+	UPROPERTY()
+	FVector PlayerLocation;
+	// Player Rotation
+	UPROPERTY()
+	FRotator PlayerRotation;
+	// Level Name
+	UPROPERTY()
+	FString LevelName;
 };

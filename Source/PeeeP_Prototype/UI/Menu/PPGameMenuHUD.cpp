@@ -102,6 +102,31 @@ void UPPGameMenuHUD::LoadButtonClick()
 	if (UPPSaveGame* SaveData = UPPSaveGame::LoadSaveData(this, TEXT("0"), 0))
 	{
 		UE_LOG(LogTemp, Log, TEXT("Loaded TestValue: %s"), *SaveData->TestValue);
+		UE_LOG(LogTemp, Log, TEXT("Loaded PlayerLocation: %s"), *SaveData->PlayerLocation.ToString());
+		UE_LOG(LogTemp, Log, TEXT("Loaded PlayerRotation: %s"), *SaveData->PlayerRotation.ToString());
+		UE_LOG(LogTemp, Log, TEXT("Loaded LevelName: %s"), *SaveData->LevelName);
+
+		// 저장된 데이터를 바탕으로 인게임으로 넘어가는 부분
+		UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		if (GameInstance)
+		{
+			//GameInstance->SetLoadPlayerLocation(SaveData->PlayerLocation);
+			//GameInstance->SetLoadPlayerRotation(SaveData->PlayerRotation);
+			UPPLevelLoadGIS* LevelLoadGIS = GameInstance->GetSubsystem<UPPLevelLoadGIS>();
+			if (LevelLoadGIS)
+			{
+				// 저장된 레벨로 이동
+				TSoftObjectPtr<UWorld> LoadLevel = TSoftObjectPtr<UWorld>(FSoftObjectPath(FString::Printf(TEXT("/Game/PeeeP_Level/%s.%s"), *SaveData->LevelName, *SaveData->LevelName)));
+				if(!LoadLevel.IsNull())
+				{
+					LevelLoadGIS->LoadLevel(LoadLevel);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Failed to create LoadLevel from SaveData LevelName"));
+				}
+			}
+		}
 	}
 	else
 	{
