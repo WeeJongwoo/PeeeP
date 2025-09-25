@@ -30,6 +30,8 @@
 #include "UI/PPChargingLevelHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameMode/PPGameInstance.h"
+#include "GameMode/PPSaveGameSubsystem.h"
+#include "GameMode/PPSaveGame.h"
 
 APPCharacterPlayer::APPCharacterPlayer()
 {
@@ -251,6 +253,9 @@ void APPCharacterPlayer::BeginPlay()
 	DeadEventDelegate.BindUObject(this, &APPCharacterPlayer::OnDeath);
 
 	InitInputSettings();
+
+	// 저장된 데이터 로드
+	LoadSaveData();
 
 }
 
@@ -699,6 +704,20 @@ void APPCharacterPlayer::TakeDamage(float Amount)
 	}
 	ElectricDischargeComponent->AddCurrentCapacity(-Amount);
 	
+}
+
+bool APPCharacterPlayer::LoadSaveData()
+{
+	if (UPPSaveGameSubsystem* SaveGameSubsystem = GetGameInstance()->GetSubsystem<UPPSaveGameSubsystem>())
+	{
+		if (UPPSaveGame* Loaded = Cast<UPPSaveGame>(SaveGameSubsystem->LastLoadedSaveData))
+		{
+			SetActorLocation(Loaded->PlayerLocation);
+			SetActorRotation(Loaded->PlayerRotation);
+		}
+	}
+
+	return true;
 }
 
 void APPCharacterPlayer::SetElectricCapacity(float Amount)

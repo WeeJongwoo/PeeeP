@@ -241,4 +241,8 @@ public:
 
 public:
 	virtual void TakeDamage(float Amount);
+
+private:
+	// Load Save Data
+	bool LoadSaveData();
 };

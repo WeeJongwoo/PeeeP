@@ -24,7 +24,9 @@ public:
 	{
 		if (UPPSaveGameSubsystem* Subsytem = GetSaveGameSubsystem(inObj))
 		{
-			return Cast<T>(Subsytem->LoadDataLogic(T::StaticClass(), inUniqueID, inUserIndex));
+			T* Loaded = Cast<T>(Subsytem->LoadDataLogic(T::StaticClass(), inUniqueID, inUserIndex));
+			Subsytem->LastLoadedSaveData = Loaded; // Cache Last Loaded Data
+			return Loaded;
 		}
 		return nullptr;
 	}
@@ -40,4 +42,7 @@ public:
 	// Prefix Map
 	UPROPERTY()
 	TMap<UClass*, FString> SlotNamePrefixMap;
+
+	UPROPERTY()
+	TObjectPtr<UPPSaveGameBase> LastLoadedSaveData = nullptr;
 };
