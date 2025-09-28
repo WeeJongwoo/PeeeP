@@ -8,6 +8,7 @@
 #include "Components/AudioComponent.h"
 #include "GameMode/PPSaveGame.h"
 #include "Kismet/GameplayStatics.h"
+#include "Inventory/PPInventoryComponent.h"
 
 
 // Sets default values
@@ -140,6 +141,9 @@ bool APPElectricCharageStation::SetSaveData(UPPSaveGame* SaveData, APPCharacterP
 	SaveData->PlayerRotation = InPlayer->GetActorRotation();
 	// Level Name
 	SaveData->LevelName = UGameplayStatics::GetCurrentLevelName(this, true);
+	// Inventory Parts
+	SaveData->InventoryPartsArray = InPlayer->GetInventoryComponent()->GetSaveMap();
+	SaveData->CurrentSlotIndex = InPlayer->GetInventoryComponent()->GetCurrentSlotIndex();
 
 	return true;
 }

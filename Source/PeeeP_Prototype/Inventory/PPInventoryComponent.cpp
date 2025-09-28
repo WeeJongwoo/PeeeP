@@ -294,6 +294,7 @@ void UPPInventoryComponent::InitInventory()
 	if (GameInstance)
 	{
 		// 인벤토리 파츠 배열을 불러온다.
+		// 맵 이동시를 고려하여 게임 인스턴스에 저장 후 인벤토리 초기화 시 불러오는 방식으로 구현
 		InventoryPartsArray = GameInstance->GetInventoryPartsArray();
 	}
 
@@ -383,7 +384,8 @@ void UPPInventoryComponent::SaveInventoryToGameInstance()
 		return;
 	}
 
-	TMap<int32, TPair<FName, int32>> SaveMap;
+	//TMap<int32, TPair<FName, int32>> SaveMap;
+	SaveMap.Empty();
 	for (int32 i = 0; i < PartsItems.Num(); i++)
 	{
 		if (PartsItems[i] && PartsItems[i]->PartsData)
@@ -394,6 +396,29 @@ void UPPInventoryComponent::SaveInventoryToGameInstance()
 
 	GameInstance->SetInventoryPartsArray(SaveMap);
 	GameInstance->SetCurrentSlotIndex(CurrentSlotIndex);
+}
+
+void UPPInventoryComponent::SetSaveMap(TMap<int32, TPair<FName, int32>> InSaveMap)
+{
+	SaveMap = InSaveMap;
+}
+
+TMap<int32, TPair<FName, int32>> UPPInventoryComponent::GetSaveMap()
+{
+	SaveMap.Empty();
+	for (int32 i = 0; i < PartsItems.Num(); i++)
+	{
+		if (PartsItems[i] && PartsItems[i]->PartsData)
+		{
+			SaveMap.Add(i, TPair<FName, int32>(PartsItems[i]->PartsData->GetPrimaryAssetId().PrimaryAssetName, PartsItems[i]->ItemQuantity));
+		}
+	}
+	return SaveMap;
+}
+
+int32 UPPInventoryComponent::GetCurrentSlotIndex()
+{
+	return CurrentSlotIndex;
 }
 
 void UPPInventoryComponent::SetQuickSlotWidget(UPPQuickSlotWidget* widget)

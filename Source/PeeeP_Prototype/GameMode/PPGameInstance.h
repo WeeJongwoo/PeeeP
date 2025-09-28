@@ -26,6 +26,7 @@ protected:
 
 public:
 	void SetInventoryPartsArray(TMap<int32, TPair<FName, int32>> NewInventoryPartsArray);
+	// 인벤토리 불러오기
 	FORCEINLINE TMap<int32, TPair<FName, int32>> GetInventoryPartsArray() { return InventoryPartsArray; }
 
 	void SetCurrentSlotIndex(int32 NewCurrentSlotIndex);

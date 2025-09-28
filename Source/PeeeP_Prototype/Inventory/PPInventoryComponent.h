@@ -84,6 +84,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
+	// 저장 등에 의해 옮겨질 아이템 정보 임시 저장용 맵
+	TMap<int32, TPair<FName, int32>> SaveMap;
 	// 현재 선택된 슬롯 인덱스
 	UPROPERTY(VisibleAnywhere, Category = "Inventory")
 	int32 CurrentSlotIndex;
@@ -94,6 +96,13 @@ public:
 	void ModifyCurrentSlotIndex(int32 Value);
 
 	void SaveInventoryToGameInstance();
+
+	// SaveMap Setter
+	void SetSaveMap(TMap<int32, TPair<FName, int32>> InSaveMap);
+	// SaveMap Getter
+	TMap<int32, TPair<FName, int32>> GetSaveMap();
+	// CurrentSlotIndex Getter
+	int32 GetCurrentSlotIndex();
 
 private:
 	// 퀵슬롯 위젯

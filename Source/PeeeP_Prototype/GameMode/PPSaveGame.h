@@ -32,4 +32,8 @@ public:
 	// Level Name
 	UPROPERTY()
 	FString LevelName;
+
+	// Inventory Parts
+	TMap<int32, TPair<FName, int32>> InventoryPartsArray;
+	int32 CurrentSlotIndex;
 };

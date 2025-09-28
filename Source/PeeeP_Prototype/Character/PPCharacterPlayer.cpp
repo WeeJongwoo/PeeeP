@@ -714,7 +714,18 @@ bool APPCharacterPlayer::LoadSaveData()
 		{
 			SetActorLocation(Loaded->PlayerLocation);
 			SetActorRotation(Loaded->PlayerRotation);
+
+			if (InventoryComponent)
+			{
+				// 게임 인스턴스를 불러와 게임 인스턴스의 인벤토리 변수에 접근하여 저장한 데이터를 게임 인스턴스의 인벤토리 변수에 넣는다.
+				if(UPPGameInstance* GameInstance = Cast<UPPGameInstance>(GetGameInstance()))
+				{
+					GameInstance->SetInventoryPartsArray(Loaded->InventoryPartsArray);
+					GameInstance->SetCurrentSlotIndex(Loaded->CurrentSlotIndex);
+				}
+			}
 		}
+		
 	}
 
 	return true;
