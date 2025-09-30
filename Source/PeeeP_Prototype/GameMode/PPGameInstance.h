@@ -21,6 +21,8 @@ protected:
 	TMap<int32, TPair<FName, int32>> InventoryPartsArray;
 	int32 CurrentSlotIndex;
 
+	float CurrentElectricCapacity;
+
 	UPROPERTY()
 	TObjectPtr<class USoundMix> MasterSoundMix;
 
@@ -33,6 +35,9 @@ public:
 	FORCEINLINE int32 GetCurrentSlotIndex() { return CurrentSlotIndex; }
 
 	void ClearInventoryPartsArray();
+
+	void SetCurrentElectricCapacity(float NewCurrentElectricCapacity);
+	FORCEINLINE float GetCurrentElectricCapacity() { return CurrentElectricCapacity; }
 
 	// Audio
 	float MasterVolume;
@@ -47,6 +52,8 @@ public:
 	void ApplySavedControlSettings();
 
 	UDataTable* GetUIStringTable();
+
+	int8 bWasLoadedFromSave : 1;
 
 private:
 	class UDataTable* UIStringTable;

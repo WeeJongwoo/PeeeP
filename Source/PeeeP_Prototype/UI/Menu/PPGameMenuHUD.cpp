@@ -108,7 +108,6 @@ void UPPGameMenuHUD::LoadButtonClick()
 	// 세이브 기능을 이용하여 로드(테스트)
 	if (UPPSaveGame* SaveData = UPPSaveGame::LoadSaveData(this, TEXT("0"), 0))
 	{
-
 		UE_LOG(LogTemp, Log, TEXT("Loaded TestValue: %s"), *SaveData->TestValue);
 		UE_LOG(LogTemp, Log, TEXT("Loaded PlayerLocation: %s"), *SaveData->PlayerLocation.ToString());
 		UE_LOG(LogTemp, Log, TEXT("Loaded PlayerRotation: %s"), *SaveData->PlayerRotation.ToString());
@@ -118,6 +117,7 @@ void UPPGameMenuHUD::LoadButtonClick()
 		UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 		if (GameInstance)
 		{
+			GameInstance->bWasLoadedFromSave = true;
 			//GameInstance->SetLoadPlayerLocation(SaveData->PlayerLocation);
 			//GameInstance->SetLoadPlayerRotation(SaveData->PlayerRotation);
 			UPPLevelLoadGIS* LevelLoadGIS = GameInstance->GetSubsystem<UPPLevelLoadGIS>();

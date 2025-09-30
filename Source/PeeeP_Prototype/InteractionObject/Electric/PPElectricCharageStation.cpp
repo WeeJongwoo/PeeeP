@@ -9,6 +9,7 @@
 #include "GameMode/PPSaveGame.h"
 #include "Kismet/GameplayStatics.h"
 #include "Inventory/PPInventoryComponent.h"
+#include "Component/PPElectricDischargeComponent.h"
 
 
 // Sets default values
@@ -144,6 +145,8 @@ bool APPElectricCharageStation::SetSaveData(UPPSaveGame* SaveData, APPCharacterP
 	// Inventory Parts
 	SaveData->InventoryPartsArray = InPlayer->GetInventoryComponent()->GetSaveMap();
 	SaveData->CurrentSlotIndex = InPlayer->GetInventoryComponent()->GetCurrentSlotIndex();
+	// Battery
+	SaveData->PlayerElectricCapacity = InPlayer->GetElectricDischargeComponent()->GetCurrentCapacity();
 
 	return true;
 }

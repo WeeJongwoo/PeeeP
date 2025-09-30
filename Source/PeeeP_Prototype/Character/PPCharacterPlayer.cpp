@@ -176,8 +176,6 @@ APPCharacterPlayer::APPCharacterPlayer()
 		ElectricChargingLevelWidgetComponent->SetDrawSize(FVector2D{ 256.0f, 128.0f });
 		ElectricChargingLevelWidgetComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
-
-
 }
 
 void APPCharacterPlayer::OnDeath(uint8 bIsDead)
@@ -255,8 +253,14 @@ void APPCharacterPlayer::BeginPlay()
 	InitInputSettings();
 
 	// 저장된 데이터 로드
-	LoadSaveData();
-
+	if (UPPGameInstance* GameInstance = Cast<UPPGameInstance>(GetGameInstance()))
+	{
+		if (GameInstance->bWasLoadedFromSave)
+		{
+			LoadSaveData();
+			GameInstance->bWasLoadedFromSave = false;
+		}
+	}
 }
 
 void APPCharacterPlayer::Tick(float DeltaTime)
@@ -508,7 +512,6 @@ UCameraComponent* APPCharacterPlayer::GetCamera()
 	return FollowCamera;
 }
 
-
 void APPCharacterPlayer::SwitchParts(UPPPartsDataBase* InPartsData)
 {
 	RemoveParts();
@@ -562,7 +565,6 @@ void APPCharacterPlayer::PlayAnimation(UAnimMontage* InAnimMontage)
 	}
 }
 
-//그랩 ?��?��메이?�� ?��?�� ?��, Notify�? ?��?�� ?��출됨. 그랩?�� ?��??? ?��브젝?���? ?��?���? 체크. 
 void APPCharacterPlayer::GrabHitCheck()
 {
 	UPPGrabParts* GrabParts = Cast<UPPGrabParts>(Parts);
@@ -570,8 +572,6 @@ void APPCharacterPlayer::GrabHitCheck()
 
 	GrabParts->Grab();
 }
-
-
 
 void APPCharacterPlayer::ReduationMaxWalkSpeedRatio(float InReductionRatio)
 {
@@ -706,6 +706,37 @@ void APPCharacterPlayer::TakeDamage(float Amount)
 	
 }
 
+bool APPCharacterPlayer::SaveDataToGameInstance()
+{
+	if (UPPGameInstance* GameInstance = Cast<UPPGameInstance>(GetGameInstance()))
+	{
+		if (InventoryComponent)
+		{
+			GameInstance->SetInventoryPartsArray(InventoryComponent->GetSaveMap());
+			GameInstance->SetCurrentSlotIndex(InventoryComponent->GetCurrentSlotIndex());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("InventoryComponent is null. Save to Instance failed."));
+		}
+
+		if (ElectricDischargeComponent)
+		{
+			GameInstance->SetCurrentElectricCapacity(ElectricDischargeComponent->GetCurrentCapacity());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ElectricDischargeComponent is null. Save to Instance failed."));
+		}
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
+}
+
 bool APPCharacterPlayer::LoadSaveData()
 {
 	if (UPPSaveGameSubsystem* SaveGameSubsystem = GetGameInstance()->GetSubsystem<UPPSaveGameSubsystem>())
@@ -715,13 +746,18 @@ bool APPCharacterPlayer::LoadSaveData()
 			SetActorLocation(Loaded->PlayerLocation);
 			SetActorRotation(Loaded->PlayerRotation);
 
-			if (InventoryComponent)
+			// 게임 인스턴스를 불러와 게임 인스턴스의 인벤토리 변수에 접근하여 저장한 데이터를 게임 인스턴스의 인벤토리 변수에 넣는다.
+			if (UPPGameInstance* GameInstance = Cast<UPPGameInstance>(GetGameInstance()))
 			{
-				// 게임 인스턴스를 불러와 게임 인스턴스의 인벤토리 변수에 접근하여 저장한 데이터를 게임 인스턴스의 인벤토리 변수에 넣는다.
-				if(UPPGameInstance* GameInstance = Cast<UPPGameInstance>(GetGameInstance()))
+				if (InventoryComponent)
 				{
 					GameInstance->SetInventoryPartsArray(Loaded->InventoryPartsArray);
 					GameInstance->SetCurrentSlotIndex(Loaded->CurrentSlotIndex);
+				}
+
+				if (ElectricDischargeComponent)
+				{
+					GameInstance->SetCurrentElectricCapacity(Loaded->PlayerElectricCapacity);
 				}
 			}
 		}

@@ -31,6 +31,14 @@ UPPGameInstance::UPPGameInstance()
 
 	// Default
 	MouseSensitivity = 15.0f;
+
+	// Default
+	CurrentSlotIndex = 0;
+
+	// Default
+	CurrentElectricCapacity = 0.1f;
+
+	bWasLoadedFromSave = false;
 }
 
 void UPPGameInstance::SetInventoryPartsArray(TMap<int32, TPair<FName, int32>> NewInventoryPartsArray)
@@ -47,6 +55,11 @@ void UPPGameInstance::ClearInventoryPartsArray()
 {
 	InventoryPartsArray.Empty();
 	CurrentSlotIndex = 0;
+}
+
+void UPPGameInstance::SetCurrentElectricCapacity(float NewCurrentElectricCapacity)
+{
+	CurrentElectricCapacity = NewCurrentElectricCapacity;
 }
 
 void UPPGameInstance::ApplySavedAudioSettings()

@@ -101,6 +101,7 @@ public:
 	// ������Ʈ(�÷��̾�) ���� ���� �Լ�
 	void AddCurrentCapacity(float amount);
 	void SetCurrentCapacity(float Amount);
+	float GetCurrentCapacity() const;
 	void Reset();
 
 	void CancelCharging();

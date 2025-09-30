@@ -15,6 +15,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/AudioComponent.h"
 #include "UI/PPChargingLevelHUD.h"
+#include "GameMode/PPGameInstance.h"
 
 // Sets default values for this component's properties
 UPPElectricDischargeComponent::UPPElectricDischargeComponent()
@@ -60,8 +61,18 @@ void UPPElectricDischargeComponent::BeginPlay()
 	{
 		DischargeEffectComponent = OwnerCharacter->GetElectricNiagaraComponent();
 		SetChargingEnable();
+
+		if (UPPGameInstance* GameInstance = Cast<UPPGameInstance>(GetWorld()->GetGameInstance()))
+		{
+			CurrentElectricCapacity = GameInstance->GetCurrentElectricCapacity();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("GameInstance is not valid in PPElectricDischargeComponent::BeginPlay()"));
+		}
 	}
 
+	// 마지막으로 UI에 브로드캐스트
 	BroadCastToUI();
 }
 
@@ -413,6 +424,11 @@ void UPPElectricDischargeComponent::SetCurrentCapacity(float Amount)
 {
 	CurrentElectricCapacity = Amount;
 	BroadCastToUI();
+}
+
+float UPPElectricDischargeComponent::GetCurrentCapacity() const
+{
+	return CurrentElectricCapacity;
 }
 
 void UPPElectricDischargeComponent::BroadCastToUI()
