@@ -59,6 +59,8 @@ public:
 	FORCEINLINE TArray<TObjectPtr<class UPPInventoryPartsItem>> GetConsumableItems() { return ConsumableItems; }
 	FORCEINLINE TArray<TObjectPtr<class UPPInventoryPartsItem>> GetOtherItems() { return OtherItems; }
 
+	// 아이템 추가 시도
+	bool TryAddItem(FName InItemName, int32 InItemQuantity, int32& OutItemQuantity);
 	// 아이템 추가
 	bool AddItem(FName InItemName, int32 InItemQuantity, int32& OutItemQuantity);
 	// 아이템 사용
@@ -67,7 +69,8 @@ public:
 	void UseItemCurrentIndex(ESlotType InventoryType);
 	// 아이템 교체
 	void SwapItem(int32 InprevIndex, int32 InCurrentIndex);
-
+	// 아이템 중복 여부
+	bool HasItem(FName InItemName);
 
 	// 인벤토리 정렬
 	void SortItem();

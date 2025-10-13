@@ -51,17 +51,28 @@ void APPPartsItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 	{
 		if (APPCharacterPlayer* player = Cast<APPCharacterPlayer>(OtherActor))
 		{
+
 			UE_LOG(LogTemp, Log, TEXT("Player Overlap Begin"));
 			InventoryComponent = player->GetInventoryComponent();
 			int32 TempOutItemQuntity = 0;
-			InventoryComponent->AddItem(PartsData.GetFName(), 1, TempOutItemQuntity);
+
+			// Check If Player already has the parts
+			// If Player already has the parts, do not add it again
+			InventoryComponent->TryAddItem(PartsData.GetFName(), 1, TempOutItemQuntity);
+
+			//InventoryComponent->AddItem(PartsData.GetFName(), 1, TempOutItemQuntity);
 			InventoryComponent->SaveInventoryToGameInstance();
 
+			// Play Earn Sound
 			if (nullptr != EarnSound)
 			{
 				UGameplayStatics::PlaySound2D(GetWorld(), EarnSound, 0.75f);
 			}
 
+			
+
+
+			// Display Parts Info UI
 			APPPlayerController* PlayerController = Cast<APPPlayerController>(player->GetController());
 			if (PlayerController)
 			{

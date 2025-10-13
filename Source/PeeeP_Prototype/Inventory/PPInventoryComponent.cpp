@@ -54,6 +54,22 @@ void UPPInventoryComponent::BeginPlay()
 	
 }
 
+bool UPPInventoryComponent::TryAddItem(FName InItemName, int32 InItemQuantity, int32& OutItemQuantity)
+{
+	// If the item already exists, do not add it again
+	if(HasItem(InItemName))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Already Have Item"));
+		return false;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Can Add Item"));
+		AddItem(InItemName, InItemQuantity, OutItemQuantity);
+		return true;
+	}
+}
+
 bool UPPInventoryComponent::AddItem(FName InItemName, int32 InItemQuantity, int32& OutItemQuantity)
 {
 
@@ -271,6 +287,20 @@ void UPPInventoryComponent::RemoveItem(int32 InSlotIndex, ESlotType InventoryTyp
 void UPPInventoryComponent::SwapItem(int32 InprevIndex, int32 InCurrentIndex)
 {
 	// 추후 인벤토리 내에서 교체 기능이 있을 때 구현 예정
+}
+
+bool UPPInventoryComponent::HasItem(FName InItemName)
+{
+	// Check If Item Exists in PartsItems
+	for (const UPPInventoryPartsItem* Item : PartsItems)
+	{
+		if (IsValid(Item) && Item->PartsData && Item->PartsData->GetPrimaryAssetId().PrimaryAssetName == InItemName)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void UPPInventoryComponent::SortItem()
