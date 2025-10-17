@@ -59,6 +59,8 @@ public:
 	FORCEINLINE TArray<TObjectPtr<class UPPInventoryPartsItem>> GetConsumableItems() { return ConsumableItems; }
 	FORCEINLINE TArray<TObjectPtr<class UPPInventoryPartsItem>> GetOtherItems() { return OtherItems; }
 
+	// 아이템 추가 시도
+	bool TryAddItem(FName InItemName, int32 InItemQuantity, int32& OutItemQuantity);
 	// 아이템 추가
 	bool AddItem(FName InItemName, int32 InItemQuantity, int32& OutItemQuantity);
 	// 아이템 사용
@@ -67,7 +69,8 @@ public:
 	void UseItemCurrentIndex(ESlotType InventoryType);
 	// 아이템 교체
 	void SwapItem(int32 InprevIndex, int32 InCurrentIndex);
-
+	// 아이템 중복 여부
+	bool HasItem(FName InItemName);
 
 	// 인벤토리 정렬
 	void SortItem();
@@ -84,6 +87,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 protected:
+	// 저장 등에 의해 옮겨질 아이템 정보 임시 저장용 맵
+	TMap<int32, TPair<FName, int32>> SaveMap;
 	// 현재 선택된 슬롯 인덱스
 	UPROPERTY(VisibleAnywhere, Category = "Inventory")
 	int32 CurrentSlotIndex;
@@ -94,6 +99,13 @@ public:
 	void ModifyCurrentSlotIndex(int32 Value);
 
 	void SaveInventoryToGameInstance();
+
+	// SaveMap Setter
+	void SetSaveMap(TMap<int32, TPair<FName, int32>> InSaveMap);
+	// SaveMap Getter
+	TMap<int32, TPair<FName, int32>> GetSaveMap();
+	// CurrentSlotIndex Getter
+	int32 GetCurrentSlotIndex();
 
 private:
 	// 퀵슬롯 위젯

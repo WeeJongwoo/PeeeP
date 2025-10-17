@@ -30,6 +30,8 @@
 #include "UI/PPChargingLevelHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameMode/PPGameInstance.h"
+#include "GameMode/PPSaveGameSubsystem.h"
+#include "GameMode/PPSaveGame.h"
 
 APPCharacterPlayer::APPCharacterPlayer()
 {
@@ -174,8 +176,6 @@ APPCharacterPlayer::APPCharacterPlayer()
 		ElectricChargingLevelWidgetComponent->SetDrawSize(FVector2D{ 256.0f, 128.0f });
 		ElectricChargingLevelWidgetComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
-
-
 }
 
 void APPCharacterPlayer::OnDeath(uint8 bIsDead)
@@ -250,12 +250,17 @@ void APPCharacterPlayer::BeginPlay()
 
 	DeadEventDelegate.BindUObject(this, &APPCharacterPlayer::OnDeath);
 
-	//Test_EquipGrabParts();
+	InitInputSettings();
 
-	//// Parts ?��?���? ?��?��?��?��?�� �??��?��
-	//// ?��?�� �?분�?? ?��중에 ?��벤토리에?�� ?��?��?�� ?��?��?��?�� ?���? �?경하?�� ?��?�� ?���? 만들?��?�� ?��?��?���? ?�� ?��
-	//UActorComponent* PartsComponent = AddComponentByClass(UPPGrabParts::StaticClass(), true, FTransform::Identity, false);
-	//Parts = CastChecked<UPPPartsBase>(PartsComponent);
+	// 저장된 데이터 로드
+	if (UPPGameInstance* GameInstance = Cast<UPPGameInstance>(GetGameInstance()))
+	{
+		if (GameInstance->bWasLoadedFromSave)
+		{
+			LoadSaveData();
+			GameInstance->bWasLoadedFromSave = false;
+		}
+	}
 }
 
 void APPCharacterPlayer::Tick(float DeltaTime)
@@ -374,6 +379,16 @@ void APPCharacterPlayer::Look(const FInputActionValue& Value)
 {
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
+	// Set Custom Mouse Sensitivity Coefficient.
+	// Because Unreal Default Mouse Sensitivity is too high.
+	float MouseSensitivityCoefficient = 0.05f;
+
+	// Multiply MouseSensivity
+	float ManipulatedMouseSensitivity = MouseSensitivity * MouseSensitivityCoefficient;
+
+	// Apply Mouse Sensitivity to LookAxisVector
+	LookAxisVector *= ManipulatedMouseSensitivity;
+
 	AddControllerYawInput(LookAxisVector.X);
 	AddControllerPitchInput(LookAxisVector.Y);
 }
@@ -446,6 +461,15 @@ void APPCharacterPlayer::SetFOVBySpeed(float DeltaTime)
 	FollowCamera->SetFieldOfView(NewFOV);
 }
 
+void APPCharacterPlayer::InitInputSettings()
+{
+	UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		MouseSensitivity = GameInstance->MouseSensitivity;
+	}
+}
+
 void APPCharacterPlayer::SetMaxWalkSpeed(float InMaxWalkSpeed)
 {
 	MaxWalkSpeed = InMaxWalkSpeed;
@@ -462,6 +486,12 @@ void APPCharacterPlayer::SetMaxWalkSpeed(float InMaxWalkSpeed)
 void APPCharacterPlayer::SetRunning(bool InIsRunning)
 {
 	bIsRunning = InIsRunning;
+}
+
+void APPCharacterPlayer::SetMouseSensitivity(float NewMouseSensitivity)
+{
+	MouseSensitivity = NewMouseSensitivity;
+	UE_LOG(LogTemp, Log, TEXT("Mouse Sensitivity Set: %f"), MouseSensitivity);
 }
 
 void APPCharacterPlayer::SetDefaultMeshAndAnim()
@@ -481,7 +511,6 @@ UCameraComponent* APPCharacterPlayer::GetCamera()
 {
 	return FollowCamera;
 }
-
 
 void APPCharacterPlayer::SwitchParts(UPPPartsDataBase* InPartsData)
 {
@@ -536,7 +565,6 @@ void APPCharacterPlayer::PlayAnimation(UAnimMontage* InAnimMontage)
 	}
 }
 
-//그랩 ?��?��메이?�� ?��?�� ?��, Notify�? ?��?�� ?��출됨. 그랩?�� ?��??? ?��브젝?���? ?��?���? 체크. 
 void APPCharacterPlayer::GrabHitCheck()
 {
 	UPPGrabParts* GrabParts = Cast<UPPGrabParts>(Parts);
@@ -544,8 +572,6 @@ void APPCharacterPlayer::GrabHitCheck()
 
 	GrabParts->Grab();
 }
-
-
 
 void APPCharacterPlayer::ReduationMaxWalkSpeedRatio(float InReductionRatio)
 {
@@ -678,6 +704,67 @@ void APPCharacterPlayer::TakeDamage(float Amount)
 	}
 	ElectricDischargeComponent->AddCurrentCapacity(-Amount);
 	
+}
+
+bool APPCharacterPlayer::SaveDataToGameInstance()
+{
+	if (UPPGameInstance* GameInstance = Cast<UPPGameInstance>(GetGameInstance()))
+	{
+		if (InventoryComponent)
+		{
+			GameInstance->SetInventoryPartsArray(InventoryComponent->GetSaveMap());
+			GameInstance->SetCurrentSlotIndex(InventoryComponent->GetCurrentSlotIndex());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("InventoryComponent is null. Save to Instance failed."));
+		}
+
+		if (ElectricDischargeComponent)
+		{
+			GameInstance->SetCurrentElectricCapacity(ElectricDischargeComponent->GetCurrentCapacity());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ElectricDischargeComponent is null. Save to Instance failed."));
+		}
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool APPCharacterPlayer::LoadSaveData()
+{
+	if (UPPSaveGameSubsystem* SaveGameSubsystem = GetGameInstance()->GetSubsystem<UPPSaveGameSubsystem>())
+	{
+		if (UPPSaveGame* Loaded = Cast<UPPSaveGame>(SaveGameSubsystem->LastLoadedSaveData))
+		{
+			SetActorLocation(Loaded->PlayerLocation);
+			SetActorRotation(Loaded->PlayerRotation);
+
+			// 게임 인스턴스를 불러와 게임 인스턴스의 인벤토리 변수에 접근하여 저장한 데이터를 게임 인스턴스의 인벤토리 변수에 넣는다.
+			if (UPPGameInstance* GameInstance = Cast<UPPGameInstance>(GetGameInstance()))
+			{
+				if (InventoryComponent)
+				{
+					GameInstance->SetInventoryPartsArray(Loaded->InventoryPartsArray);
+					GameInstance->SetCurrentSlotIndex(Loaded->CurrentSlotIndex);
+				}
+
+				if (ElectricDischargeComponent)
+				{
+					GameInstance->SetCurrentElectricCapacity(Loaded->PlayerElectricCapacity);
+				}
+			}
+		}
+		
+	}
+
+	return true;
 }
 
 void APPCharacterPlayer::SetElectricCapacity(float Amount)

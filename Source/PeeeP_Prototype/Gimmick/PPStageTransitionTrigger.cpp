@@ -8,6 +8,7 @@
 #include "Inventory/PPInventoryComponent.h"
 #include "GameMode/PPGameInstance.h"
 #include "GameMode/PPLevelLoadGIS.h"
+#include "Component/PPElectricDischargeComponent.h"
 
 // Sets default values
 APPStageTransitionTrigger::APPStageTransitionTrigger()
@@ -40,18 +41,23 @@ void APPStageTransitionTrigger::OnTriggered(UPrimitiveComponent* OverlappedCompo
 	APPCharacterPlayer* PlayerCharacter = Cast<APPCharacterPlayer>(OtherActor);
 	if (PlayerCharacter)
 	{
-		//UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(this));
-
-		//if (GameInstance)
-		//{
-		//	//TArray<TObjectPtr<class UPPInventoryPartsItem>> PartsItems = PlayerCharacter->GetInventoryComponent()->GetPartsItems();
-		//	//GameInstance->SetPartsItems(PartsItems);
-		//}
+		if (PlayerCharacter->SaveDataToGameInstance())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("SaveDataToGameInstance Success"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("SaveDataToGameInstance Fail"));
+		}
 
 		UPPLevelLoadGIS* LevelLoader = GetWorld()->GetGameInstance()->GetSubsystem<UPPLevelLoadGIS>();
 		if (LevelLoader)
 		{
 			LevelLoader->LoadLevel(NextLevel);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("LevelLoader is nullptr"));
 		}
 
 		//UGameplayStatics::OpenLevel(this, NextLevelName);

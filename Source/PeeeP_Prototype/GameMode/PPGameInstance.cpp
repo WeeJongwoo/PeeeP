@@ -5,6 +5,7 @@
 #include "Sound/SoundClass.h"
 #include "Sound/SoundMix.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/UIStringRow.h"
 
 
 UPPGameInstance::UPPGameInstance()
@@ -16,9 +17,28 @@ UPPGameInstance::UPPGameInstance()
 		MasterSoundMix = MasterSoundMixRef.Object;
 	}
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> UIStringTableRef(TEXT("/Game/Data/UI/UIString.UIString"));
+	if (nullptr != UIStringTableRef.Object)
+	{
+		UIStringTable = UIStringTableRef.Object;
+	}
+
+
+	// Default
 	MasterVolume = 1.0f;
 	MusicVolume = 1.0f;
 	SFXVolume = 1.0f;
+
+	// Default
+	MouseSensitivity = 15.0f;
+
+	// Default
+	CurrentSlotIndex = 0;
+
+	// Default
+	CurrentElectricCapacity = 0.1f;
+
+	bWasLoadedFromSave = false;
 }
 
 void UPPGameInstance::SetInventoryPartsArray(TMap<int32, TPair<FName, int32>> NewInventoryPartsArray)
@@ -37,6 +57,11 @@ void UPPGameInstance::ClearInventoryPartsArray()
 	CurrentSlotIndex = 0;
 }
 
+void UPPGameInstance::SetCurrentElectricCapacity(float NewCurrentElectricCapacity)
+{
+	CurrentElectricCapacity = NewCurrentElectricCapacity;
+}
+
 void UPPGameInstance::ApplySavedAudioSettings()
 {
 	if (MasterSoundMix)
@@ -47,4 +72,14 @@ void UPPGameInstance::ApplySavedAudioSettings()
 
 		UGameplayStatics::PushSoundMixModifier(GetWorld(), MasterSoundMix);
 	}
+}
+
+void UPPGameInstance::ApplySavedControlSettings()
+{
+
+}
+
+UDataTable* UPPGameInstance::GetUIStringTable()
+{
+	return UIStringTable;
 }

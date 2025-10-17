@@ -55,4 +55,6 @@ private:
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	void SaveGame(class APPCharacterPlayer* InPlayer) override;
+
+	bool SetSaveData(class UPPSaveGame* SaveData, class APPCharacterPlayer* InPlayer);
 };

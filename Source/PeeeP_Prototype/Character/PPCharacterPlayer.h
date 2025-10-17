@@ -80,6 +80,8 @@ protected:
 	float DefaultFOV;
 	float MaxRunningFOV;
 
+	float MouseSensitivity;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void ButtonInteraction(const FInputActionValue& Value);
@@ -90,10 +92,14 @@ protected:
 
 	ECharacterControlType CurrentCharacterControlType;
 
+	void InitInputSettings();
+
 public:
 	void SetMaxWalkSpeed(float InMaxWalkSpeed);
 
 	void SetRunning(bool InIsRunning);
+
+	void SetMouseSensitivity(float NewMouseSensitivity);
 
 protected:
 
@@ -235,4 +241,11 @@ public:
 
 public:
 	virtual void TakeDamage(float Amount);
+
+// 인스턴스 및 서브시스템 관련 함수
+public:
+	bool SaveDataToGameInstance();
+private:
+	// Load Save Data
+	bool LoadSaveData();
 };
