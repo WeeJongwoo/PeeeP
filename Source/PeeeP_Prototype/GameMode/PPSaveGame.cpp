@@ -13,7 +13,7 @@ UPPSaveGame* UPPSaveGame::LoadSaveData(UObject* inObj, const FString& inUniqueID
 	// 사용 예시
 	//bool UTestUserWidget::TestSaveLogic()
 	//{
-	//	if (UTestSaveGame* saveData = UTestSaveGame::LoadData(this, TEXT("0"), 0))
+	//	if (UTestSaveGame* saveData = UTestSaveGame::LoadSaveData(this, TEXT("0"), 0))
 	//	{
 	//		saveData->TestValue = TEXT("Test");
 	//		saveData->SaveData();
