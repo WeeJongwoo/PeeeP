@@ -21,11 +21,14 @@ protected:
 	TMap<int32, TPair<FName, int32>> InventoryPartsArray;
 	int32 CurrentSlotIndex;
 
+	float CurrentElectricCapacity;
+
 	UPROPERTY()
 	TObjectPtr<class USoundMix> MasterSoundMix;
 
 public:
 	void SetInventoryPartsArray(TMap<int32, TPair<FName, int32>> NewInventoryPartsArray);
+	// 인벤토리 불러오기
 	FORCEINLINE TMap<int32, TPair<FName, int32>> GetInventoryPartsArray() { return InventoryPartsArray; }
 
 	void SetCurrentSlotIndex(int32 NewCurrentSlotIndex);
@@ -33,9 +36,25 @@ public:
 
 	void ClearInventoryPartsArray();
 
-	void ApplySavedAudioSettings();
+	void SetCurrentElectricCapacity(float NewCurrentElectricCapacity);
+	FORCEINLINE float GetCurrentElectricCapacity() { return CurrentElectricCapacity; }
 
+	// Audio
 	float MasterVolume;
 	float MusicVolume;
 	float SFXVolume;
+
+	void ApplySavedAudioSettings();
+
+	// Control
+	float MouseSensitivity;
+
+	void ApplySavedControlSettings();
+
+	UDataTable* GetUIStringTable();
+
+	int8 bWasLoadedFromSave : 1;
+
+private:
+	class UDataTable* UIStringTable;
 };

@@ -11,6 +11,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/Menu/PPSettingMenu.h"
 #include "GameMode/PPLevelLoadGIS.h"
+#include "GameMode/PPSaveGame.h"
+#include "GameMode/PPSaveGameSubsystem.h"
 
 UPPGameMenuHUD::UPPGameMenuHUD(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -20,6 +22,8 @@ UPPGameMenuHUD::UPPGameMenuHUD(const FObjectInitializer& ObjectInitializer) : Su
 void UPPGameMenuHUD::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	UE_LOG(LogTemp, Log, TEXT("PPGameMenuHUD NativeConstruct"));
 
 	/*StartButton = Cast<UPPMenuButtonWidget>(GetWidgetFromName(TEXT("WBP_StartButton")));
 	LoadButton = Cast<UPPMenuButtonWidget>(GetWidgetFromName(TEXT("WBP_LoadButton")));
@@ -42,6 +46,22 @@ void UPPGameMenuHUD::NativeConstruct()
 		WBP_LoadButton->Button->OnClicked.AddDynamic(this, &UPPGameMenuHUD::LoadButtonClick);
 		WBP_LoadButton->Button->OnHovered.AddDynamic(this, &UPPGameMenuHUD::LoadButtonHover);
 		WBP_LoadButton->Button->OnUnhovered.AddDynamic(this, &UPPGameMenuHUD::LoadButtonHoverEnd);
+		// 세이브 데이터를 저장하는 클래스: UPPSaveGame
+		// 세이브 데이터 인덱스: 0
+		// 따라서 슬롯 이름은 "UPPSaveGame_0"
+		// 슬롯 이름 결정 방식은 UPPSaveGameSubsystem::LoadDataLogic 함수 참고
+		if (UGameplayStatics::DoesSaveGameExist(TEXT("UPPSaveGame_0"), 0))
+		{
+			FLinearColor NewColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			WBP_LoadButton->SetColorAndOpacity(NewColor);
+			UE_LOG(LogTemp, Log, TEXT("SaveData Exists"));
+		}
+		else
+		{
+			FLinearColor NewColor = FLinearColor(1.0f, 1.0f, 1.0f, 0.5f);
+			WBP_LoadButton->SetColorAndOpacity(NewColor);
+			UE_LOG(LogTemp, Log, TEXT("No SaveData"));
+		}
 	}
 
 	if (WBP_SettingButton && WBP_SettingButton->Button)
@@ -78,6 +98,12 @@ void UPPGameMenuHUD::StartButtonClick()
 	{
 		GameInstance->ClearInventoryPartsArray();
 
+		// 새로운 게임을 시작할 때 이전 저장 데이터를 초기화
+		if (UPPSaveGameSubsystem* SaveSubsystem = GameInstance->GetSubsystem<UPPSaveGameSubsystem>())
+		{
+			SaveSubsystem->LastLoadedSaveData = nullptr; 
+		}
+
 		UPPLevelLoadGIS* LevelLoadGIS = GameInstance->GetSubsystem<UPPLevelLoadGIS>();
 		if (LevelLoadGIS)
 		{
@@ -96,6 +122,51 @@ void UPPGameMenuHUD::StartButtonClick()
 void UPPGameMenuHUD::LoadButtonClick()
 {
 	UE_LOG(LogTemp, Log, TEXT("LoadOpen"));
+
+	// 세이브 기능을 이용하여 로드(테스트)
+	if (UGameplayStatics::DoesSaveGameExist(TEXT("UPPSaveGame_0"), 0))
+	{
+		if (UPPSaveGame* SaveData = UPPSaveGame::LoadSaveData(this, TEXT("0"), 0))
+		{
+			UE_LOG(LogTemp, Log, TEXT("Loaded TestValue: %s"), *SaveData->TestValue);
+			UE_LOG(LogTemp, Log, TEXT("Loaded PlayerLocation: %s"), *SaveData->PlayerLocation.ToString());
+			UE_LOG(LogTemp, Log, TEXT("Loaded PlayerRotation: %s"), *SaveData->PlayerRotation.ToString());
+			UE_LOG(LogTemp, Log, TEXT("Loaded LevelName: %s"), *SaveData->LevelName);
+
+			// 저장된 데이터를 바탕으로 인게임으로 넘어가는 부분
+			UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+			if (GameInstance)
+			{
+				GameInstance->bWasLoadedFromSave = true;
+				//GameInstance->SetLoadPlayerLocation(SaveData->PlayerLocation);
+				//GameInstance->SetLoadPlayerRotation(SaveData->PlayerRotation);
+				UPPLevelLoadGIS* LevelLoadGIS = GameInstance->GetSubsystem<UPPLevelLoadGIS>();
+				if (LevelLoadGIS)
+				{
+					// 저장된 레벨로 이동
+					TSoftObjectPtr<UWorld> LoadLevel = TSoftObjectPtr<UWorld>(FSoftObjectPath(FString::Printf(TEXT("/Game/PeeeP_Level/%s.%s"), *SaveData->LevelName, *SaveData->LevelName)));
+					if (!LoadLevel.IsNull())
+					{
+						LevelLoadGIS->LoadLevel(LoadLevel);
+					}
+					else
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Failed to create LoadLevel from SaveData LevelName"));
+					}
+				}
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Failed to load SaveData"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No SaveData to Load"));
+	}
+
+	
 }
 
 void UPPGameMenuHUD::SettingButtonClick()
