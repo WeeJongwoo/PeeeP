@@ -26,7 +26,7 @@ public:
 
 private:
 
-	TSharedPtr<FStreamableHandle> LevelHandle;
+	//TSharedPtr<FStreamableHandle> LevelHandle;
 
 	void OnLoadingUpdate(TSharedRef<FStreamableHandle> Handle);
 
