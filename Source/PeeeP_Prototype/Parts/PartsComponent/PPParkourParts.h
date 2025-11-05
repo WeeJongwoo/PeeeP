@@ -16,8 +16,6 @@ class PEEEP_PROTOTYPE_API UPPParkourParts : public UPPPartsBase
 
 public:
 	UPPParkourParts();
-	
-	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
 
 	virtual void PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData) override;
 

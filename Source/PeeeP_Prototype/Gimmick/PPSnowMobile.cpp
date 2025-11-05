@@ -57,7 +57,7 @@ void APPSnowMobile::OnSnowmobileOverlap(UPrimitiveComponent*, AActor* OtherActor
 {
 	if (APPCharacterPlayer* Player = Cast<APPCharacterPlayer>(OtherActor))
 	{
-		Player->TakeDamage(DamageAmount);
+		Player->TakeDamage(DamageAmount, true);
 		if (ACharacter* Char = Cast<ACharacter>(Player))
 		{
 			Char->LaunchCharacter(LastDirection * KnockbackStrength, true, true);

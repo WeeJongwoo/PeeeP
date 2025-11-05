@@ -240,6 +240,17 @@ public:
 	void PlayDeadSound();
 
 public:
+	virtual void TakeDamage(float Amount, bool bPlayAnim);
+
+private:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> GuideToggleAction;
+
+	void ToggleGuide(const FInputActionValue& Value);
+
+	bool bIsGuideOn = false;
+
 	virtual void TakeDamage(float Amount);
 
 // 인스턴스 및 서브시스템 관련 함수

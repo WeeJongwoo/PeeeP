@@ -30,6 +30,7 @@
 #include "UI/PPChargingLevelHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameMode/PPGameInstance.h"
+#include "Gimmick/Subsystem/PPGuideWorldSubsystem.h"
 #include "GameMode/PPSaveGameSubsystem.h"
 #include "GameMode/PPSaveGame.h"
 
@@ -312,6 +313,9 @@ void APPCharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	EnhancedInputComponent->BindAction(QuickSlotUseAction, ETriggerEvent::Triggered, this, &APPCharacterPlayer::QuickSlotUse);
 
 	EnhancedInputComponent->BindAction(RespawnTestInputAction, ETriggerEvent::Triggered, this, &APPCharacterPlayer::SetElectricCapacity, 0.0f);
+
+	//Guide Toggle
+	EnhancedInputComponent->BindAction(GuideToggleAction, ETriggerEvent::Started, this, &APPCharacterPlayer::ToggleGuide);
 }
 
 void APPCharacterPlayer::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -692,18 +696,35 @@ void APPCharacterPlayer::PlayDeadSound()
 	}
 }
 
-void APPCharacterPlayer::TakeDamage(float Amount)
+void APPCharacterPlayer::TakeDamage(float Amount, bool bPlayAnim)
 {
-	if (IsValid(Parts))
+	if (bPlayAnim)
 	{
-		Parts->PlayHitAnimation();
+		if (IsValid(Parts))
+		{
+			Parts->PlayHitAnimation();
+		}
+		else
+		{
+			GetMesh()->GetAnimInstance()->Montage_Play(HitAnimMontage, 1.0f);
+		}
 	}
-	else
-	{
-		GetMesh()->GetAnimInstance()->Montage_Play(HitAnimMontage, 1.0f);
-	}
-	ElectricDischargeComponent->AddCurrentCapacity(-Amount);
 	
+	ElectricDischargeComponent->AddCurrentCapacity(-Amount);
+}
+
+void APPCharacterPlayer::ToggleGuide(const FInputActionValue& Value)
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		if (UPPGuideWorldSubsystem* GuideSystem = World->GetSubsystem<UPPGuideWorldSubsystem>())
+		{
+			bIsGuideOn = !bIsGuideOn;
+			UE_LOG(LogTemp, Log, TEXT("Toggle Guide %s"), bIsGuideOn ? TEXT("true") : TEXT("false"));
+			GuideSystem->SetGuideActive(bIsGuideOn);
+		}
+	}
 }
 
 bool APPCharacterPlayer::SaveDataToGameInstance()

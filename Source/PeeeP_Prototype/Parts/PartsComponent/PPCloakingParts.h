@@ -18,8 +18,6 @@ public:
 
 	UPPCloakingParts();
 
-	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
-
 	virtual void PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData) override;
 
 private:
@@ -32,6 +30,7 @@ private:
 	void StartCloaking();
 	void StopCloaking();
 	void SetCloakingState();
+	void RestoreCloakingState();
 
 	TObjectPtr<class UMaterialInstance> CloakingMaterial;
 

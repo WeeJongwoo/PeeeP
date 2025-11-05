@@ -30,7 +30,7 @@ void APPPlayerDeadZone::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AAct
 	APPCharacterPlayer* Player = Cast<APPCharacterPlayer>(OtherActor);
 	if (IsValid(Player))
 	{
-		Player->TakeDamage(9999);
+		Player->TakeDamage(9999, false);
 	}
 }
 

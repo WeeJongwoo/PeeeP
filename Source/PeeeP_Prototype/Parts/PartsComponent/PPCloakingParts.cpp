@@ -8,6 +8,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Components/AudioComponent.h"
+#include "Component/PPElectricDischargeComponent.h"
 
 UPPCloakingParts::UPPCloakingParts()
 {
@@ -20,12 +21,6 @@ UPPCloakingParts::UPPCloakingParts()
 	CloakingSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CloakingSoundComponent"));
 
 	bCanCloaking = true;
-}
-
-void UPPCloakingParts::OnComponentDestroyed(bool bDestroyingHierarchy)
-{
-	Super::OnComponentDestroyed(bDestroyingHierarchy);
-
 }
 
 void UPPCloakingParts::PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData)
@@ -79,15 +74,20 @@ void UPPCloakingParts::CleanUpParts()
 {
 	Super::CleanUpParts();
 
-	StopCloaking();
+	RestoreCloakingState();
 
-	if (CloakingCooldownTimerHandle.IsValid())
+	if (UWorld* World = GetWorld())
 	{
-		GetWorld()->GetTimerManager().ClearTimer(CloakingCooldownTimerHandle);
-	}
-	if (CloakingTimerHandle.IsValid())
-	{
-		GetWorld()->GetTimerManager().ClearTimer(CloakingTimerHandle);
+		FTimerManager& TimerManager = World->GetTimerManager();
+
+		if (CloakingCooldownTimerHandle.IsValid())
+		{
+			TimerManager.ClearTimer(CloakingCooldownTimerHandle);
+		}
+		if (CloakingTimerHandle.IsValid())
+		{
+			TimerManager.ClearTimer(CloakingTimerHandle);
+		}
 	}
 
 	if (IsValid(CloakingSoundComponent) && CloakingSoundComponent->IsPlaying())
@@ -98,13 +98,20 @@ void UPPCloakingParts::CleanUpParts()
 
 void UPPCloakingParts::StartCloaking()
 {
-	if (!bCanCloaking)
+	float CurrentCapacity = Owner->GetElectricDischargeComponent()->GetCurrentCapacity();
+
+	if (!bCanCloaking || !(CurrentCapacity > ElectricConsumption))
 	{
 		return;
 	}
 
 	if (IsValid(Owner))
 	{
+		if (ConsumptionType == EConsumptionType::OneShot)
+		{
+			Owner->TakeDamage(ElectricConsumption, false);
+		}
+
 		if (NumMaterials > 0 && IsValid(CloakingMaterial))
 		{
 			for (int32 i = 0; i < NumMaterials; i++)
@@ -118,7 +125,10 @@ void UPPCloakingParts::StartCloaking()
 
 		Owner->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel11, ECR_Ignore);
 
-		GetWorld()->GetTimerManager().SetTimer(CloakingTimerHandle, this, &UPPCloakingParts::StopCloaking, CloakingTime, false);
+		if (UWorld* World = GetWorld())
+		{
+			GetWorld()->GetTimerManager().SetTimer(CloakingTimerHandle, this, &UPPCloakingParts::StopCloaking, CloakingTime, false);
+		}
 
 		if (IsValid(CloakingSoundComponent) && IsValid(StartSound))
 		{
@@ -137,17 +147,13 @@ void UPPCloakingParts::StopCloaking()
 		UE_LOG(LogTemp, Log, TEXT("DefaultMaterial Set"));
 		if (NumMaterials > 0 && IsValid(CloakingMaterial))
 		{
-			for (int i = 0; i < NumMaterials; i++)
+			RestoreCloakingState();
+
+			if (UWorld* World = GetWorld())
 			{
-				Owner->GetMesh()->SetMaterial(i, nullptr);
+				GetWorld()->GetTimerManager().SetTimer(CloakingCooldownTimerHandle, this, &UPPCloakingParts::SetCloakingState, Cooldown, false);
 			}
-
-			UE_LOG(LogTemp, Log, TEXT("DefaultMaterial Set"));
-
-			Owner->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel11, ECR_Overlap);
-
-			GetWorld()->GetTimerManager().SetTimer(CloakingCooldownTimerHandle, this, &UPPCloakingParts::SetCloakingState, Cooldown, false);
-
+			
 			if (IsValid(CloakingSoundComponent) && IsValid(EndSound))
 			{
 				if (CloakingSoundComponent->IsPlaying())
@@ -166,4 +172,16 @@ void UPPCloakingParts::StopCloaking()
 void UPPCloakingParts::SetCloakingState()
 {
 	bCanCloaking = true;
+}
+
+void UPPCloakingParts::RestoreCloakingState()
+{
+	for (int i = 0; i < NumMaterials; i++)
+	{
+		Owner->GetMesh()->SetMaterial(i, nullptr);
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("DefaultMaterial Set"));
+
+	Owner->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel11, ECR_Overlap);
 }
