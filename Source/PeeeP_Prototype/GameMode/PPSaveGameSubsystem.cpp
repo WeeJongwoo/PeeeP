@@ -29,6 +29,7 @@ UPPSaveGameBase* UPPSaveGameSubsystem::LoadDataLogic(UClass* inClass, const FStr
 	FString* FindPrefix = SlotNamePrefixMap.Find(inClass);
 	check(FindPrefix);
 
+	// 중요: SlotName은 고유해야 함 (클래스명 + 유니크ID 조합)
 	FString SlotName = FString::Printf(TEXT("%s_%s"), **FindPrefix, *inUniqueID);
 
 	// 찾아보고 없으면 생성

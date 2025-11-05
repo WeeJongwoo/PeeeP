@@ -114,6 +114,13 @@ void APPElectricCharageStation::SaveGame(APPCharacterPlayer* InPlayer)
 			if (SaveResult)
 			{
 				SaveData->SaveData();
+				// SaveData의 SlotName 형식은 SaveGame 클래스와 슬롯 인덱스를 기반으로 결정 됨.
+				// 예를 들어, UPPSaveGame 클래스와 슬롯 인덱스 0을 사용하는 경우 슬롯 이름은 "UPPSaveGame_0"이 됨.
+				if (UGameplayStatics::DoesSaveGameExist(TEXT("UPPSaveGame_0"), 0))
+				{
+					UE_LOG(LogTemp, Warning, TEXT("SaveGame Overwrite Success"));
+				}
+				
 				UE_LOG(LogTemp, Log, TEXT("Set Save Data Success"));
 				UE_LOG(LogTemp, Log, TEXT("SaveGame Success"));
 			}
