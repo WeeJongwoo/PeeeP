@@ -251,7 +251,7 @@ private:
 
 	bool bIsGuideOn = false;
 
-	virtual void TakeDamage(float Amount);
+	//virtual void TakeDamage(float Amount);
 
 // 인스턴스 및 서브시스템 관련 함수
 public:
