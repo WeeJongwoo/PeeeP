@@ -20,7 +20,7 @@ public:
 	virtual void BeginPlay() override;
 
 private:
-
+	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget> Intro;
 
 	TObjectPtr<class UUserWidget> IntroUI;
