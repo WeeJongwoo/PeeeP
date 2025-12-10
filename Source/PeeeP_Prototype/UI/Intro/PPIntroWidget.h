@@ -24,21 +24,24 @@ protected:
 	void StartGame();
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<class UMediaPlayer> IntroMedia;
+	TObjectPtr<class UMediaPlayer> VideoMedia;
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<class UMediaSource> IntroMediaSource;
+	TObjectPtr<class UMediaSource> VideoMediaSource;
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<class UMediaSource> IntroMediaLoopSource;
+	TObjectPtr<class UMediaSource> VideoMediaLoopSource;
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<class UMediaTexture> IntroMediaTexture;
+	TObjectPtr<class UMediaTexture> VideoMediaTexture;
+
+	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<class UWorld> LevelToOpen;
 
 
 public:
 
-	void PlayIntro();
+	void PlayVideo();
 
 	UFUNCTION()
 	void PlayLoop();

@@ -34,44 +34,45 @@ FReply UPPIntroWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, cons
 
 void UPPIntroWidget::StartGame()
 {
-	IntroMedia->Close();
-	UGameplayStatics::OpenLevel(this, TEXT("MainLobby"));
+	VideoMedia->Close();
+	UGameplayStatics::OpenLevelBySoftObjectPtr(this, LevelToOpen);
 }
 
-void UPPIntroWidget::PlayIntro()
+void UPPIntroWidget::PlayVideo()
 {
 
-	if (IntroMedia)
+	if (VideoMedia)
 	{
-		if (IntroMedia->OpenSource(IntroMediaSource))
+		if (VideoMedia->OpenSource(VideoMediaSource))
 		{
-			IntroMediaTexture->SetMediaPlayer(IntroMedia);
-			IntroMediaTexture->UpdateResource();
+			VideoMediaTexture->SetMediaPlayer(VideoMedia);
+			VideoMediaTexture->UpdateResource();
 
-			IntroMedia->SetNativeVolume(1.0f);
-			IntroMedia->Play();
+			VideoMedia->SetNativeVolume(1.0f);
+			VideoMedia->SetLooping(false);
+			VideoMedia->Play();
 			
-			UE_LOG(LogTemp, Log, TEXT("Play Intro"));
+			UE_LOG(LogTemp, Log, TEXT("Play Video"));
 
-			IntroMedia->OnEndReached.AddDynamic(this, &UPPIntroWidget::PlayLoop);
+			VideoMedia->OnEndReached.AddDynamic(this, &UPPIntroWidget::PlayLoop);
 		}
 	}
 }
 
 void UPPIntroWidget::PlayLoop()
 {
-	if (IntroMedia)
+	if (VideoMedia)
 	{
-		if (IntroMedia->OpenSource(IntroMediaLoopSource))
+		if (VideoMedia->OpenSource(VideoMediaLoopSource))
 		{
-			IntroMedia->Seek(FTimespan::FromMilliseconds(0));
+			VideoMedia->Seek(FTimespan::FromMilliseconds(0));
 
-			IntroMediaTexture->SetMediaPlayer(IntroMedia);
-			//IntroMediaTexture->UpdateResource();
+			VideoMediaTexture->SetMediaPlayer(VideoMedia);
+			//VideoMediaTexture->UpdateResource();
 
-			IntroMedia->SetLooping(true);
-			IntroMedia->Play();
-			UE_LOG(LogTemp, Log, TEXT("Play Intro"));
+			VideoMedia->SetLooping(true);
+			VideoMedia->Play();
+			UE_LOG(LogTemp, Log, TEXT("Play Video"));
 
 		}
 	}

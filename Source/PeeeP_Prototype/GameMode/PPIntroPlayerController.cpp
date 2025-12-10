@@ -28,6 +28,6 @@ void APPIntroPlayerController::BeginPlay()
 
 		UE_LOG(LogTemp, Log, TEXT("Widget"));
 		LobbyUI->AddToViewport();
-		LobbyUI->PlayIntro();
+		LobbyUI->PlayVideo();
 	}
 }
