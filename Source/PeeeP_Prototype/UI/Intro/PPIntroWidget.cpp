@@ -40,7 +40,14 @@ void UPPIntroWidget::StartGame()
 		LevelToOpen.LoadSynchronous();
 	}
 
-	UGameplayStatics::OpenLevelBySoftObjectPtr(this, LevelToOpen.Get());
+	if (LevelToOpen != nullptr && LevelToOpen.IsValid())
+	{
+		UGameplayStatics::OpenLevelBySoftObjectPtr(this, LevelToOpen.Get());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[UPPIntroWidget] LevelToOpen is not valid"));
+	}
 }
 
 void UPPIntroWidget::PlayVideo()
