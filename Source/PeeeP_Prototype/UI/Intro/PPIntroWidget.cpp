@@ -35,7 +35,12 @@ FReply UPPIntroWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, cons
 void UPPIntroWidget::StartGame()
 {
 	VideoMedia->Close();
-	UGameplayStatics::OpenLevelBySoftObjectPtr(this, LevelToOpen);
+	if(LevelToOpen.IsPending())
+	{
+		LevelToOpen.LoadSynchronous();
+	}
+
+	UGameplayStatics::OpenLevelBySoftObjectPtr(this, LevelToOpen.Get());
 }
 
 void UPPIntroWidget::PlayVideo()
