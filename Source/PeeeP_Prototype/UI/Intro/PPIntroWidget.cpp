@@ -35,7 +35,19 @@ FReply UPPIntroWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, cons
 void UPPIntroWidget::StartGame()
 {
 	VideoMedia->Close();
-	UGameplayStatics::OpenLevelBySoftObjectPtr(this, LevelToOpen);
+	if(LevelToOpen.IsPending())
+	{
+		LevelToOpen.LoadSynchronous();
+	}
+
+	if (LevelToOpen != nullptr && LevelToOpen.IsValid())
+	{
+		UGameplayStatics::OpenLevelBySoftObjectPtr(this, LevelToOpen.Get());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[UPPIntroWidget] LevelToOpen is not valid"));
+	}
 }
 
 void UPPIntroWidget::PlayVideo()
