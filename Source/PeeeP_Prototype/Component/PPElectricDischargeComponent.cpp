@@ -411,7 +411,7 @@ void UPPElectricDischargeComponent::AddCurrentCapacity(float amount)
 
 	if (CurrentElectricCapacity <= MaxElectricCapacity)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Charing +%f"), amount);
+		// UE_LOG(LogTemp, Log, TEXT("Charing +%f"), amount);
 		CurrentElectricCapacity += amount;
 		CurrentElectricCapacity = FMath::Clamp(CurrentElectricCapacity, 0, MaxElectricCapacity);
 		SetChargingEnable();
@@ -433,16 +433,15 @@ float UPPElectricDischargeComponent::GetCurrentCapacity() const
 
 void UPPElectricDischargeComponent::BroadCastToUI()
 {
-	// ���� ���� �뷮�� ������ ����� UI�� ����� �� �ְ� ��ε� ĳ��Ʈ
 	float CurrentElectircCapacityRate = FMath::Clamp((CurrentElectricCapacity / MaxElectricCapacity), 0, 1);
 	float CurrentElectricCapacityRatePerLevel = FMath::Clamp(CurrentChargingTime - CurrentChargeLevel, 0, 1);
 	IPPElectricHUDInterface* ElectircHUDInterface = Cast<IPPElectricHUDInterface>(GetOwner());
 	if (ElectircHUDInterface)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Succeessed Cast to IPPElectricHUDInterface."));
+		//UE_LOG(LogTemp, Log, TEXT("Succeessed Cast to IPPElectricHUDInterface."));
 		if (ElectircHUDInterface->ElectircCapacityDelegate.IsBound())
 		{
-			UE_LOG(LogTemp, Log, TEXT("Succeessed to Bound ElectircCapacityDelegate."));
+			//UE_LOG(LogTemp, Log, TEXT("Succeessed to Bound ElectircCapacityDelegate."));
 			ElectircHUDInterface->ElectircCapacityDelegate.Broadcast(CurrentElectircCapacityRate);
 		}
 		if (ElectircHUDInterface->ChargingLevelDelegate.IsBound())	// Level Gauge

@@ -99,10 +99,21 @@ void UPPGameMenuHUD::StartButtonClick()
 		GameInstance->ClearInventoryPartsArray();
 
 		// 새로운 게임을 시작할 때 이전 저장 데이터를 초기화
-		if (UPPSaveGameSubsystem* SaveSubsystem = GameInstance->GetSubsystem<UPPSaveGameSubsystem>())
+		if (UGameplayStatics::DoesSaveGameExist(TEXT("UPPSaveGame_0"), 0))
 		{
-			SaveSubsystem->LastLoadedSaveData = nullptr; 
+			UE_LOG(LogTemp, Log, TEXT("[PPGameMenuHUD] SaveGameData Exist."));
+
+			if (UPPSaveGameSubsystem* SaveSubsystem = GameInstance->GetSubsystem<UPPSaveGameSubsystem>())
+			{
+				SaveSubsystem->LastLoadedSaveData = nullptr;
+				UE_LOG(LogTemp, Log, TEXT("[PPGameMenuHUD] Data nullptr Set Completed."));
+			}
+
+			// 기존 세이브 파일 제거
+			UGameplayStatics::DeleteGameInSlot(TEXT("UPPSaveGame_0"), 0);
+			UE_LOG(LogTemp, Log, TEXT("[PPGameMenuHUD] Previous Save File Deleted Completely!"));
 		}
+		
 
 		UPPLevelLoadGIS* LevelLoadGIS = GameInstance->GetSubsystem<UPPLevelLoadGIS>();
 		if (LevelLoadGIS)
