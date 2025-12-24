@@ -9,6 +9,7 @@
 /**
  * 
  */
+
 UCLASS()
 class PEEEP_PROTOTYPE_API UPPGameMenuHUD : public UUserWidget
 {
@@ -45,6 +46,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = Widget, meta = (BindWidget))
 	TObjectPtr<class UPPSettingMenu> WBP_SettingMenu;
+
+	UPROPERTY(VisibleAnywhere, Category = Widget, meta = (BindWidget))
+	TObjectPtr<class UPPResetSaveWindow> WBP_ResetSaveWindow;
 
 protected:
 	UPROPERTY(meta = (BindWidgetAnim), Transient)
@@ -107,4 +111,8 @@ protected:
 
 	UFUNCTION()
 	void ExitButtonHoverEnd();
+
+protected:
+	UFUNCTION()
+	void LoadLevel();
 };
