@@ -10,6 +10,7 @@
 #include "GameMode/PPGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Menu/PPSettingMenu.h"
+#include "UI/Menu/PPResetSaveWindow.h"
 #include "GameMode/PPLevelLoadGIS.h"
 #include "GameMode/PPSaveGame.h"
 #include "GameMode/PPSaveGameSubsystem.h"
@@ -83,6 +84,12 @@ void UPPGameMenuHUD::NativeConstruct()
 		WBP_SettingMenu->SetVisibility(ESlateVisibility::Hidden);
 	}
 
+	if (WBP_ResetSaveWindow)
+	{
+		WBP_ResetSaveWindow->OnResetSaveConfirmedDelegate.AddUObject(this, &UPPGameMenuHUD::LoadLevel);
+		WBP_ResetSaveWindow->SetVisibility(ESlateVisibility::Hidden);
+	}
+
 	if (LogoLoopAnim)
 	{
 		PlayAnimation(LogoLoopAnim, 0.0f, 9999);
@@ -99,22 +106,15 @@ void UPPGameMenuHUD::StartButtonClick()
 		GameInstance->ClearInventoryPartsArray();
 
 		// 새로운 게임을 시작할 때 이전 저장 데이터를 초기화
-		if (UPPSaveGameSubsystem* SaveSubsystem = GameInstance->GetSubsystem<UPPSaveGameSubsystem>())
+		if (UGameplayStatics::DoesSaveGameExist(TEXT("UPPSaveGame_0"), 0))
 		{
-			SaveSubsystem->LastLoadedSaveData = nullptr; 
+			UE_LOG(LogTemp, Log, TEXT("[PPGameMenuHUD] SaveGameData Exist."));
+			// 세이브를 지울 것이냐는 위젯 표기
+			WBP_ResetSaveWindow->SetVisibility(ESlateVisibility::Visible);
 		}
-
-		UPPLevelLoadGIS* LevelLoadGIS = GameInstance->GetSubsystem<UPPLevelLoadGIS>();
-		if (LevelLoadGIS)
+		else
 		{
-			if (!StartLevel.IsNull())
-			{
-				LevelLoadGIS->LoadLevel(StartLevel);
-			}
-			else
-			{
-				UGameplayStatics::OpenLevel(GetWorld(), TEXT("Stage1"));
-			}
+			LoadLevel();
 		}
 	}
 }
@@ -227,4 +227,24 @@ void UPPGameMenuHUD::SettingButtonHoverEnd()
 void UPPGameMenuHUD::ExitButtonHoverEnd()
 {
 	PlayAnimation(ExitButtonHoverEndAnim);
+}
+
+void UPPGameMenuHUD::LoadLevel()
+{
+	UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		UPPLevelLoadGIS* LevelLoadGIS = GameInstance->GetSubsystem<UPPLevelLoadGIS>();
+		if (LevelLoadGIS)
+		{
+			if (!StartLevel.IsNull())
+			{
+				LevelLoadGIS->LoadLevel(StartLevel);
+			}
+			else
+			{
+				UGameplayStatics::OpenLevel(GetWorld(), TEXT("Stage1"));
+			}
+		}
+	}
 }
