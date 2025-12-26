@@ -23,6 +23,7 @@ public:
 	void LoadLevel(const TSoftObjectPtr<class UWorld>& InTartgetLevel);
 
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
 
 private:
 
@@ -43,6 +44,8 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<class UPPLoadingWidget> LoadingWidget; // The instance of the loading widget
+
+	bool bIsLoadingComplete = false;
 
 	FTimerHandle LoadingTimerHandle; // Timer handle for managing loading time
 

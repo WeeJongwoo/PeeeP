@@ -22,12 +22,23 @@ void UPPLevelLoadGIS::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
+	FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UPPLevelLoadGIS::OnPostLoadLevel);
+
 	UE_LOG(LogTemp, Log, TEXT("PPLevelLoadGI Initialized"));
+}
+
+void UPPLevelLoadGIS::Deinitialize()
+{
+	FCoreUObjectDelegates::PostLoadMapWithWorld.RemoveAll(this);
+	DeleteLoadingWidget();
+
+	Super::Deinitialize();
 }
 
 
 void UPPLevelLoadGIS::LoadLevel(const TSoftObjectPtr<class UWorld>& InTartgetLevel)
 {
+	TargetLevel = InTartgetLevel;
 
 	UGameInstance* GameInstance = GetGameInstance();
 
@@ -45,12 +56,10 @@ void UPPLevelLoadGIS::LoadLevel(const TSoftObjectPtr<class UWorld>& InTartgetLev
 		LoadingWidget->AddToViewport(1);
 		LoadingWidget->PlayFadeOutAnimation();
 		LoadingWidget->SetOnFadeOutFinished(FSimpleDelegate::CreateUObject(this, &UPPLevelLoadGIS::TryToLoadLevel));
+		bIsLoadingComplete = false;
 	}
 
-	FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UPPLevelLoadGIS::OnPostLoadLevel);
-
-	TargetLevel = InTartgetLevel;
-
+	//FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UPPLevelLoadGIS::OnPostLoadLevel);
 }
 
 void UPPLevelLoadGIS::OnLoadingUpdate(TSharedRef<FStreamableHandle> Handle)
@@ -66,6 +75,11 @@ void UPPLevelLoadGIS::OnLoadingUpdate(TSharedRef<FStreamableHandle> Handle)
 
 void UPPLevelLoadGIS::OnPostLoadLevel(UWorld* LoadedWorld)
 {
+	if (TargetLevel.IsNull())
+	{
+		return;
+	}
+
 	DeleteLoadingWidget();
 
 	UGameInstance* GameInstance = GetGameInstance();
@@ -75,21 +89,44 @@ void UPPLevelLoadGIS::OnPostLoadLevel(UWorld* LoadedWorld)
 	{
 		LoadingWidget->AddToViewport(100);
 
+		TWeakObjectPtr<UPPLevelLoadGIS> WeakThis(this);
+
 		FTimerDelegate PollLoadingDelegate;
-		PollLoadingDelegate.BindLambda([this]()
+		PollLoadingDelegate.BindLambda([WeakThis]()
 			{
+				if (!WeakThis.IsValid())
+				{
+					return;
+				}
+
+				UPPLevelLoadGIS* This = WeakThis.Get();
+
+				if (This->bIsLoadingComplete)
+				{
+					return;
+				}
+
 				if (!IsAsyncLoading())
 				{
-					GetWorld()->GetTimerManager().ClearTimer(LoadingTimerHandle);
-
-					LoadingWidget->PlayFadeInAnimation();
-					LoadingWidget->SetOnFadeInFinished(FSimpleDelegate::CreateUObject(this, &UPPLevelLoadGIS::DeleteLoadingWidget));
+					This->bIsLoadingComplete = true;
+					if (UWorld* World = This->GetWorld())
+					{
+						World->GetTimerManager().ClearTimer(This->LoadingTimerHandle);
+					}
+					
+					if (IsValid(This->LoadingWidget) && This->LoadingWidget->IsInViewport())
+					{
+						This->LoadingWidget->PlayFadeInAnimation();
+						This->LoadingWidget->SetOnFadeInFinished(FSimpleDelegate::CreateUObject(This, &UPPLevelLoadGIS::DeleteLoadingWidget));
+					}
 				}
 			}
 		);
 
-		GetWorld()->GetTimerManager().SetTimer(LoadingTimerHandle, PollLoadingDelegate, 0.1f, true);
-
+		if (UWorld* World = GetWorld())
+		{
+			World->GetTimerManager().SetTimer(LoadingTimerHandle, PollLoadingDelegate, 0.1f, true);
+		}
 	}
 }
 
@@ -116,11 +153,20 @@ void UPPLevelLoadGIS::TryToLoadLevel()
 
 void UPPLevelLoadGIS::DeleteLoadingWidget()
 {
+	if (UWorld* World = GetWorld())
+	{
+		World->GetTimerManager().ClearTimer(LoadingTimerHandle);
+	}
+
 	if (IsValid(LoadingWidget))
 	{
-		LoadingWidget->RemoveFromViewport();
+		if (LoadingWidget->IsInViewport())
+		{
+			LoadingWidget->RemoveFromViewport();
+		}
 		LoadingWidget->RemoveFromParent();
 		LoadingWidget = nullptr;
+		bIsLoadingComplete = false;
 		UE_LOG(LogTemp, Log, TEXT("LoadingWidget deleted successfully"));
 	}
 }
