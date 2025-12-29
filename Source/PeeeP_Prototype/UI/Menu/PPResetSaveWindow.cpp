@@ -35,6 +35,8 @@ void UPPResetSaveWindow::ButtonYesClick()
 	UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (GameInstance)
 	{
+		// 게임 인스턴스의 인벤토리 초기화
+		GameInstance->ClearInventoryPartsArray();
 		if (UPPSaveGameSubsystem* SaveSubsystem = GameInstance->GetSubsystem<UPPSaveGameSubsystem>())
 		{
 			SaveSubsystem->LastLoadedSaveData = nullptr;

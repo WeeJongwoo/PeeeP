@@ -38,9 +38,23 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	TObjectPtr<class UAnimMontage> GrabAnimMontage;
 
+	UPROPERTY(EditAnywhere, Category = Audio)
+	TObjectPtr<class USoundBase> GrabbingSound;
+
+	UPROPERTY(EditAnywhere, Category = Audio)
+	TObjectPtr<class USoundBase> GrabSuccessSound;
+
+	UPROPERTY(EditAnywhere, Category = Audio)
+	TObjectPtr<class USoundBase> GrabFailSound;
+
+	UPROPERTY(EditAnywhere, Category = Audio)
+	TObjectPtr<class USoundBase> GrabReleaseSound;
+
+
 	void HandleGrabAnimation();
 	void GrabRelease();
 	void UpdateGrabbedObjectPosition();
+	void GrabFailed();
 
 	bool IsGrabbed;
 

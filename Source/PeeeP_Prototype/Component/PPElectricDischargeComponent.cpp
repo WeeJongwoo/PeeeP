@@ -65,6 +65,12 @@ void UPPElectricDischargeComponent::BeginPlay()
 		if (UPPGameInstance* GameInstance = Cast<UPPGameInstance>(GetWorld()->GetGameInstance()))
 		{
 			CurrentElectricCapacity = GameInstance->GetCurrentElectricCapacity();
+			// Stage2 한정으로 전기 용량 5.0f로 시작
+			FString CurrentLevelName = UGameplayStatics::GetCurrentLevelName(this, true);
+			if (CurrentLevelName == TEXT("Stage2"))
+			{
+				CurrentElectricCapacity = 5.0f;
+			}
 		}
 		else
 		{
