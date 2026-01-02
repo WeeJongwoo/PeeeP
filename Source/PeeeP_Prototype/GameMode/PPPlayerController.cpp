@@ -7,6 +7,8 @@
 #include "UI/PPInGameUIMain.h"
 #include "PPPlayerState.h"
 #include "UI/Parts/PPPartsPauseUIBase.h"
+#include "GameMode/PPLevelData.h"
+#include "Editor/PPWorldSettings.h"
 
 
 APPPlayerController::APPPlayerController()
@@ -126,6 +128,14 @@ void APPPlayerController::BeginPlay()
 	{
 		PS->SetOwnerPlayerController(this);
 	}
+
+	// 레벨 팁 위젯
+	APPWorldSettings* WorldSettings = Cast<APPWorldSettings>(GetWorld()->GetWorldSettings());
+	const UPPLevelData* LevelDataAsset = WorldSettings ? WorldSettings->GetLevelDataAsset() : nullptr;
+	if(LevelDataAsset && LevelDataAsset->bUseTipWidget && LevelDataAsset->LevelStartTipWidget)
+	{
+		ShowLevelStartTipWidget(LevelDataAsset);
+	}
 }
 
 void APPPlayerController::SetUIInputMode(TObjectPtr<class UUserWidget> FocusTarget)
@@ -148,4 +158,39 @@ void APPPlayerController::SetGameInputMode()
 	bShowMouseCursor = false;
 
 	SetPause(false);
+}
+
+void APPPlayerController::ShowLevelStartTipWidget(const UPPLevelData* LevelDataAsset)
+{
+	float MaxAppearDelay = LevelDataAsset->LevelStartTipWidgetAppearOffsetTime;
+	const float AppearDelay = FMath::Max(0.0f, MaxAppearDelay);
+	float TempDisplayTime = LevelDataAsset->LevelStartTipWidgetDisplayTime;
+	const float DisplayTime = FMath::Max(0.0f, TempDisplayTime);
+
+	GetWorldTimerManager().SetTimer(TipWidgetAppearTimerHandle, this, &APPPlayerController::DisplayLevelStartTipWidget, AppearDelay, false);
+
+	if (DisplayTime > 0.0f)
+	{
+		GetWorldTimerManager().SetTimer(TipWidgetDisappearTimerHandle, this, &APPPlayerController::RemoveLevelStartTipWidget, AppearDelay + DisplayTime, false);
+	}
+}
+
+void APPPlayerController::DisplayLevelStartTipWidget()
+{
+	APPWorldSettings* WorldSettings = Cast<APPWorldSettings>(GetWorld()->GetWorldSettings());
+	const UPPLevelData* LevelDataAsset = WorldSettings ? WorldSettings->GetLevelDataAsset() : nullptr;
+	if (LevelDataAsset && LevelDataAsset->bUseTipWidget && LevelDataAsset->LevelStartTipWidget)
+	{
+		ActiveTipWidget = CreateWidget<UUserWidget>(this, LevelDataAsset->LevelStartTipWidget);
+		if (ActiveTipWidget)
+		{
+			ActiveTipWidget->AddToViewport();
+		}
+	}
+}
+
+void APPPlayerController::RemoveLevelStartTipWidget()
+{
+	ActiveTipWidget->RemoveFromParent();
+	ActiveTipWidget = nullptr;
 }
