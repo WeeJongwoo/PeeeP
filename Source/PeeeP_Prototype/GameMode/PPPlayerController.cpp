@@ -9,6 +9,9 @@
 #include "UI/Parts/PPPartsPauseUIBase.h"
 #include "GameMode/PPLevelData.h"
 #include "Editor/PPWorldSettings.h"
+#include "UI/PPTipWidget.h"
+#include "Kismet/GameplayStatics.h"
+#include "Interface/UI/PPWidgetAnimationInterface.h"
 
 
 APPPlayerController::APPPlayerController()
@@ -181,15 +184,52 @@ void APPPlayerController::DisplayLevelStartTipWidget()
 	const UPPLevelData* LevelDataAsset = WorldSettings ? WorldSettings->GetLevelDataAsset() : nullptr;
 	if (LevelDataAsset && LevelDataAsset->bUseTipWidget && LevelDataAsset->LevelStartTipWidget)
 	{
-		ActiveTipWidget = CreateWidget<UUserWidget>(this, LevelDataAsset->LevelStartTipWidget);
+		ActiveTipWidget = CreateWidget<UPPTipWidget>(this, LevelDataAsset->LevelStartTipWidget);
 		if (ActiveTipWidget)
 		{
+			// UI String Table Key Setting
+			FString StageName = UGameplayStatics::GetCurrentLevelName(GetWorld());
+			FString TitleKey = FString::Printf(TEXT("%s_TipTitle"), *StageName);
+			FString ContentsKey = FString::Printf(TEXT("%s_TipContents"), *StageName);
+			FName TitleFName(*TitleKey);
+			FName ContentsFName(*ContentsKey);
+
+			// Set Text
+			ActiveTipWidget->SetTipTitleText(TitleFName);
+			ActiveTipWidget->SetTipContentsText(ContentsFName);
 			ActiveTipWidget->AddToViewport();
+
+			// Play Animation
+			IPPWidgetAnimationInterface* AnimationInterface = Cast<IPPWidgetAnimationInterface>(ActiveTipWidget);
+			if (AnimationInterface)
+			{
+				AnimationInterface->PlayWidgetAnimationIn();
+			}
+			else
+			{
+				UE_LOG(LogTemp, Log, TEXT("[APPPlayerController] ActiveTipWidget does not implement IPPWidgetAnimationInterface"));
+			}
 		}
 	}
 }
 
 void APPPlayerController::RemoveLevelStartTipWidget()
+{
+	IPPWidgetAnimationInterface* AnimationInterface = Cast<IPPWidgetAnimationInterface>(ActiveTipWidget);
+	if (AnimationInterface)
+	{
+		AnimationInterface->PlayWidgetAnimationOut();
+		ActiveTipWidget->OnTipDisappearAnimFinished.BindDynamic(this, &APPPlayerController::RemoveTipWidget);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("[APPPlayerController] ActiveTipWidget does not implement IPPWidgetAnimationInterface"));
+		RemoveTipWidget();
+	}
+	
+}
+
+void APPPlayerController::RemoveTipWidget()
 {
 	ActiveTipWidget->RemoveFromParent();
 	ActiveTipWidget = nullptr;

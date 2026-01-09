@@ -9,3 +9,7 @@ Setting_MusicVolume,SettingMenu,Music
 Setting_SFXVolume,SettingMenu,SFX
 Setting_Title_Control,SettingMenu,CONTROL SETTINGS
 Setting_MouseSensitivity,SettingMenu,Mouse Sensitivity
+Stage1_TipTitle,Stage1Tip,TIP
+Stage1_TipContents,Stage1Tip,G키를 눌러 가이드를 표시할 수 있습니다.
+Stage2_TipTitle,Stage2Tip,TIP
+Stage2_TipContents,Stage2Tip,파츠와 전기를 바꿔가며 나아갈 수 있습니다.

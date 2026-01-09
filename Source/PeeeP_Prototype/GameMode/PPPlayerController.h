@@ -42,7 +42,7 @@ protected:
 	void SetGameInputMode();
 
 private:
-	TObjectPtr<class UUserWidget> ActiveTipWidget;
+	TObjectPtr<class UPPTipWidget> ActiveTipWidget;
 
 	void ShowLevelStartTipWidget(const class UPPLevelData* LevelDataAsset);
 	
@@ -50,6 +50,8 @@ private:
 	void DisplayLevelStartTipWidget();
 	UFUNCTION()
 	void RemoveLevelStartTipWidget();
+	UFUNCTION()
+	void RemoveTipWidget();
 
 	FTimerHandle TipWidgetAppearTimerHandle;
 	FTimerHandle TipWidgetDisappearTimerHandle;
