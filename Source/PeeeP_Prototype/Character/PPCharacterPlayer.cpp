@@ -262,6 +262,19 @@ void APPCharacterPlayer::BeginPlay()
 			GameInstance->bWasLoadedFromSave = false;
 		}
 	}
+
+	//------------해당 부분 가이드 온 오프시 작동할 델리게이트 바인딩 부분	------------//
+	//이 부분 아니어도 사운드 발생시키는 부분에 해당 방식으로 추가하면 됨
+	/*UWorld* World = GetWorld();
+	if (World)
+	{
+		if (UPPGuideWorldSubsystem* GuideSystem = World->GetSubsystem<UPPGuideWorldSubsystem>())
+		{
+			GuideSystem->OnGuideActiveDelegate.AddUObject();
+			GuideSystem->OnGuideHiddenDelegate.AddUObject();
+		}
+	}*/
+	//-------------------------------------------------------------------------------//
 }
 
 void APPCharacterPlayer::Tick(float DeltaTime)
@@ -720,9 +733,7 @@ void APPCharacterPlayer::ToggleGuide(const FInputActionValue& Value)
 	{
 		if (UPPGuideWorldSubsystem* GuideSystem = World->GetSubsystem<UPPGuideWorldSubsystem>())
 		{
-			bIsGuideOn = !bIsGuideOn;
-			UE_LOG(LogTemp, Log, TEXT("Toggle Guide %s"), bIsGuideOn ? TEXT("true") : TEXT("false"));
-			GuideSystem->SetGuideActive(bIsGuideOn);
+			GuideSystem->GuideActive();
 		}
 	}
 }

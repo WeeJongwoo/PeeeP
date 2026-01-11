@@ -6,9 +6,10 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "PPGuideWorldSubsystem.generated.h"
 
-/**
- * 
- */
+DECLARE_MULTICAST_DELEGATE(FGuideActiveDelegate);
+DECLARE_MULTICAST_DELEGATE(FGuideHiddenDelegate);
+
+
 UCLASS()
 class PEEEP_PROTOTYPE_API UPPGuideWorldSubsystem : public UWorldSubsystem
 {
@@ -19,10 +20,15 @@ public:
 	void RegisterGuideObject(class UPPGuideObjectComponent* GuideObject);
 	void UnregisterGuideObject(class UPPGuideObjectComponent* GuideObject);
 
-	void SetGuideActive(bool Active);
+	void GuideActive();
+
+	FGuideActiveDelegate OnGuideActiveDelegate;
+	FGuideHiddenDelegate OnGuideHiddenDelegate;
 
 private:
 
 	TSet<TWeakObjectPtr<class UPPGuideObjectComponent>> GuideObjectSet;
 	
+	FTimerHandle GuideTimerHandle;
+
 };
