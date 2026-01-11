@@ -100,22 +100,16 @@ void UPPGameMenuHUD::StartButtonClick()
 {
 	UE_LOG(LogTemp, Log, TEXT("StartGame"));
 
-	UPPGameInstance* GameInstance = Cast<UPPGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	if (GameInstance)
+	// 새로운 게임을 시작할 때 이전 저장 데이터를 초기화
+	if (UGameplayStatics::DoesSaveGameExist(TEXT("UPPSaveGame_0"), 0))
 	{
-		GameInstance->ClearInventoryPartsArray();
-
-		// 새로운 게임을 시작할 때 이전 저장 데이터를 초기화
-		if (UGameplayStatics::DoesSaveGameExist(TEXT("UPPSaveGame_0"), 0))
-		{
-			UE_LOG(LogTemp, Log, TEXT("[PPGameMenuHUD] SaveGameData Exist."));
-			// 세이브를 지울 것이냐는 위젯 표기
-			WBP_ResetSaveWindow->SetVisibility(ESlateVisibility::Visible);
-		}
-		else
-		{
-			LoadLevel();
-		}
+		UE_LOG(LogTemp, Log, TEXT("[PPGameMenuHUD] SaveGameData Exist."));
+		// 세이브를 지울 것이냐는 위젯 표기
+		WBP_ResetSaveWindow->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		LoadLevel();
 	}
 }
 

@@ -40,4 +40,21 @@ protected:
 
 	void SetUIInputMode(TObjectPtr<class UUserWidget> FocusTarget);
 	void SetGameInputMode();
+
+private:
+	TObjectPtr<class UPPTipWidget> ActiveTipWidget;
+
+	void ShowLevelStartTipWidget(const class UPPLevelData* LevelDataAsset);
+	
+	UFUNCTION()
+	void DisplayLevelStartTipWidget();
+	UFUNCTION()
+	void RemoveLevelStartTipWidget();
+	UFUNCTION()
+	void RemoveTipWidget();
+
+	FTimerHandle TipWidgetAppearTimerHandle;
+	FTimerHandle TipWidgetDisappearTimerHandle;
+
+
 };

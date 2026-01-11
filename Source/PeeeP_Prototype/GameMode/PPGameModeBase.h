@@ -24,6 +24,7 @@ public:
 
 	void SetInitialSpawnLocation(APlayerController* PlayerController);
 
+
 protected:
 	virtual void BeginPlay() override;
 

@@ -11,6 +11,7 @@
 #include "Character/PPCharacterPlayer.h"
 #include "InteractionObject/PPGrabableObject.h"
 #include "Component/PPElectricDischargeComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 UPPGrabParts::UPPGrabParts()
 {
@@ -78,6 +79,13 @@ void UPPGrabParts::PartsInit(TObjectPtr<class UPPPartsDataBase> InPartsData)
 				EnhancedInputComponent->BindAction(GrabPartsData->GrabAction, ETriggerEvent::Completed, this, &UPPGrabParts::GrabRelease);
 
 				this->GrabAnimMontage = GrabPartsData->GrabAnimMontage;
+
+				// Mapping Audio
+				this->GrabbingSound = GrabPartsData->GrabbingSound;
+				this->GrabSuccessSound = GrabPartsData->GrabSuccessSound;
+				this->GrabFailSound = GrabPartsData->GrabFailSound;
+				this->GrabReleaseSound = GrabPartsData->GrabReleaseSound;
+
 			}
 		}
 	}
@@ -124,8 +132,10 @@ void UPPGrabParts::HandleGrabAnimation()
 	{
 		float CurrentCapacity = Owner->GetElectricDischargeComponent()->GetCurrentCapacity();
 
+		// Grab Failed When Not Enough Electric Consumption
 		if (!(CurrentCapacity > ElectricConsumption))
 		{
+			GrabFailed();
 			return;
 		}
 
@@ -135,6 +145,11 @@ void UPPGrabParts::HandleGrabAnimation()
 		}
 
 		Owner->PlayAnimMontage(GrabAnimMontage, 1.0f, FName(TEXT("Grab")));
+
+		/*if (GrabbingSound)
+		{
+			UGameplayStatics::PlaySound2D(GetWorld(), GrabbingSound);
+		}*/
 
 		//Owner->PlayAnimation(GrabAnimMontage);
 	}
@@ -180,6 +195,11 @@ void UPPGrabParts::Grab()
 			UE_LOG(LogTemp, Log, TEXT("NICE"));
 			GrabableObject->SetIsGrabbed(true);
 			GrabableObject->GrabReleaseDelegate.BindUObject(this, &UPPGrabParts::GrabRelease);
+
+			if (GrabSuccessSound)
+			{
+				UGameplayStatics::PlaySound2D(GetWorld(), GrabSuccessSound);
+			}
 		}
 	}
 
@@ -210,6 +230,7 @@ void UPPGrabParts::GrabRelease()
 			{
 				UE_LOG(LogTemp, Log, TEXT("byebye"));
 				GrabableObject->SetIsGrabbed(false);
+				UGameplayStatics::PlaySound2D(GetWorld(), GrabReleaseSound);
 			}
 
 			GrabHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel10, ECR_Block);
@@ -229,6 +250,15 @@ void UPPGrabParts::UpdateGrabbedObjectPosition()
 	//GrabHandle->SetTargetLocation(TargetLocation);
 	//GrabHandle->SetTargetLocationAndRotation(GrabbedObjectPosition - GrabbedObjectOffset, GrabbedObjectRotation);
 	GrabHandle->SetTargetLocationAndRotation(TargetLocation, GrabbedObjectRotation);
+}
+
+void UPPGrabParts::GrabFailed()
+{
+	UE_LOG(LogTemp, Log, TEXT("Grab Failed"));
+	if (GrabFailSound)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), GrabFailSound);
+	}
 }
 
 

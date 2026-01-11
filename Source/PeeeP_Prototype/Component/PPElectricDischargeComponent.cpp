@@ -16,6 +16,8 @@
 #include "Components/AudioComponent.h"
 #include "UI/PPChargingLevelHUD.h"
 #include "GameMode/PPGameInstance.h"
+#include "Editor/PPWorldSettings.h"
+#include "GameMode/PPLevelData.h"
 
 // Sets default values for this component's properties
 UPPElectricDischargeComponent::UPPElectricDischargeComponent()
@@ -60,7 +62,6 @@ void UPPElectricDischargeComponent::BeginPlay()
 	if (OwnerCharacter)
 	{
 		DischargeEffectComponent = OwnerCharacter->GetElectricNiagaraComponent();
-		SetChargingEnable();
 
 		if (UPPGameInstance* GameInstance = Cast<UPPGameInstance>(GetWorld()->GetGameInstance()))
 		{
@@ -68,9 +69,27 @@ void UPPElectricDischargeComponent::BeginPlay()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("GameInstance is not valid in PPElectricDischargeComponent::BeginPlay()"));
+			UE_LOG(LogTemp, Warning, TEXT("[PPElectricDischargeComponent] GameInstance is not valid in PPElectricDischargeComponent::BeginPlay()"));
+		}
+
+		// 월드 세팅에서 사전 설정된 값이 있으면 적용
+		APPWorldSettings* WorldSettings = Cast<APPWorldSettings>(GetWorld()->GetWorldSettings());
+		const UPPLevelData* LevelDataAsset = WorldSettings ? WorldSettings->GetLevelDataAsset() : nullptr;
+		if (LevelDataAsset)
+		{
+			bool bForceStartCapacity = WorldSettings->LevelDataAsset->bForcePlayerElectricCapacity;
+			if (bForceStartCapacity)
+			{
+				CurrentElectricCapacity = WorldSettings->LevelDataAsset->StartElectricCapacity;
+				UE_LOG(LogTemp, Log, TEXT("[PPElectricDischargeComponent] Start Electric Capacity from WorldSettings: %f"), CurrentElectricCapacity);
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[PPElectricDischargeComponent] LevelDataAsset is not valid in PPElectricDischargeComponent::BeginPlay()"));
 		}
 	}
+	SetChargingEnable();
 
 	// 마지막으로 UI에 브로드캐스트
 	BroadCastToUI();
