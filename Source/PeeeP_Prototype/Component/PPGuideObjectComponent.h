@@ -22,6 +22,9 @@ protected:
 	virtual void OnRegister() override;
 	virtual void OnUnregister() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
+	TObjectPtr<class USoundBase> GuideAppearSound;
+
 public:	
 
 	void GuideSetHidden(bool bHidden);

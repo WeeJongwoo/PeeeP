@@ -3,6 +3,7 @@
 
 #include "Component/PPGuideObjectComponent.h"
 #include "Gimmick/Subsystem/PPGuideWorldSubsystem.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values for this component's properties
@@ -54,5 +55,12 @@ void UPPGuideObjectComponent::OnUnregister()
 void UPPGuideObjectComponent::GuideSetHidden(bool bHidden)
 {
 	GetOwner()->SetActorHiddenInGame(bHidden);
+	if (!bHidden)
+	{
+		if (GuideAppearSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, GuideAppearSound, GetOwner()->GetActorLocation());
+		}
+	}
 }
 
