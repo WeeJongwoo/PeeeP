@@ -1,6 +1,7 @@
 ﻿#include "Gimmick/PPSnowMobile.h"
 #include "Character/PPCharacterPlayer.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 APPSnowMobile::APPSnowMobile()
 {
@@ -20,6 +21,11 @@ APPSnowMobile::APPSnowMobile()
 void APPSnowMobile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (SnowmobileIdleSound)
+	{
+		UGameplayStatics::SpawnSoundAttached(SnowmobileIdleSound, SnowmobileMesh);
+	}
 }
 
 void APPSnowMobile::Tick(float DeltaTime)
