@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -45,6 +45,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Snowmobile|Collision", meta = (ClampMin = "0", AllowPrivateAccess = "true"))
 	float StopDuration = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Snowmobile|Sound", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class USoundBase> SnowmobileIdleSound;
 
 	float DistanceAlongSpline = 0.f;
 	bool bIsPaused = false;
