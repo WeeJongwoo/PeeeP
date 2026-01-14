@@ -3,6 +3,7 @@
 
 #include "UI/Menu/PPSettingMenu.h"
 #include "GameMode/PPGameInstance.h"
+#include "GameMode/PPLevelLoadGIS.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Components/ComboBoxString.h"
@@ -64,6 +65,12 @@ void UPPSettingMenu::NativeConstruct()
 		WBPSettingExitButton->Button->OnClicked.AddDynamic(this, &UPPSettingMenu::ExitButtonClick);
 	}
 
+	// UButton Init
+	if (CreditButton)
+	{
+		CreditButton->OnClicked.AddDynamic(this, &UPPSettingMenu::CreditButtonClick);
+	}
+
 	if (GameInstance)
 	{
 		// Audio
@@ -104,6 +111,8 @@ void UPPSettingMenu::NativeConstruct()
 	// UI String Initialize
 	MappingTextBoxString();
 	InitializeUIStrings();
+
+	CreditLevel = TSoftObjectPtr<UWorld>(FSoftObjectPath(TEXT("/Game/PeeeP_Level/CreditMap.CreditMap")));
 }
 
 void UPPSettingMenu::PlaySettingWindowAppearAnim()
@@ -227,6 +236,25 @@ void UPPSettingMenu::ExitButtonClick()
 {
 	UE_LOG(LogTemp, Log, TEXT("Clicked"));
 	PlaySettingWindowDisappearAnim();
+}
+
+void UPPSettingMenu::CreditButtonClick()
+{
+	if (GameInstance)
+	{
+		UPPLevelLoadGIS* LevelLoadGIS = GameInstance->GetSubsystem<UPPLevelLoadGIS>();
+		if (LevelLoadGIS)
+		{
+			if (!CreditLevel.IsNull())
+			{
+				LevelLoadGIS->LoadLevel(CreditLevel);
+			}
+			else
+			{
+				UGameplayStatics::OpenLevel(GetWorld(), TEXT("CreditMap"));
+			}
+		}
+	}
 }
 
 void UPPSettingMenu::OnMasterVolumeChanged(float Value)
