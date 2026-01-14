@@ -115,4 +115,7 @@ protected:
 protected:
 	UFUNCTION()
 	void LoadLevel();
+
+private:
+	TObjectPtr<USoundBase> MainMenuBGM;
 };

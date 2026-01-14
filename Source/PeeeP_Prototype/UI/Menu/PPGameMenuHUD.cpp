@@ -18,6 +18,13 @@
 UPPGameMenuHUD::UPPGameMenuHUD(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	LobbyActorClass = APPLobbyActor::StaticClass();
+
+	// BGM 로드
+	static ConstructorHelpers::FObjectFinder<USoundBase> BGMAsset(TEXT("/Game/SFX/BGM/cues/SC_MainMenu.SC_MainMenu"));
+	if (BGMAsset.Succeeded())
+	{
+		MainMenuBGM = BGMAsset.Object;
+	}
 }
 
 void UPPGameMenuHUD::NativeConstruct()
@@ -94,6 +101,13 @@ void UPPGameMenuHUD::NativeConstruct()
 	{
 		PlayAnimation(LogoLoopAnim, 0.0f, 9999);
 	}
+
+	// 메인 메뉴 BGM 재생
+	if (MainMenuBGM)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), MainMenuBGM);
+	}
+	
 }
 
 void UPPGameMenuHUD::StartButtonClick()

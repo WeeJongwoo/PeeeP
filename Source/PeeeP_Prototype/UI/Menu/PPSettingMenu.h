@@ -14,7 +14,9 @@ class PEEEP_PROTOTYPE_API UPPSettingMenu : public UUserWidget
 {
 	GENERATED_BODY()
 
+
 public:
+
 	virtual void NativeConstruct() override;
 
 	void PlaySettingWindowAppearAnim();
@@ -112,12 +114,19 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	TObjectPtr<class UTextBlock> MouseSensitivityLabelText;
 
+	// Button
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	TObjectPtr<class UButton> CreditButton;
+
 	TMap<FName, UTextBlock*> UIStringMap;
 
 private:
 
 	UFUNCTION()
 	void ExitButtonClick();
+
+	UFUNCTION()
+	void CreditButtonClick();
 
 	// Audio Settings
 	UFUNCTION()
@@ -146,4 +155,5 @@ private:
 
 	FWidgetAnimationDynamicEvent EndDelegate;
 	
+	TSoftObjectPtr<UWorld> CreditLevel;
 };
