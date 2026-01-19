@@ -113,18 +113,27 @@ void UPPParkourParts::ChargStart()
 		}
 	}
 
+	float CurrentCapacity = Owner->GetElectricDischargeComponent()->GetCurrentCapacity();
+
+	if (CurrentCapacity < ElectricConsumption * TimePerChargeLevel)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Not Enough Electric"));
+		return;
+	}
+
 	bIsCharging = true;
 	if (CurrentJumpLevel > 0)
 	{
 		CurrentJumpLevel = 0;
 	}
-
+	
 	UWorld* World = GetWorld();
 	if (IsValid(World))
 	{
 		PreviousJumpChargingTime = World->GetTimeSeconds();
 		UE_LOG(LogTemp, Warning, TEXT("Start"));
 	}
+
 	if (IsValid(ParkourSoundComponent) && IsValid(ChargeSound))
 	{
 		ParkourSoundComponent->SetSound(ChargeSound);
@@ -136,7 +145,7 @@ void UPPParkourParts::ChargStart()
 
 void UPPParkourParts::TickJumpCharge()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Charge"));
+	//UE_LOG(LogTemp, Warning, TEXT("Charge"));
 	if (bIsCharging)
 	{
 		if (CurrentJumpLevel == MaxJumpLevel)

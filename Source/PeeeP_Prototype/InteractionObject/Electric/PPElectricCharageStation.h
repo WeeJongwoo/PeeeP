@@ -38,6 +38,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class USoundBase> SaveSound;
 
+
+	float ElectricRegenPerSecond;
+
 	bool bIsActivate;
 
 public:	

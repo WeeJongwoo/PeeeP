@@ -34,6 +34,8 @@ APPElectricCharageStation::APPElectricCharageStation()
 	AudioComponent->SetupAttachment(RootComponent);
 	AudioComponent->VolumeMultiplier = 0.5f;
 
+	ElectricRegenPerSecond = 7.5f;
+
 	bIsActivate = false;
 }
 
@@ -55,7 +57,7 @@ void APPElectricCharageStation::Tick(float DeltaTime)
 
 	if (bIsActivate)
 	{
-		ElectricDischargeComponent->AddCurrentCapacity(5.0f * DeltaTime);
+		ElectricDischargeComponent->AddCurrentCapacity(ElectricRegenPerSecond * DeltaTime);
 	}
 }
 
