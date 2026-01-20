@@ -4,6 +4,37 @@
 #include "GameMode/PPSaveGameSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameMode/PPSaveGame.h"
+#include "Character/PPCharacterPlayer.h"
+#include "Component/PPElectricDischargeComponent.h"
+#include "Inventory/PPInventoryComponent.h"
+
+// Static function
+bool UPPSaveGameSubsystem::SetSaveData(UPPSaveGame* SaveData, APPCharacterPlayer* InPlayer)
+{
+	if (SaveData == nullptr || InPlayer == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[PPSaveGameSubsystem] SaveData or InPlayer is null"));
+		return false;
+	}
+
+	// TestValue String
+	SaveData->TestValue = TEXT("PPSaveGameSubsystem Save");
+	// Player Location
+	SaveData->PlayerLocation = InPlayer->GetActorLocation();
+	// Player Rotation
+	SaveData->PlayerRotation = InPlayer->GetActorRotation();
+	// Level Name
+	SaveData->LevelName = UGameplayStatics::GetCurrentLevelName(InPlayer, true);
+	// Inventory Parts
+	SaveData->InventoryPartsArray = InPlayer->GetInventoryComponent()->GetSaveMap();
+	SaveData->CurrentSlotIndex = InPlayer->GetInventoryComponent()->GetCurrentSlotIndex();
+	// Battery
+	SaveData->PlayerElectricCapacity = InPlayer->GetElectricDischargeComponent()->GetCurrentCapacity();
+
+	UE_LOG(LogTemp, Warning, TEXT("[PPSaveGameSubsystem] Set Save Data Success"));
+
+	return true;
+}
 
 void UPPSaveGameSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
