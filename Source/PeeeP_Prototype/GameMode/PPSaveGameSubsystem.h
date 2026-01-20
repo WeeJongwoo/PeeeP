@@ -14,7 +14,7 @@ UCLASS()
 class PEEEP_PROTOTYPE_API UPPSaveGameSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
-	
+
 public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
@@ -30,6 +30,9 @@ public:
 		}
 		return nullptr;
 	}
+
+	// Save Data
+	static bool SetSaveData(class UPPSaveGame* SaveData, class APPCharacterPlayer* InPlayer);
 
 protected:
 	// Get Save Game Subsystem

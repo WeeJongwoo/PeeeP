@@ -59,5 +59,6 @@ private:
 
 	void SaveGame(class APPCharacterPlayer* InPlayer) override;
 
-	bool SetSaveData(class UPPSaveGame* SaveData, class APPCharacterPlayer* InPlayer);
+	// Legacy Save Data Function
+	// bool SetSaveData(class UPPSaveGame* SaveData, class APPCharacterPlayer* InPlayer);
 };

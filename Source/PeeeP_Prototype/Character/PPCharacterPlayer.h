@@ -251,10 +251,14 @@ private:
 
 	//virtual void TakeDamage(float Amount);
 
+
 // 인스턴스 및 서브시스템 관련 함수
 public:
 	bool SaveDataToGameInstance();
 private:
 	// Load Save Data
 	bool LoadSaveData();
+
+	// Save Data
+	bool SaveData();
 };

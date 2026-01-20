@@ -263,6 +263,17 @@ void APPCharacterPlayer::BeginPlay()
 		}
 	}
 
+	// 데이터 저장
+	bool bSaveDataResult = SaveData();
+	if (bSaveDataResult)
+	{
+		UE_LOG(LogTemp, Log, TEXT("[PPCharacterPlayer] Player SaveData Success"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[PPCharacterPlayer] Player SaveData Fail"));
+	}
+
 	//------------해당 부분 가이드 온 오프시 작동할 델리게이트 바인딩 부분	------------//
 	//이 부분 아니어도 사운드 발생시키는 부분에 해당 방식으로 추가하면 됨
 	/*UWorld* World = GetWorld();
@@ -829,7 +840,40 @@ UPPChargingLevelHUD* APPCharacterPlayer::GetElectricChargingLevelWidget()
 	return ElectricChargingLevelWidget;
 }
 
+bool APPCharacterPlayer::SaveData()
+{
+	// Save Game
+	if (UPPSaveGame* SaveData = UPPSaveGame::LoadSaveData(this, TEXT("0"), 0))
+	{
+		bool SaveResult = false;
+		SaveResult = UPPSaveGameSubsystem::SetSaveData(SaveData, this);
+		if (SaveResult)
+		{
+			SaveData->SaveData();
+			// SaveData의 SlotName 형식은 SaveGame 클래스와 슬롯 인덱스를 기반으로 결정 됨.
+			// 예를 들어, UPPSaveGame 클래스와 슬롯 인덱스 0을 사용하는 경우 슬롯 이름은 "UPPSaveGame_0"이 됨.
+			if (UGameplayStatics::DoesSaveGameExist(TEXT("UPPSaveGame_0"), 0))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("[PPCharacterPlayer] SaveGame Overwrite Success"));
+			}
 
+			UE_LOG(LogTemp, Log, TEXT("[PPCharacterPlayer] Set Save Data Success"));
+			UE_LOG(LogTemp, Log, TEXT("[PPCharacterPlayer] SaveGame Success"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[PPCharacterPlayer] Set Save Data Fail"));
+			return false;
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[PPCharacterPlayer] Load Save Data Fail"));
+		return false;
+	}
+
+	return true;
+}
 
 
 

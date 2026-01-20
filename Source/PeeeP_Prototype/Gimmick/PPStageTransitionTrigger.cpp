@@ -9,6 +9,8 @@
 #include "GameMode/PPGameInstance.h"
 #include "GameMode/PPLevelLoadGIS.h"
 #include "Component/PPElectricDischargeComponent.h"
+#include "GameMode/PPSaveGame.h"
+#include "GameMode/PPSaveGameSubsystem.h"
 
 // Sets default values
 APPStageTransitionTrigger::APPStageTransitionTrigger()

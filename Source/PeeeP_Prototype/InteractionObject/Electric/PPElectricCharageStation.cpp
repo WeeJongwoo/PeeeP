@@ -10,6 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Inventory/PPInventoryComponent.h"
 #include "Component/PPElectricDischargeComponent.h"
+#include "GameMode/PPSaveGameSubsystem.h"
 
 
 // Sets default values
@@ -112,7 +113,8 @@ void APPElectricCharageStation::SaveGame(APPCharacterPlayer* InPlayer)
 		if (UPPSaveGame* SaveData = UPPSaveGame::LoadSaveData(this, TEXT("0"), 0))
 		{
 			bool SaveResult = false;
-			SaveResult =  SetSaveData(SaveData, InPlayer);
+			//SaveResult =  SetSaveData(SaveData, InPlayer);
+			SaveResult = UPPSaveGameSubsystem::SetSaveData(SaveData, InPlayer);
 			if (SaveResult)
 			{
 				SaveData->SaveData();
@@ -120,11 +122,11 @@ void APPElectricCharageStation::SaveGame(APPCharacterPlayer* InPlayer)
 				// 예를 들어, UPPSaveGame 클래스와 슬롯 인덱스 0을 사용하는 경우 슬롯 이름은 "UPPSaveGame_0"이 됨.
 				if (UGameplayStatics::DoesSaveGameExist(TEXT("UPPSaveGame_0"), 0))
 				{
-					UE_LOG(LogTemp, Warning, TEXT("SaveGame Overwrite Success"));
+					UE_LOG(LogTemp, Warning, TEXT("[PPElectricCharageStation] SaveGame Overwrite Success"));
 				}
 				
-				UE_LOG(LogTemp, Log, TEXT("Set Save Data Success"));
-				UE_LOG(LogTemp, Log, TEXT("SaveGame Success"));
+				UE_LOG(LogTemp, Log, TEXT("[PPElectricCharageStation] Set Save Data Success"));
+				UE_LOG(LogTemp, Log, TEXT("[PPElectricCharageStation] SaveGame Success"));
 			}
 			else
 			{
@@ -135,6 +137,8 @@ void APPElectricCharageStation::SaveGame(APPCharacterPlayer* InPlayer)
 	bIsActivate = true;
 }
 
+// Legacy Save Data Function
+/*
 bool APPElectricCharageStation::SetSaveData(UPPSaveGame* SaveData, APPCharacterPlayer* InPlayer)
 {
 	if (SaveData == nullptr || InPlayer == nullptr)
@@ -159,4 +163,5 @@ bool APPElectricCharageStation::SetSaveData(UPPSaveGame* SaveData, APPCharacterP
 
 	return true;
 }
+*/
 
