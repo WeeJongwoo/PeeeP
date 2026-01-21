@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "../Inventory/PPInventorySaveTypes.h"
 #include "PPGameInstance.generated.h"
 
 /**
@@ -18,7 +19,7 @@ class PEEEP_PROTOTYPE_API UPPGameInstance : public UGameInstance
 
 
 protected:
-	TMap<int32, TPair<FName, int32>> InventoryPartsArray;
+	TMap<int32, FPPInventoryPartSaveData> InventoryPartsArray;
 	int32 CurrentSlotIndex;
 
 	float CurrentElectricCapacity;
@@ -27,9 +28,9 @@ protected:
 	TObjectPtr<class USoundMix> MasterSoundMix;
 
 public:
-	void SetInventoryPartsArray(TMap<int32, TPair<FName, int32>> NewInventoryPartsArray);
+	void SetInventoryPartsArray(TMap<int32, FPPInventoryPartSaveData> NewInventoryPartsArray);
 	// 인벤토리 불러오기
-	FORCEINLINE TMap<int32, TPair<FName, int32>> GetInventoryPartsArray() { return InventoryPartsArray; }
+	FORCEINLINE TMap<int32, FPPInventoryPartSaveData> GetInventoryPartsArray() { return InventoryPartsArray; }
 
 	void SetCurrentSlotIndex(int32 NewCurrentSlotIndex);
 	FORCEINLINE int32 GetCurrentSlotIndex() { return CurrentSlotIndex; }

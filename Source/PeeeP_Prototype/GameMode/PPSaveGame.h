@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameMode/PPSaveGameBase.h"
+#include "Inventory/PPInventorySaveTypes.h"
 #include "PPSaveGame.generated.h"
 
 /**
  * 
  */
+
 UCLASS()
 class PEEEP_PROTOTYPE_API UPPSaveGame : public UPPSaveGameBase
 {
@@ -20,24 +22,26 @@ public:
 	// 저장할 데이터
 	
 	// Test
-	UPROPERTY()
+	UPROPERTY(SaveGame)
 	FString TestValue;
 
 	// Player Location
-	UPROPERTY()
+	UPROPERTY(SaveGame)
 	FVector PlayerLocation;
 	// Player Rotation
-	UPROPERTY()
+	UPROPERTY(SaveGame)
 	FRotator PlayerRotation;
 	// Level Name
-	UPROPERTY()
+	UPROPERTY(SaveGame)
 	FString LevelName;
 
 	// Inventory Parts
-	TMap<int32, TPair<FName, int32>> InventoryPartsArray;
+	UPROPERTY(SaveGame)
+	TMap<int32, FPPInventoryPartSaveData> InventoryPartsArray;
+	UPROPERTY(SaveGame)
 	int32 CurrentSlotIndex;
 
 	// Battery
-	UPROPERTY()
+	UPROPERTY(SaveGame)
 	float PlayerElectricCapacity;
 };

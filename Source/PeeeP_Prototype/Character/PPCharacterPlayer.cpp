@@ -784,7 +784,8 @@ bool APPCharacterPlayer::LoadSaveData()
 {
 	if (UPPSaveGameSubsystem* SaveGameSubsystem = GetGameInstance()->GetSubsystem<UPPSaveGameSubsystem>())
 	{
-		if (UPPSaveGame* Loaded = Cast<UPPSaveGame>(SaveGameSubsystem->LastLoadedSaveData))
+		UPPSaveGame* Loaded = Cast<UPPSaveGame>(SaveGameSubsystem->LastLoadedSaveData);
+		if (Loaded != nullptr)
 		{
 			SetActorLocation(Loaded->PlayerLocation);
 			SetActorRotation(Loaded->PlayerRotation);
@@ -796,11 +797,16 @@ bool APPCharacterPlayer::LoadSaveData()
 				{
 					GameInstance->SetInventoryPartsArray(Loaded->InventoryPartsArray);
 					GameInstance->SetCurrentSlotIndex(Loaded->CurrentSlotIndex);
+
+					InventoryComponent->InitInventory();
+
 				}
 
 				if (ElectricDischargeComponent)
 				{
 					GameInstance->SetCurrentElectricCapacity(Loaded->PlayerElectricCapacity);
+
+					ElectricDischargeComponent->SetCurrentCapacity(Loaded->PlayerElectricCapacity);
 				}
 			}
 		}

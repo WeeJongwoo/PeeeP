@@ -6,6 +6,8 @@
 #include "Engine/AssetManager.h"
 #include "GameMode/PPGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameMode/PPSaveGame.h"
+#include "Inventory/PPInventorySaveTypes.h"
 
 
 // Sets default values for this component's properties
@@ -345,7 +347,7 @@ void UPPInventoryComponent::InitInventory()
 		for (const auto& InvItem : InventoryPartsArray)
 		{
 			// 특정 아이템 키 생성
-			FPrimaryAssetId Key(TEXT("PPPartsData"), InvItem.Value.Key);
+			FPrimaryAssetId Key(TEXT("PPPartsData"), InvItem.Value.ItemID);
 
 			if (Assets.Contains(Key))
 			{
@@ -362,14 +364,21 @@ void UPPInventoryComponent::InitInventory()
 					if (ItemData)
 					{
 						NewItem->PartsData = ItemData;
-						NewItem->ItemQuantity = InvItem.Value.Value;
+						NewItem->ItemQuantity = InvItem.Value.Quantity;
 						// 아이템 넣기
 						PartsItems[InvItem.Key] = NewItem;
+						// 퀵슬롯 위젯 업데이트(건들지마)
+						if (QuickSlotWidget)
+						{
+							QuickSlotWidget->UpdateQuickSlot();
+						}
+
 					}
 				}
 			}
 		}
 	}
+
 }
 
 // Called every frame
@@ -420,7 +429,10 @@ void UPPInventoryComponent::SaveInventoryToGameInstance()
 	{
 		if (PartsItems[i] && PartsItems[i]->PartsData)
 		{
-			SaveMap.Add(i, TPair<FName, int32>( PartsItems[i]->PartsData->GetPrimaryAssetId().PrimaryAssetName, PartsItems[i]->ItemQuantity ));
+			FPPInventoryPartSaveData Data;
+			Data.ItemID = PartsItems[i]->PartsData->GetPrimaryAssetId().PrimaryAssetName;
+			Data.Quantity = PartsItems[i]->ItemQuantity;
+			SaveMap.Add(i, Data);
 		}
 	}
 
@@ -428,19 +440,22 @@ void UPPInventoryComponent::SaveInventoryToGameInstance()
 	GameInstance->SetCurrentSlotIndex(CurrentSlotIndex);
 }
 
-void UPPInventoryComponent::SetSaveMap(TMap<int32, TPair<FName, int32>> InSaveMap)
+void UPPInventoryComponent::SetSaveMap(TMap<int32, FPPInventoryPartSaveData> InSaveMap)
 {
 	SaveMap = InSaveMap;
 }
 
-TMap<int32, TPair<FName, int32>> UPPInventoryComponent::GetSaveMap()
+TMap<int32, FPPInventoryPartSaveData> UPPInventoryComponent::GetSaveMap()
 {
 	SaveMap.Empty();
 	for (int32 i = 0; i < PartsItems.Num(); i++)
 	{
 		if (PartsItems[i] && PartsItems[i]->PartsData)
 		{
-			SaveMap.Add(i, TPair<FName, int32>(PartsItems[i]->PartsData->GetPrimaryAssetId().PrimaryAssetName, PartsItems[i]->ItemQuantity));
+			FPPInventoryPartSaveData Data;
+			Data.ItemID = PartsItems[i]->PartsData->GetPrimaryAssetId().PrimaryAssetName;
+			Data.Quantity = PartsItems[i]->ItemQuantity;
+			SaveMap.Add(i, Data);
 		}
 	}
 	return SaveMap;
@@ -449,6 +464,14 @@ TMap<int32, TPair<FName, int32>> UPPInventoryComponent::GetSaveMap()
 int32 UPPInventoryComponent::GetCurrentSlotIndex()
 {
 	return CurrentSlotIndex;
+}
+
+void UPPInventoryComponent::UpdateQuickSlotWidget()
+{
+	if (QuickSlotWidget)
+	{
+		QuickSlotWidget->UpdateQuickSlot();
+	}
 }
 
 void UPPInventoryComponent::SetQuickSlotWidget(UPPQuickSlotWidget* widget)
