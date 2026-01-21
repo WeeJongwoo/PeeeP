@@ -8,6 +8,7 @@
 #include "Inventory/ESlotType.h"
 #include "../UI/Inventory/PPSlot.h"
 #include "../UI/Inventory/PPQuickSlotWidget.h"
+#include "PPInventorySaveTypes.h"
 #include "PPInventoryComponent.generated.h"
 
 // 인벤토리 내용 변경 델리게이트
@@ -23,7 +24,8 @@ public:
 	UPPInventoryComponent();
 
 	virtual void InitializeComponent() override;
-
+	// 인벤토리 초기화
+	void InitInventory();
 public:
 	FOnChangedInventoryDelegate OnChangeInven;
 
@@ -51,7 +53,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
 	int32 MaxItemNum;
 
-	TMap<int32, TPair<FName, int32>> InventoryPartsArray;
+	TMap<int32, FPPInventoryPartSaveData> InventoryPartsArray;
 
 public:
 	// Getter
@@ -76,9 +78,6 @@ public:
 	void SortItem();
 
 protected:
-	// 인벤토리 초기화
-	void InitInventory();
-
 	// 아이템 삭제
 	void RemoveItem(int32 InSlotIndex, ESlotType InventoryType);
 
@@ -88,7 +87,7 @@ public:
 
 protected:
 	// 저장 등에 의해 옮겨질 아이템 정보 임시 저장용 맵
-	TMap<int32, TPair<FName, int32>> SaveMap;
+	TMap<int32, FPPInventoryPartSaveData> SaveMap;
 	// 현재 선택된 슬롯 인덱스
 	UPROPERTY(VisibleAnywhere, Category = "Inventory")
 	int32 CurrentSlotIndex;
@@ -101,9 +100,9 @@ public:
 	void SaveInventoryToGameInstance();
 
 	// SaveMap Setter
-	void SetSaveMap(TMap<int32, TPair<FName, int32>> InSaveMap);
+	void SetSaveMap(TMap<int32, FPPInventoryPartSaveData> InSaveMap);
 	// SaveMap Getter
-	TMap<int32, TPair<FName, int32>> GetSaveMap();
+	TMap<int32, FPPInventoryPartSaveData> GetSaveMap();
 	// CurrentSlotIndex Getter
 	int32 GetCurrentSlotIndex();
 
@@ -115,6 +114,9 @@ private:
 	// 슬롯들을 저장하기 위한 배열
 	UPROPERTY(VisibleAnywhere, Category = "Inventory")
 	TArray<TObjectPtr<class UPPSlot>> Slots;
+
+	UFUNCTION()
+	void UpdateQuickSlotWidget();
 
 public:
 	// 인벤토리 컴포넌트 내 퀵슬롯 위젯 설정을 위한 함수

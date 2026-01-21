@@ -41,7 +41,7 @@ UPPGameInstance::UPPGameInstance()
 	bWasLoadedFromSave = false;
 }
 
-void UPPGameInstance::SetInventoryPartsArray(TMap<int32, TPair<FName, int32>> NewInventoryPartsArray)
+void UPPGameInstance::SetInventoryPartsArray(TMap<int32, FPPInventoryPartSaveData> NewInventoryPartsArray)
 {
 	InventoryPartsArray = NewInventoryPartsArray;
 }
